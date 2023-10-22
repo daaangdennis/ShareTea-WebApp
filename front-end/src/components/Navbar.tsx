@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { navbarProps, route } from "../types/types";
 
 const Navbar: React.FC<navbarProps> = ({ routes }) => {
+
+  
   return (
     <header className="p-3 text-bg-dark">
       <div className="container">
@@ -44,9 +46,11 @@ const Navbar: React.FC<navbarProps> = ({ routes }) => {
           </form>
 
           <div className="text-end">
-            <button type="button" className="btn btn-outline-light me-2">
-              Login
-            </button>
+            <Link to={"/login"}>
+              <button type="button" className="btn btn-outline-light me-2">
+                Login
+              </button>
+            </Link>
             <button type="button" className="btn btn-warning">
               Sign-up
             </button>

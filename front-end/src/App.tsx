@@ -5,13 +5,14 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import { route } from "./types/types";
 import Footer from "./components/Footer";
+import LoginPage from "./pages/LoginPage";
 
 function App() {
   const routes: route[] = [
     { name: "Home", path: "/", element: <LandingPage /> },
-    { name: "Menu", path: "/", element: <LandingPage /> },
-    { name: "Contact", path: "/", element: <LandingPage /> },
-    { name: "Cart", path: "/", element: <LandingPage /> },
+    { name: "Menu", path: "/Menu", element: <></> },
+    { name: "Contact", path: "/Contact", element: <></> },
+    { name: "Cart", path: "/Cart", element: <></> },
   ];
 
   return (
@@ -22,6 +23,7 @@ function App() {
           {routes.map((item: route) => (
             <Route path={item.path} element={item.element}></Route>
           ))}
+          <Route path="/login" element={<LoginPage />}></Route>
         </Routes>
         <Footer />
       </BrowserRouter>

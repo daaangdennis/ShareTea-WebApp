@@ -11,11 +11,12 @@ export interface navbarProps {
 }
 
 export interface product {
-  productId: number;
+  product_id: number;
   name: string;
-  image: string;
-  description: string;
+  image?: string;
+  description?: string;
   price: number;
+  category: string;
 }
 
 export interface ProductCardProps {
