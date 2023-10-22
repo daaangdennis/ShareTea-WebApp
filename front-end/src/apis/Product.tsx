@@ -9,6 +9,7 @@ export function getProducts(
     .then((response) => {
       const data: product[] = response.data;
       console.log(data);
+      
       setProducts(data);
       setFiliterdProducts(data);
     })

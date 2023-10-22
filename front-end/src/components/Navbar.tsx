@@ -1,15 +1,17 @@
 import { Link } from "react-router-dom";
-import { navbarProps, product, route } from "../types/types";
+import { Cart, navbarProps, product, route } from "../types/types";
 import { useEffect, useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { Products, filteredProducts } from "../atoms/product";
 import { getProducts } from "../apis/Product";
+import { cart } from "../atoms/cart";
 
 const Navbar: React.FC<navbarProps> = ({ routes }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const SourceProducts = useRecoilValue<product[]>(Products);
   const setProducts = useSetRecoilState<product[]>(Products);
   const setFilteredProducts = useSetRecoilState<product[]>(filteredProducts);
+  const cartItems = useRecoilValue<Cart>(cart);
 
   useEffect(() => {
     getProducts(setProducts, setFilteredProducts);
@@ -43,13 +45,29 @@ const Navbar: React.FC<navbarProps> = ({ routes }) => {
           </Link>
 
           <ul className="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-            {routes.map((item: route) => (
-              <li>
-                <Link className="nav-link px-2 text-dark" to={item.path}>
-                  {item.name}
-                </Link>
-              </li>
-            ))}
+            {routes.map((item: route) =>
+              item.name == "Cart" ? (
+                <li>
+                  <Link style={{ textDecoration: "none" }} to={item.path}>
+                    <button
+                      type="button"
+                      className="nav-link px-2 btn position-relative text-dark"
+                    >
+                      {item.name}
+                      <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        {cartItems.items.length}
+                      </span>
+                    </button>
+                  </Link>
+                </li>
+              ) : (
+                <li>
+                  <Link className="nav-link px-2 text-dark" to={item.path}>
+                    {item.name}
+                  </Link>
+                </li>
+              )
+            )}
           </ul>
 
           <form
