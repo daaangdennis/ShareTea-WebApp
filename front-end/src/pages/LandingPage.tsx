@@ -2,13 +2,10 @@ import { useEffect, useState } from "react";
 import { getProducts } from "../apis/Product";
 import ProductGrid from "../components/ProductGrid";
 import { product } from "../types/types";
+import { useSetRecoilState } from "recoil";
+import { Products } from "../atoms/product";
 
 function LandingPage() {
-  const [products, setProducts] = useState<product[]>([]);
-
-  useEffect(() => {
-    getProducts(setProducts);
-  }, []);
   // const products: product[] = [
   //   {
   //     product_id: 1,
@@ -89,7 +86,7 @@ function LandingPage() {
           </div>
         </section>
       </div>
-      <ProductGrid products={products} />
+      <ProductGrid/>
     </main>
   );
 }

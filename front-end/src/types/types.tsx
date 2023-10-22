@@ -13,7 +13,7 @@ export interface navbarProps {
 export interface product {
   product_id: number;
   name: string;
-  image?: string;
+  url: string;
   description?: string;
   price: number;
   category: string;
@@ -23,5 +23,5 @@ export interface ProductCardProps {
   product: product;
 }
 export interface ProductGridProps {
-  products: product[];
+  // products: product[];
 }
