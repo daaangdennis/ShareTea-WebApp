@@ -1,5 +1,7 @@
 package com.sharetea.backend.Services;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,9 @@ public class Services {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private InventoryRepository inventoryRepository;
 
 
 
@@ -50,6 +55,41 @@ public class Services {
 
     public Iterable<Product> getAllProducts() {
         return productRepository.findAll();
+    }
+    public Product addProduct(Product product){
+        return productRepository.save(product);
+    }
+
+    public Product updateProduct(Integer productID, Product productUpdate){
+        Optional<Product> productOptional = productRepository.findById(productID);
+
+        if(productOptional.isPresent()){
+            Product product = productOptional.get();
+
+            if (productUpdate.getName() != null) {
+                product.setName(productUpdate.getName());;
+            }
+            if (productUpdate.getPrice() != null) {
+                product.setPrice(productUpdate.getPrice());
+            }
+            if (productUpdate.getCategory() != null) {
+                product.setCategory(productUpdate.getCategory());
+            }
+            if (productUpdate.getUrl() != null) {
+                product.setUrl(productUpdate.getUrl());
+            }
+
+            return productRepository.save(product);
+        }
+        else{
+            return null; 
+        }
+
+    }
+
+
+    public Iterable<Inventory> getAllInventory() {
+        return inventoryRepository.findAll();
     }
 
 }
