@@ -19,20 +19,35 @@ public class TableController {
     public Iterable<Customer> getCustomers() {
         return CustomerSrv.getAllCustomers();
     }
-
     @PostMapping("/customer/add")
     public Customer addCustomer(@RequestBody Customer customer) {
         return CustomerSrv.addCustomer(customer);
     }
 
+
     @GetMapping("/employee/get")
     public Iterable<Employee> getEmployees() {
         return CustomerSrv.getAllEmployees();
     }
-
     @PostMapping("/employee/add")
     public Employee addEmployee(@RequestBody Employee employee) {
         return CustomerSrv.addEmployee(employee);
+    }
+
+
+    @GetMapping("/orders/get")
+    public Iterable<Orders> getOrders() {
+        return CustomerSrv.getAllOrders();
+    }
+    @PostMapping("/orders/add")
+    public Orders addOrder(@RequestBody Orders order) {
+        return CustomerSrv.addOrder(order);
+    }
+
+
+    @GetMapping("/product/get")
+    public Iterable<Product> getProducts() {
+        return CustomerSrv.getAllProducts();
     }
 
 

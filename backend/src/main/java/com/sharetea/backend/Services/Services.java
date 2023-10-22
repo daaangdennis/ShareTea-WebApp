@@ -14,6 +14,14 @@ public class Services {
     @Autowired
     private EmployeeRepository employeeRepository;
 
+    @Autowired
+    private OrdersRepository ordersRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
+
+
+
     public Iterable<Customer> getAllCustomers() {
         return customerRepository.findAll();
     }
@@ -29,6 +37,19 @@ public class Services {
 
     public Employee addEmployee(Employee employee){
         return employeeRepository.save(employee);
+    }
+
+
+    public Iterable<Orders> getAllOrders() {
+        return ordersRepository.findAll();
+    }
+    public Orders addOrder(Orders order){
+        return ordersRepository.save(order);
+    }
+
+
+    public Iterable<Product> getAllProducts() {
+        return productRepository.findAll();
     }
 
 }
