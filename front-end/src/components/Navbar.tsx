@@ -1,9 +1,5 @@
 import { Link } from "react-router-dom";
-import { route } from "../types/types";
-
-interface navbarProps {
-  routes: route[];
-}
+import { navbarProps, route } from "../types/types";
 
 const Navbar: React.FC<navbarProps> = ({ routes }) => {
   return (
