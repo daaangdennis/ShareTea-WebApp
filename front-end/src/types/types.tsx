@@ -25,3 +25,17 @@ export interface ProductCardProps {
 export interface ProductGridProps {
   // products: product[];
 }
+
+export interface Cart {
+  items: {
+    product: product;
+    toppings?: any;
+    notes?: string;
+  }[];
+  total: number;
+}
+
+export interface CartTableProps {
+  columns: string[];
+  items: Cart;
+}

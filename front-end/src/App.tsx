@@ -6,13 +6,14 @@ import Navbar from "./components/Navbar";
 import { route } from "./types/types";
 import Footer from "./components/Footer";
 import LoginPage from "./pages/LoginPage";
+import CartPage from "./pages/CartPage";
 
 function App() {
   const routes: route[] = [
     { name: "Home", path: "/", element: <LandingPage /> },
     { name: "Menu", path: "/Menu", element: <></> },
     { name: "Contact", path: "/Contact", element: <></> },
-    { name: "Cart", path: "/Cart", element: <></> },
+    { name: "Cart", path: "/Cart", element: <CartPage /> },
   ];
 
   return (
