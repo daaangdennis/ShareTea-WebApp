@@ -1,6 +1,6 @@
 package com.sharetea.backend.Entities;
 
-import java.sql.Date;
+import java.util.Date;
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -28,6 +28,8 @@ public class Inventory {
     @CreationTimestamp @JsonFormat(pattern = "yyyy-MM-dd")
     private Date last_updated;
 
+    private Boolean is_topping;
+
 
     public Integer getInventory_id() {
         return inventory_id;
@@ -49,13 +51,40 @@ public class Inventory {
         return last_updated;
     }
 
+    public Boolean getIs_topping() {
+        return is_topping;
+    }
+
+
+    public void setInventory_id(Integer inventory_id) {
+        this.inventory_id = inventory_id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public void setLast_updated(Date last_updated) {
+        this.last_updated = last_updated;
+    }
+
+    public void setIs_topping(Boolean is_topping) {
+        this.is_topping = is_topping;
+    } 
+    
+    
     @Override
     public String toString() {
         return "Inventory [inventory_id=" + inventory_id + ", name=" + name + ", details=" + details + ", quantity="
-                + quantity + ", last_updated=" + last_updated + "]";
+                + quantity + ", last_updated=" + last_updated + ", is_topping=" + is_topping + "]";
     }
-
-    
-
     
 }
