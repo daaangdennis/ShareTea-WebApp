@@ -1,5 +1,5 @@
 #Use Maven Build Image
-FROM maven:3.9.5-openjdk-11-jdk-slim AS Build
+FROM openjdk:21-jdk-slim AS Build
 
 #Set working directory
 WORKDIR /backend
