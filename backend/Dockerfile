@@ -1,9 +1,6 @@
 #Use openjdk Build Image
 FROM maven:3.9.5 AS Build
 
-#Install Maven
-RUN apt-get update && apt-get install -y maven
-
 #Set working directory
 WORKDIR /backend
 
