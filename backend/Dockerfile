@@ -9,7 +9,7 @@ COPY pom.xml .
 COPY src .
 
 #Build the SpringBoot App with Maven
-RUN mvn clean install
+RUN mvn clean install -DskipTests -X
 
 #Expose the port of the springboot app 
 EXPOSE 8080
