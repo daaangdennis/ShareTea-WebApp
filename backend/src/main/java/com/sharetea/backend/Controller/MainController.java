@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.sharetea.backend.Entities.*;
+import com.sharetea.backend.RequestBodies.CustomerBody;
+import com.sharetea.backend.RequestBodies.EmployeeBody;
 import com.sharetea.backend.Services.*;
 
 @CrossOrigin(origins = "*")
@@ -21,12 +23,13 @@ public class MainController {
     @Autowired
     private Services service;
     
+
     @GetMapping("/customer/get")
     public Iterable<Customer> getCustomers() {
         return service.getAllCustomers();
     }
     @PostMapping("/customer/add")
-    public Customer addCustomer(@RequestBody Customer customer) {
+    public Customer addCustomer(@RequestBody CustomerBody customer) {
         return service.addCustomer(customer);
     }
 
@@ -36,7 +39,7 @@ public class MainController {
         return service.getAllEmployees();
     }
     @PostMapping("/employee/add")
-    public Employee addEmployee(@RequestBody Employee employee) {
+    public Employee addEmployee(@RequestBody EmployeeBody employee) {
         return service.addEmployee(employee);
     }
 

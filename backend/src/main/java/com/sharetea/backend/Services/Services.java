@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.sharetea.backend.Entities.*;
 import com.sharetea.backend.Repositories.*;
+import com.sharetea.backend.RequestBodies.*;
 
 @Service
 public class Services {
@@ -33,24 +34,54 @@ public class Services {
     @Autowired
     private InventoryRepository inventoryRepository;
 
+    @Autowired
+    private UsersRepository usersRepository;
+
 
 
     public Iterable<Customer> getAllCustomers() {
         return customerRepository.findAll();
     }
 
-    public Customer addCustomer(Customer customer) {
-        return customerRepository.save(customer);
+    public Customer addCustomer(CustomerBody customerData) {
+        Users user = new Users();
+        user.setFirst_name(customerData.getFirstName());
+        user.setLast_name(customerData.getLastName());
+        user.setToken_id(customerData.getTokenID());
+        user.setEmail(customerData.getEmail());
+        user = usersRepository.save(user);
+
+        Customer customer = new Customer();
+        customer.setUser_id(user.getUser_id());
+        customer = customerRepository.save(customer);
+        return customer;
     }
+
+
+
 
 
     public List<Employee> getAllEmployees() {
         return employeeRepository.findAll();
     }
 
-    public Employee addEmployee(Employee employee){
-        return employeeRepository.save(employee);
+    public Employee addEmployee(EmployeeBody employeeData) {
+        Users user = new Users();
+        user.setFirst_name(employeeData.getFirstName());
+        user.setLast_name(employeeData.getLastName());
+        user.setToken_id(employeeData.getTokenID());
+        user.setEmail(employeeData.getEmail());
+        user = usersRepository.save(user);
+
+        Employee employee = new Employee();
+        employee.setUser_id(user.getUser_id());
+        employee.setPosition(employeeData.getPosition());
+        employee = employeeRepository.save(employee);
+        return employee;
     }
+
+
+
 
 
     public List<Orders> getAllOrders() {
@@ -59,6 +90,10 @@ public class Services {
     public Orders addOrder(Orders order){
         return ordersRepository.save(order);
     }
+
+
+
+
 
     
     public List<Map<String, Object>> getProductsbyCategory() {
@@ -111,6 +146,10 @@ public class Services {
             return null; 
         }
     }
+
+
+
+
 
 
     public List<Inventory> getAllInventory() {
