@@ -6,6 +6,7 @@ WORKDIR /backend
 
 #Copy maven files over to the docker container
 COPY pom.xml .
+COPY src .
 
 #Build the SpringBoot App with Maven
 RUN mvn clean install
