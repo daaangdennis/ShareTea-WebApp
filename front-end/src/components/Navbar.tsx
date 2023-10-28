@@ -5,6 +5,7 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { Products, filteredProducts } from "../atoms/product";
 import { getProducts } from "../apis/Product";
 import { cart } from "../atoms/cart";
+import "../styles/Navbar.css";
 
 const Navbar: React.FC<navbarProps> = ({ routes }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -12,6 +13,8 @@ const Navbar: React.FC<navbarProps> = ({ routes }) => {
   const setProducts = useSetRecoilState<product[]>(Products);
   const setFilteredProducts = useSetRecoilState<product[]>(filteredProducts);
   const cartItems = useRecoilValue<Cart>(cart);
+
+  const [menu, setMenu] = useState("home");
 
   useEffect(() => {
     getProducts(setProducts, setFilteredProducts);
@@ -29,48 +32,8 @@ const Navbar: React.FC<navbarProps> = ({ routes }) => {
   }, [searchTerm]);
 
   return (
-    <nav className="navbar navbar-expand-md">
+    <header className="p-3 text-bg">
       <div className="container-fluid">
-        <a className="navbar-brand" href="/">
-          <img
-            width="auto"
-            height="55"
-            className="p-3"
-            src="https://images.squarespace-cdn.com/content/v1/61e8bb2a2cf8670534839093/fd85183c-e606-4f3a-b24d-96dab9535761/new-logo_500x99px.png?format=1500w"
-          ></img>
-        </a>
-        <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-          <span className="navbar-toggler-icon"></span>
-        </button>
-        <ul className="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-            {routes.map((item: route) =>
-              item.name == "Cart" ? (
-                <li>
-                  <Link style={{ textDecoration: "none" }} to={item.path}>
-                    <button
-                      type="button"
-                      className="nav-link px-2 btn position-relative text-dark"
-                    >
-                      {item.name}
-                      <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                        {cartItems.items.length}
-                      </span>
-                    </button>
-                  </Link>
-                </li>
-              ) : (
-                <li>
-                  <Link className="nav-link px-2 text-dark" to={item.path}>
-                    {item.name}
-                  </Link>
-                </li>
-              )
-            )}
-          </ul>
-      </div>
-    </nav>
-    /*<header className="p-3 text-bg">
-      <div className="container">
         <div className="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
           <Link
             to={"/"}
@@ -78,7 +41,7 @@ const Navbar: React.FC<navbarProps> = ({ routes }) => {
           >
             <img
               width="auto"
-              height="50"
+              height="55"
               className="p-3"
               src="https://images.squarespace-cdn.com/content/v1/61e8bb2a2cf8670534839093/fd85183c-e606-4f3a-b24d-96dab9535761/new-logo_500x99px.png?format=1500w"
             ></img>
@@ -88,21 +51,14 @@ const Navbar: React.FC<navbarProps> = ({ routes }) => {
             {routes.map((item: route) =>
               item.name == "Cart" ? (
                 <li>
-                  <Link style={{ textDecoration: "none" }} to={item.path}>
-                    <button
-                      type="button"
-                      className="nav-link px-2 btn position-relative text-dark"
-                    >
-                      {item.name}
-                      <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                        {cartItems.items.length}
-                      </span>
-                    </button>
+                  <Link className="nav-link px-2 text-dark nav-font" style={{ textDecoration: "none", fontSize: "16px" }} to={item.path}>
+                    {item.name}
+                  <div className="nav-cart-count">{cartItems.items.length}</div>
                   </Link>
                 </li>
               ) : (
                 <li>
-                  <Link className="nav-link px-2 text-dark" to={item.path}>
+                  <Link className="nav-link text-dark nav-font" to={item.path}>
                     {item.name}
                   </Link>
                 </li>
@@ -110,32 +66,19 @@ const Navbar: React.FC<navbarProps> = ({ routes }) => {
             )}
           </ul>
 
-          <form
-            className="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3"
-            role="search"
-          >
-            <input
-              type="search"
-              className="form-control form-control-dark text-bg-light"
-              placeholder="Search..."
-              aria-label="Search"
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </form>
-
           <div className="text-end">
             <Link to={"/login"}>
               <button type="button" className="btn btn-outline-dark me-2">
                 Login
               </button>
             </Link>
-            <button type="button" className="btn btn-warning">
+            <button type="button" className="btn btn-danger">
               Sign-up
             </button>
           </div>
         </div>
       </div>
-    </header>*/
+    </header>
   );
 };
 
