@@ -1,5 +1,5 @@
 #Use openjdk Build Image
-FROM openjdk:21-jdk-slim AS Build
+FROM maven:3.9.5 AS Build
 
 #Install Maven
 RUN apt-get update && apt-get install -y maven
