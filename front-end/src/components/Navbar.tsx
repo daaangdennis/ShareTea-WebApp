@@ -29,7 +29,47 @@ const Navbar: React.FC<navbarProps> = ({ routes }) => {
   }, [searchTerm]);
 
   return (
-    <header className="p-3 text-bg">
+    <nav className="navbar navbar-expand-md">
+      <div className="container-fluid">
+        <a className="navbar-brand" href="/">
+          <img
+            width="auto"
+            height="55"
+            className="p-3"
+            src="https://images.squarespace-cdn.com/content/v1/61e8bb2a2cf8670534839093/fd85183c-e606-4f3a-b24d-96dab9535761/new-logo_500x99px.png?format=1500w"
+          ></img>
+        </a>
+        <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+          <span className="navbar-toggler-icon"></span>
+        </button>
+        <ul className="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+            {routes.map((item: route) =>
+              item.name == "Cart" ? (
+                <li>
+                  <Link style={{ textDecoration: "none" }} to={item.path}>
+                    <button
+                      type="button"
+                      className="nav-link px-2 btn position-relative text-dark"
+                    >
+                      {item.name}
+                      <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        {cartItems.items.length}
+                      </span>
+                    </button>
+                  </Link>
+                </li>
+              ) : (
+                <li>
+                  <Link className="nav-link px-2 text-dark" to={item.path}>
+                    {item.name}
+                  </Link>
+                </li>
+              )
+            )}
+          </ul>
+      </div>
+    </nav>
+    /*<header className="p-3 text-bg">
       <div className="container">
         <div className="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
           <Link
@@ -95,7 +135,7 @@ const Navbar: React.FC<navbarProps> = ({ routes }) => {
           </div>
         </div>
       </div>
-    </header>
+    </header>*/
   );
 };
 
