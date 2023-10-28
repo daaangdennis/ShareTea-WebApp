@@ -1,5 +1,8 @@
-#Use Maven Build Image
+#Use openjdk Build Image
 FROM openjdk:21-jdk-slim AS Build
+
+#Install Maven
+RUN apt-get update && apt-get install -y maven
 
 #Set working directory
 WORKDIR /backend
