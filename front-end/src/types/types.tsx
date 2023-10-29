@@ -18,9 +18,9 @@ export interface product {
   price: number;
   category: string;
   toppings?: {
-    topping: string;
+    items: string[];
     price: number;
-  }[];
+  };
   isIce?: boolean;
   isSugar?: boolean;
 }
