@@ -2,7 +2,8 @@ import React from 'react'
 import { useRecoilState } from 'recoil'
 import { activeImageState } from "../atoms/activeImageState"
 import { ImageGalleryProps } from "../types/types"
-const ImageGallery: React.FC<ImageGalleryProps> = ({images}) => {
+import '../styles/ImageGallery.css';
+const ImageGallery: React.FC<ImageGalleryProps> = ({images, style}) => {
     const [index, setIndex] = useRecoilState(activeImageState);
 
     const prevImage = () => {
@@ -17,12 +18,22 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({images}) => {
         );
     };
 
-
+    // const containerStyle : React.CSSProperties = {
+    //     ...style,
+    //     backgroundImage: `url("${images[index]}")`,
+    //     position: "relative",
+    // };
+    
     return (
         <>
-            <button onClick={prevImage}>&larr; Previous</button>
-            <img src={images[index]} alt={`Image ${index + 1}`}/>
-            <button onClick={nextImage}>Next &rarr;</button>
+           <div className="image-gallery-container" style={{ ...style }}>
+                <img src={images[index]} className="ImageGallery" alt={`Image ${index + 1}`} />
+                    <div className="button-container">
+                        <button onClick={prevImage} className="btn btn-primary btn-custom">&larr; Previous</button>
+                        <button onClick={nextImage} className="btn btn-primary btn-custom">Next &rarr;</button>
+                    </div>      
+            </div>
         </>
     );
 };
+export default ImageGallery;

@@ -42,4 +42,5 @@ export interface CartTableProps {
 
 export interface ImageGalleryProps {
   images: string[];
+  style?: React.CSSProperties;
 }
