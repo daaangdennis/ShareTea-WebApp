@@ -57,6 +57,23 @@ public class Services {
         return customer;
     }
 
+    public List<List<String>> getMostandLeastOrdered(Integer customer_id){
+        List<List<String>> mostAndLeastAll = productRepository.getMostandLeastOrdered(customer_id);
+        List<List<String>> mostAndLeast = new ArrayList<>();
+       
+        mostAndLeast.add(mostAndLeastAll.get(0));
+        mostAndLeast.add(mostAndLeastAll.get(1));
+        mostAndLeast.add(mostAndLeastAll.get(2));
+
+        mostAndLeast.add(mostAndLeastAll.get(mostAndLeastAll.size() - 1));
+        mostAndLeast.add(mostAndLeastAll.get(mostAndLeastAll.size() - 2));
+        mostAndLeast.add(mostAndLeastAll.get(mostAndLeastAll.size() - 3));
+
+        return mostAndLeast;
+    }
+
+  
+
 
 
 
@@ -79,6 +96,7 @@ public class Services {
         employee = employeeRepository.save(employee);
         return employee;
     }
+
 
 
 

@@ -73,6 +73,12 @@ public class MainController {
         return service.updateProduct(productID, productUpdate);
     }
 
+    @GetMapping("/product/getmostandleast")
+    public List<List<String>> updateProduct(@RequestParam Integer customer_id) {
+        return service.getMostandLeastOrdered(customer_id);
+    }
+
+
 
     @GetMapping("/inventory/get")
     public Iterable<Inventory> getInventory() {
