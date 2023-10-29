@@ -17,6 +17,11 @@ export interface product {
   description?: string;
   price: number;
   category: string;
+  toppings?: {
+    topping: string;
+    price: number;
+  }[];
+  isIce?: boolean;
 }
 
 export interface ProductCardProps {
