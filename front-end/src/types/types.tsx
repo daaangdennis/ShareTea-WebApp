@@ -22,7 +22,7 @@ export interface product {
     price: number;
   }[];
   isIce?: boolean;
-  isSugger?: boolean;
+  isSugar?: boolean;
 }
 
 export interface ProductCardProps {
