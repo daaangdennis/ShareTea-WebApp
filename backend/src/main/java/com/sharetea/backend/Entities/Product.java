@@ -23,10 +23,11 @@ public class Product {
 
     private String url;
     private Boolean has_ice;
+    private Boolean has_toppings;
     private Boolean has_sugar;
 
 
-    
+
     public Integer getProduct_id() {
         return product_id;
     }
@@ -68,6 +69,12 @@ public class Product {
     }
     public void setHas_sugar(Boolean has_sugar) {
         this.has_sugar = has_sugar;
+    }
+    public Boolean getHas_toppings() {
+        return has_toppings;
+    }
+    public void setHas_toppings(Boolean has_toppings) {
+        this.has_toppings = has_toppings;
     }
 
     
