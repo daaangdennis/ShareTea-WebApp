@@ -86,6 +86,7 @@ function LandingPage() {
           </div>
         </section>
       </div>
+      <h1></h1>
       <ProductGrid/>
     </main>
   );

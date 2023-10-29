@@ -5,8 +5,9 @@ export function getProducts(
   setProducts: React.Dispatch<React.SetStateAction<product[]>>,
   setFiliterdProducts: React.Dispatch<React.SetStateAction<product[]>>
 ) {
-  Axios.get("http://localhost:8080/product/get")
+  Axios.get(process.env.REACT_APP_BACKEND_URL + "/product/get")
     .then((response) => {
+      console.log(process.env.REACT_APP_BACKEND_URL)
       const data: product[] = response.data;
       console.log(data);
       
