@@ -12,8 +12,17 @@ function CustomPage() {
   };
   return (
     <>
-      <img src={product.url} />
-      <div className="d-flex" style={{ flexDirection: "column", gap: 15 }}>
+      <div style={{ display: "flex", gap: 20 }}>
+        <img src={product.url} />
+        <div>
+          <h1>{product.name}</h1>
+          <h3>{product.price} $</h3>
+        </div>
+      </div>
+      <div
+        className="d-flex"
+        style={{ marginTop: 20, width: "50%", margin: "auto", gap: 30 }}
+      >
         {iceLevel && (
           <div>
             <h2>Ice Level</h2>
@@ -33,6 +42,8 @@ function CustomPage() {
           </div>
         )}
       </div>
+      <hr />
+      <button className="btn btn-dark">add to cart</button>
     </>
   );
 }
