@@ -7,11 +7,12 @@ import { route } from "./types/types";
 import Footer from "./components/Footer";
 import LoginPage from "./pages/LoginPage";
 import CartPage from "./pages/CartPage";
+import MenuPage from "./pages/MenuPage";
 
 function App() {
   const routes: route[] = [
     { name: "Home", path: "/", element: <LandingPage /> },
-    { name: "Menu", path: "/Menu", element: <></> },
+    { name: "Menu", path: "/Menu", element: <MenuPage /> },
     { name: "Contact", path: "/Contact", element: <></> },
     { name: "Cart", path: "/Cart", element: <CartPage /> },
   ];
