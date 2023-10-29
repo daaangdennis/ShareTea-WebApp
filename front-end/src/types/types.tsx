@@ -23,7 +23,7 @@ export interface ProductCardProps {
   product: product;
 }
 export interface ProductGridProps {
-  // products: product[];
+  products: product[];
 }
 
 export interface Cart {

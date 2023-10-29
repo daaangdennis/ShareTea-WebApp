@@ -11,18 +11,18 @@ import { cart } from "../atoms/cart";
 var _ = require("lodash");
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-  const [cartItems, setcartItems] = useRecoilState<Cart>(cart);
+  // const [cartItems, setcartItems] = useRecoilState<Cart>(cart);
 
-  const addProductToCart = () => {
-    const newlist: Cart = _.cloneDeep(cartItems);
-    newlist.items.push({
-      product: product,
-      toppings: "none",
-      notes: "none",
-    });
-    newlist.total = newlist.total + product.price;
-    setcartItems(newlist);
-  };
+  // const addProductToCart = () => {
+  //   const newlist: Cart = _.cloneDeep(cartItems);
+  //   newlist.items.push({
+  //     product: product,
+  //     toppings: "none",
+  //     notes: "none",
+  //   });
+  //   newlist.total = newlist.total + product.price;
+  //   setcartItems(newlist);
+  // };
 
   return (
     <div className="col">
@@ -48,7 +48,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             {product.name}
           </h3>
           <p className="card-text">{product.description}</p>
-          <div className="d-flex justify-content-between align-items-center">
+          {/* <div className="d-flex justify-content-between align-items-center">
             <button
               type="button"
               className="btn btn-sm btn-outline-secondary"
@@ -57,15 +57,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               Add
             </button>
             <small className="text-dark fs-5">{product.price} $</small>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
   );
 };
 
-const ProductGrid: React.FC<ProductGridProps> = () => {
-  const products = useRecoilValue<product[]>(filteredProducts);
+const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
   return (
     <div className="album py-5 bg-body-tertiary">
       <div className="container">
@@ -80,3 +79,5 @@ const ProductGrid: React.FC<ProductGridProps> = () => {
 };
 
 export default ProductGrid;
+
+
