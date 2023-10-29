@@ -39,3 +39,8 @@ export interface CartTableProps {
   columns: string[];
   items: Cart;
 }
+
+export interface ImageGalleryProps {
+  images: string[];
+  style?: React.CSSProperties;
+}

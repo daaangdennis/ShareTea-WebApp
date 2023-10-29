@@ -7,7 +7,6 @@ export function getProducts(
 ) {
   Axios.get("http://localhost:8080/product/get")
     .then((response) => {
-      console.log(process.env.REACT_APP_BACKEND_URL)
       const data: product[] = response.data;
       console.log(data);
       
