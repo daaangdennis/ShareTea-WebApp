@@ -55,7 +55,7 @@ public class MainController {
 
 
     @GetMapping("/product/get")
-    public List<String> getProducts() {
+    public List<Product> getProducts() {
         return service.getAllProducts();
         
     }

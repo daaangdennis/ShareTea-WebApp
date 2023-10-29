@@ -130,8 +130,8 @@ public class Services {
     
         return result;
     }
-    public List<String> getAllProducts() {
-        return productRepository.findCategories();
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
     }
     public List<List<Object>> getBestSelling() {
         return orderProductRepository.findBestSelling();
