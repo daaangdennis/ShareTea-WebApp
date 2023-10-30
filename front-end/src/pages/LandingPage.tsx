@@ -94,18 +94,18 @@ function LandingPage() {
     <div className="col"> */}
       <div className="image-gallery-container">
         <ImageGallery images={landingPageImages.images} />
-        <h1 className="fw-light">ShareTea</h1>
+        {/* <h1 className="fw-light">ShareTea</h1> */}
         {/* <p className="example-text">Your text goes here</p> */}
-        <div className="image-text">
+        {/* <div className="image-text col-md-6 text-center font-size-lg">
           Sharetea serves delicious bubble tea globally. Established in 1992 in
           Taiwan, we strive to create high quality tea drinks with our fresh
           ingredients and bring the best to you!
         </div>
         <a href="#" className="btn btn-primary my-2 image-gallery-button">
           Order Now
-        </a>
+        </a> */}
       </div>
-      <h1>Trending Products</h1>
+      <h1 className="text-center">Trending Products</h1>
       <ProductGrid products={bestSelling} />
       <InfoBar />
 
