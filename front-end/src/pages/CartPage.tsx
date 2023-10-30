@@ -1,11 +1,15 @@
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useRecoilState } from "recoil";
 import { Cart, product } from "../types/types";
 import { cart } from "../atoms/cart";
 import CartTable from "../components/CartTable";
+import CartItemsGrid from "../components/CartItems";
+
 import "../styles/CartPage.css";
 
 function CartPage() {
-  const cartItems = useRecoilValue<Cart>(cart);
+  //const cartItems = useRecoilValue<Cart>(cart);
+  const [cartItems, setcartItems] = useRecoilState<Cart>(cart);
+
   const columns: string[] = [
     "#",
     "product ID",
@@ -14,6 +18,14 @@ function CartPage() {
     "Price",
     "Total",
   ];
+
+  const clearCart = () => {
+    setcartItems({
+      items: [],
+      total: 0,
+    });
+  };
+
   return (
     <div className="container-fluid">
       <div className="row">
@@ -44,31 +56,12 @@ function CartPage() {
             </div>
             <div className="button-container">
               <button className="order-button">Place Order</button>
-              <button className="order-button">Cancel Order</button>
+              <button className="order-button" onClick={clearCart}>Cancel Order</button>
             </div>
           </div>
         </div>
-        <div className="col-md-8">
-          {/* <CartTable columns={columns} items={cartItems} /> */}
-          {cartItems.items.map(
-          (
-            item: {
-              product: product;
-              toppings?: any;
-              notes?: string;
-            },
-            i: number
-          ) => (
-            <div className="drink-order-container">
-              Product Name: {item.product.name}
-              <br></br>
-              Product Category: {item.product.category}
-              <br></br>
-              Price: {item.product.price}
-              <br></br>
-            </div>
-          )
-        )}
+        <div className="col-md-8 mt-3 mt-md-0">
+        <CartItemsGrid/>
         </div>
       </div>
     </div>
