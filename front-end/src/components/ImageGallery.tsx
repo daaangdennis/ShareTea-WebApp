@@ -32,7 +32,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, style }) => {
             className="ImageGallery, img-fluid"
             alt={`Image ${index + 1}`}
           />
-          <div className="button-container col-md-12 col-md-6 d-flex">
+          <div className="gallery-button-container col-md-12 col-md-6 d-flex">
             <button
               onClick={prevImage}
               className="btn btn-dark btn-sm"
