@@ -1,28 +1,28 @@
 .image-gallery-container {
-    position: relative;
-    width: 100%; 
-    height: auto; 
-  }
-  
-  .ImageGallery {
-    width: 100%; 
-    height: auto; 
-    display: block;
-  }
+  position: relative;
+  width: 100%;
+  height: auto;
+}
 
-  .button-container {
-    position: absolute;
-    top: 50%; 
-    left: 0; 
-    display: flex;
-    align-items: center; 
-    justify-content: space-between; 
-    width: 100%; 
-    padding: 0 20px; 
-    z-index: 2; 
-  }
-  
-  .btn-custom {
-    background: rgba(0, 0, 0, 0.5);
-    color: white; 
-  }
+.ImageGallery {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.button-container {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 20px;
+  z-index: 2;
+}
+
+.btn-custom {
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+}

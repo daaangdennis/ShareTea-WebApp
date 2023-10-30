@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { getProducts } from "../apis/Product";
 import ProductGrid from "../components/ProductGrid";
-import ImageGallery from "../components/ImageGallery"
+import ImageGallery from "../components/ImageGallery";
 import { ImageGalleryProps, product } from "../types/types";
 import { useSetRecoilState } from "recoil";
 import { Products } from "../atoms/product";
-import '../styles/LandingPage.css'
+import "../styles/LandingPage.css";
 
 function LandingPage() {
   // const products: product[] = [
@@ -59,22 +59,25 @@ function LandingPage() {
   //   },
   // ];
   const customStyle = {
-    backgroundImage: "linear-gradient(rgba(50, 50, 50, 0.25), rgba(50, 50, 50, 0.25))",
+    backgroundImage:
+      "linear-gradient(rgba(50, 50, 50, 0.25), rgba(50, 50, 50, 0.25))",
     backgroundSize: "cover",
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center",
-  }
+  };
 
   const landingPageImages: ImageGalleryProps = {
-    images: ["https://images.squarespace-cdn.com/content/v1/61e8bb2a2cf8670534839093/1697443158374-PEJA4EET4VF8JGAS35HL/230914_Q4PopcornCreamaSeries_web.jpg",
-    "https://images.squarespace-cdn.com/content/v1/61e8bb2a2cf8670534839093/1697512684209-7BC17NZXSD4B5QMZHIPO/230811_EarlGreyTeaSeries_web.jpg?format=2500w"],
+    images: [
+      "https://images.squarespace-cdn.com/content/v1/61e8bb2a2cf8670534839093/1697443158374-PEJA4EET4VF8JGAS35HL/230914_Q4PopcornCreamaSeries_web.jpg",
+      "https://images.squarespace-cdn.com/content/v1/61e8bb2a2cf8670534839093/1697512684209-7BC17NZXSD4B5QMZHIPO/230811_EarlGreyTeaSeries_web.jpg?format=2500w",
+    ],
     style: customStyle,
   };
 
   return (
     <main>
       {/* <div className="container text-center"> */}
-  {/* <div className="row">
+      {/* <div className="row">
     <div className="col">
       
     </div>
@@ -85,17 +88,18 @@ function LandingPage() {
         <ImageGallery images={landingPageImages.images} />
         <h1 className="fw-light">ShareTea</h1>
         {/* <p className="example-text">Your text goes here</p> */}
-        <div className="image-text">Sharetea serves delicious bubble tea globally. Established in
-                1992 in Taiwan, we strive to create high quality tea drinks with
-                our fresh ingredients and bring the best to you!</div>
+        <div className="image-text">
+          Sharetea serves delicious bubble tea globally. Established in 1992 in
+          Taiwan, we strive to create high quality tea drinks with our fresh
+          ingredients and bring the best to you!
+        </div>
         <a href="#" className="btn btn-primary my-2 image-gallery-button">
           Order Now
         </a>
       </div>
-    {/* </div> */}
-  {/* </div>
+      {/* </div> */}
+      {/* </div>
 </div> */}
-
 
       {/* <div>
       <ImageGallery images={landingPageImages.images}/> 
@@ -118,7 +122,7 @@ function LandingPage() {
         </section>
       </div> */}
       <h1></h1>
-      <ProductGrid/>
+      <ProductGrid />
     </main>
   );
 }
