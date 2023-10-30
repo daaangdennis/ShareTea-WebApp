@@ -5,7 +5,6 @@ import {
   ProductGridProps,
   product,
 } from "../types/types";
-import { Products, filteredProducts } from "../atoms/product";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { cart } from "../atoms/cart";
 import "../styles/CartPage.css";
@@ -59,7 +58,7 @@ const CartItem: React.FC<ProductCardProps> = ({ product }) => {
                         <br></br>
                         ${(product.price).toFixed(2)}
                     </h2>
-                    <p className="pb-4">
+                    <p className="pb-4 mb-auto">
                         Topping1
                         <br></br>
                         Topping2
@@ -74,7 +73,7 @@ const CartItem: React.FC<ProductCardProps> = ({ product }) => {
                         <br></br>
                         Topping3
                     </p>
-                    <div className="drink-order-button-container flex-column flex-md-row">
+                    <div className="drink-order-button-container flex-column flex-lg-row">
                         <button className="order-button">Edit Drink</button>
                         <button className="order-button" onClick={addProductToCart}>Add</button>
                         <button className="order-button" onClick={deleteProductFromCart}>Delete</button>
