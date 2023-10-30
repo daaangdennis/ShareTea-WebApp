@@ -12,6 +12,31 @@ import "../styles/CartPage.css";
 var _ = require("lodash");
 
 const CartItem: React.FC<ProductCardProps> = ({ product }) => {
+
+    const [cartItems, setcartItems] = useRecoilState<Cart>(cart);
+
+    const addProductToCart = () => {
+        const newlist: Cart = _.cloneDeep(cartItems);
+        newlist.items.push({
+            product: product,
+            toppings: "none",
+            notes: "none",
+        });
+        newlist.total = newlist.total + product.price;
+        setcartItems(newlist);
+    };
+
+    const deleteProductFromCart = () => {
+        const newItems = cartItems.items.filter((item) => item.product !== product);
+        const newTotal = cartItems.total - product.price;
+        const newlist: Cart = {
+            items: newItems,
+            total: newTotal,
+        };
+        setcartItems(newlist);
+    };
+      
+
     return (
         <div className="row mx-4 mb-5 drink-order-container">
             <div className="col-md-4">
@@ -51,8 +76,8 @@ const CartItem: React.FC<ProductCardProps> = ({ product }) => {
                     </p>
                     <div className="drink-order-button-container flex-column flex-md-row">
                         <button className="order-button">Edit Drink</button>
-                        <button className="order-button">Add</button>
-                        <button className="order-button">Delete</button>
+                        <button className="order-button" onClick={addProductToCart}>Add</button>
+                        <button className="order-button" onClick={deleteProductFromCart}>Delete</button>
                     </div>
                 </div> 
             </div>
