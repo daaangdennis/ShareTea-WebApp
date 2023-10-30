@@ -1,5 +1,8 @@
 package com.sharetea.backend.Controller;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -7,22 +10,26 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.sharetea.backend.Entities.*;
+import com.sharetea.backend.RequestBodies.CustomerBody;
+import com.sharetea.backend.RequestBodies.EmployeeBody;
 import com.sharetea.backend.Services.*;
 
 @CrossOrigin(origins = "*")
 @RestController
-public class TableController {
+public class MainController {
     @Autowired
     private Services service;
     
+
     @GetMapping("/customer/get")
     public Iterable<Customer> getCustomers() {
         return service.getAllCustomers();
     }
     @PostMapping("/customer/add")
-    public Customer addCustomer(@RequestBody Customer customer) {
+    public Customer addCustomer(@RequestBody CustomerBody customer) {
         return service.addCustomer(customer);
     }
 
@@ -32,7 +39,7 @@ public class TableController {
         return service.getAllEmployees();
     }
     @PostMapping("/employee/add")
-    public Employee addEmployee(@RequestBody Employee employee) {
+    public Employee addEmployee(@RequestBody EmployeeBody employee) {
         return service.addEmployee(employee);
     }
 
@@ -48,8 +55,17 @@ public class TableController {
 
 
     @GetMapping("/product/get")
-    public Iterable<Product> getProducts() {
+    public List<Product> getProducts() {
         return service.getAllProducts();
+        
+    }
+    @GetMapping("/product/getbycategory")
+    public List<Map<String, Object>> getProductsByCategory() {
+        return service.getProductsbyCategory();  
+    }
+    @GetMapping("/product/getbestselling")
+    public List<List<Object>> getBestSelling() {
+        return service.getBestSelling();  
     }
 
     @PostMapping("/product/update/{productID}")
@@ -57,10 +73,20 @@ public class TableController {
         return service.updateProduct(productID, productUpdate);
     }
 
+    @GetMapping("/product/getmostandleast")
+    public List<List<String>> updateProduct(@RequestParam Integer customer_id) {
+        return service.getMostandLeastOrdered(customer_id);
+    }
+
+
 
     @GetMapping("/inventory/get")
     public Iterable<Inventory> getInventory() {
         return service.getAllInventory();
+    }
+    @PostMapping("/inventory/update/{inventoryID}")
+    public Inventory updateInventory(@PathVariable Integer inventoryID, @RequestBody Inventory inventoryUpdate) {
+        return service.updateInventory(inventoryID, inventoryUpdate);
     }
 
 

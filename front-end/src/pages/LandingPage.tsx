@@ -4,6 +4,7 @@ import ProductGrid from "../components/ProductGrid";
 import { product } from "../types/types";
 import { useSetRecoilState } from "recoil";
 import { Products } from "../atoms/product";
+import LandingContent from "../components/LandingContent";
 
 function LandingPage() {
   // const products: product[] = [
@@ -56,6 +57,13 @@ function LandingPage() {
   //     price: 5.89,
   //   },
   // ];
+  var num = 0;
+
+  useEffect(() => {
+    //api
+    console.log("calling api here");
+    num = num + 1 ;
+  }, [num]);
 
   return (
     <main>
@@ -86,7 +94,7 @@ function LandingPage() {
           </div>
         </section>
       </div>
-      <ProductGrid/>
+      <LandingContent />
     </main>
   );
 }
