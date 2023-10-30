@@ -21,7 +21,9 @@ function CustomPage() {
     setcartItems(newlist);
   };
 
-  const iceLevel = ["0% Ice", "10% Ice", "30% Ice", "50% Ice", "100% Ice"];
+  const iceLevel = ["No Ice", "Light Ice", "Regular Ice", "Extra Ice", "MAKE IT HOT"];
+  const sugarLevel = ["No Sugar", "30% Sugar", "50% Sugar", "80% Sugar", "100% Sugar", "120% Sugar"];
+
   const toppings = {
     items: ["item1", "item2", "item3", "item4", "item5", "item6"],
     price: 0.75,
@@ -48,6 +50,16 @@ function CustomPage() {
             <h2>Ice Level</h2>
             <select className="form-control form-control-lg">
               {iceLevel.map((level: string) => (
+                <option>{level}</option>
+              ))}
+            </select>
+          </div>
+        )}
+        {sugarLevel && (
+          <div>
+            <h2>Sugar Level</h2>
+            <select className="form-control form-control-lg">
+              {sugarLevel.map((level: string) => (
                 <option>{level}</option>
               ))}
             </select>
