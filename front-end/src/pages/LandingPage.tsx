@@ -9,8 +9,8 @@ import "../styles/LandingPage.css";
 import LandingContent from "../components/LandingContent";
 import { getBestSelling } from "../apis/BestSelling";
 import InfoBar from "../components/InfoBar";
-import '../styles/LandingPage.css'
-import {LoginButton, LogoutButton} from "../components/Login";
+import "../styles/LandingPage.css";
+import { LoginButton, LogoutButton } from "../components/Login";
 import Profile from "../components/UserInfo";
 
 function LandingPage() {
@@ -112,11 +112,6 @@ function LandingPage() {
       <ProductGrid products={bestSelling} />
       <InfoBar />
 
-<<<<<<< HEAD
-      <InfoBar />
-      {/* <LandingContent /> */}
-=======
-
       {/* <div>
       <ImageGallery images={landingPageImages.images}/> 
         <section className="py-5 text-center container">
@@ -138,7 +133,6 @@ function LandingPage() {
         </section>
       </div> */}
       <h1></h1>
->>>>>>> edgar
     </main>
   );
 }
