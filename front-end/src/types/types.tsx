@@ -45,3 +45,7 @@ export interface CartTableProps {
   columns: string[];
   items: Cart;
 }
+
+export interface ToppingsGridProps {
+  toppings: { items: string[]; price: number };
+}
