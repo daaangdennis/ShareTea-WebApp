@@ -50,7 +50,7 @@ function CartPage() {
           </div>
         </div>
         <div className="col-md-8 mt-3 mt-md-0">
-        <CartItemsGrid/>
+        <CartItemsGrid products={[]}/>
         </div>
       </div>
     </div>
