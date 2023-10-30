@@ -17,13 +17,19 @@ export interface product {
   description?: string;
   price: number;
   category: string;
+  toppings?: {
+    items: string[];
+    price: number;
+  };
+  isIce?: boolean;
+  isSugar?: boolean;
 }
 
 export interface ProductCardProps {
   product: product;
 }
 export interface ProductGridProps {
-  // products: product[];
+  products: product[];
 }
 
 export interface Cart {

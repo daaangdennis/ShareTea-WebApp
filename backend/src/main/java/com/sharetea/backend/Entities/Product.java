@@ -1,5 +1,6 @@
 package com.sharetea.backend.Entities;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,7 +15,7 @@ public class Product {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY) 
     private Integer product_id;
 
-    @NotEmpty private String name;
+    @Column (unique = true) @NotEmpty private String name;
 
     @NotNull private Double price;
 

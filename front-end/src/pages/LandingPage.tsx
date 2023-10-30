@@ -5,7 +5,11 @@ import ImageGallery from "../components/ImageGallery";
 import { ImageGalleryProps, product } from "../types/types";
 import { useSetRecoilState } from "recoil";
 import { Products } from "../atoms/product";
+<<<<<<< HEAD
 import "../styles/LandingPage.css";
+=======
+import LandingContent from "../components/LandingContent";
+>>>>>>> abdullah
 
 function LandingPage() {
   // const products: product[] = [
@@ -120,9 +124,14 @@ function LandingPage() {
             </div>
           </div>
         </section>
+<<<<<<< HEAD
       </div> */}
       <h1></h1>
       <ProductGrid />
+=======
+      </div>
+      <LandingContent />
+>>>>>>> abdullah
     </main>
   );
 }
