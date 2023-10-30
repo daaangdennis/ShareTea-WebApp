@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState }  from "react";
 import {
   Cart,
   ProductCardProps,
@@ -7,12 +7,14 @@ import {
 } from "../types/types";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { cart } from "../atoms/cart";
+import { Link } from "react-router-dom";
 import "../styles/CartPage.css";
 var _ = require("lodash");
 
 const CartItem: React.FC<ProductCardProps> = ({ product }) => {
 
     const [cartItems, setcartItems] = useRecoilState<Cart>(cart);
+    const [data, setdata] = useState<product>(product)
 
     const addProductToCart = () => {
         const newlist: Cart = _.cloneDeep(cartItems);
@@ -74,7 +76,7 @@ const CartItem: React.FC<ProductCardProps> = ({ product }) => {
                         Topping3
                     </p>
                     <div className="drink-order-button-container flex-column flex-lg-row">
-                        <button className="order-button">Edit Drink</button>
+                        <Link to={`/custom`} state={{ data: data }}><button className="order-button">Edit Drink</button></Link>
                         <button className="order-button" onClick={addProductToCart}>Add</button>
                         <button className="order-button" onClick={deleteProductFromCart}>Delete</button>
                     </div>
