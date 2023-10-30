@@ -70,6 +70,8 @@
     border: solid white;
     border-radius: 15px;
     transition: all 0.3s ease 0s;
+    text-align: center;
+    text-decoration: none;
 }
 
 .order-button:hover {

@@ -76,7 +76,7 @@ const CartItem: React.FC<ProductCardProps> = ({ product }) => {
                         Topping3
                     </p>
                     <div className="drink-order-button-container flex-column flex-lg-row">
-                        <Link to={`/custom`} state={{ data: data }}><button className="order-button">Edit Drink</button></Link>
+                        <Link to={`/custom`} state={{ data: data }} className="order-button">Edit Drink</Link>
                         <button className="order-button" onClick={addProductToCart}>Add</button>
                         <button className="order-button" onClick={deleteProductFromCart}>Delete</button>
                     </div>
