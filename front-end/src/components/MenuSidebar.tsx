@@ -27,7 +27,7 @@ function MenuSidebar() {
     "Fruit Tea",
     "Brewed Tea",
     "Ice Blended",
-    "Tea Monjito",
+    "Tea Mojito",
     "Creama",
     "Fresh Milk",
   ];

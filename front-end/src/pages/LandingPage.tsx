@@ -5,11 +5,9 @@ import ImageGallery from "../components/ImageGallery";
 import { ImageGalleryProps, product } from "../types/types";
 import { useSetRecoilState } from "recoil";
 import { Products } from "../atoms/product";
-<<<<<<< HEAD
 import "../styles/LandingPage.css";
-=======
 import LandingContent from "../components/LandingContent";
->>>>>>> abdullah
+import { getBestSelling } from "../apis/BestSelling";
 
 function LandingPage() {
   // const products: product[] = [
@@ -78,6 +76,11 @@ function LandingPage() {
     style: customStyle,
   };
 
+  const [bestSelling, setBestSelling] = useState<product[]>([]);
+  const [filteredBestSelling, setFilteredBestSelling] = useState<product[]>(
+    []
+  ); /**These states are probably used for atoms, but I will look into getting rid of them */
+  getBestSelling(setBestSelling, setFilteredBestSelling);
   return (
     <main>
       {/* <div className="container text-center"> */}
@@ -101,37 +104,12 @@ function LandingPage() {
           Order Now
         </a>
       </div>
-      {/* </div> */}
-      {/* </div>
-</div> */}
+      <h1>Trending Products</h1>
+      {/* /product/getbestselling */}
 
-      {/* <div>
-      <ImageGallery images={landingPageImages.images}/> 
-        <section className="py-5 text-center container">
-          <div className="row py-lg-5">
-            <div className="col-lg-6 col-md-8 mx-auto">
-              <h1 className="fw-light">ShareTea</h1>
-              <p className="lead text-body-secondary position-absolute text-center">
-                Sharetea serves delicious bubble tea globally. Established in
-                1992 in Taiwan, we strive to create high quality tea drinks with
-                our fresh ingredients and bring the best to you!
-              </p>
-              <p>
-                <a href="#" className="btn btn-primary my-2">
-                  Order Now
-                </a>
-              </p>
-            </div>
-          </div>
-        </section>
-<<<<<<< HEAD
-      </div> */}
-      <h1></h1>
-      <ProductGrid />
-=======
-      </div>
-      <LandingContent />
->>>>>>> abdullah
+      <ProductGrid products={bestSelling} />
+      {/* </div> */}
+      {/* <LandingContent /> */}
     </main>
   );
 }
