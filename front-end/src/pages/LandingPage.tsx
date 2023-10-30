@@ -6,6 +6,8 @@ import { ImageGalleryProps, product } from "../types/types";
 import { useSetRecoilState } from "recoil";
 import { Products } from "../atoms/product";
 import '../styles/LandingPage.css'
+import {LoginButton, LogoutButton} from "../components/Login";
+import Profile from "../components/UserInfo";
 
 function LandingPage() {
   // const products: product[] = [
@@ -118,7 +120,6 @@ function LandingPage() {
         </section>
       </div> */}
       <h1></h1>
-      <ProductGrid/>
     </main>
   );
 }

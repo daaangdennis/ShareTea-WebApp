@@ -5,8 +5,14 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { Products, filteredProducts } from "../atoms/product";
 import { getProducts } from "../apis/Product";
 import { cart } from "../atoms/cart";
+import { LoginButton, LogoutButton } from "./Login";
+import { useAuth0 } from "@auth0/auth0-react";
+import UserInfo from "./UserInfo";
+
 
 const Navbar: React.FC<navbarProps> = ({ routes }) => {
+  const { user, isAuthenticated, isLoading } = useAuth0();
+
   const [searchTerm, setSearchTerm] = useState("");
   const SourceProducts = useRecoilValue<product[]>(Products);
   const setProducts = useSetRecoilState<product[]>(Products);
@@ -84,14 +90,19 @@ const Navbar: React.FC<navbarProps> = ({ routes }) => {
           </form>
 
           <div className="text-end">
-            <Link to={"/login"}>
-              <button type="button" className="btn btn-outline-dark me-2">
-                Login
-              </button>
-            </Link>
-            <button type="button" className="btn btn-warning">
-              Sign-up
-            </button>
+            {isAuthenticated ?(
+            <div style={{ display: "flex" }}>
+              <UserInfo />
+              <LogoutButton />
+            </div>
+            ):
+            (
+              <LoginButton></LoginButton>
+            )
+
+            }
+            
+            
           </div>
         </div>
       </div>
