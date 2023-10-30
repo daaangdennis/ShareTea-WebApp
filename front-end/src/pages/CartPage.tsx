@@ -1,23 +1,12 @@
 import { useRecoilValue, useRecoilState } from "recoil";
 import { Cart, product } from "../types/types";
 import { cart } from "../atoms/cart";
-import CartTable from "../components/CartTable";
-import CartItemsGrid from "../components/CartItems";
+import CartItemsGrid from "../components/CartItemsGrid";
 
 import "../styles/CartPage.css";
 
 function CartPage() {
-  //const cartItems = useRecoilValue<Cart>(cart);
   const [cartItems, setcartItems] = useRecoilState<Cart>(cart);
-
-  const columns: string[] = [
-    "#",
-    "product ID",
-    "Product Name",
-    "Product category",
-    "Price",
-    "Total",
-  ];
 
   const clearCart = () => {
     setcartItems({
