@@ -50,3 +50,7 @@ export interface ImageGalleryProps {
   images: string[];
   style?: React.CSSProperties;
 }
+
+export interface ToppingsGridProps {
+  toppings: { items: string[]; price: number };
+}
