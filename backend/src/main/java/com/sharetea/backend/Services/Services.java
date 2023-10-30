@@ -130,9 +130,18 @@ public class Services {
     
         return result;
     }
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public Map<String, Object> getAllProducts() {
+        List<Product> products = productRepository.findAll();
+        List<Inventory> toppings = inventoryRepository.findToppings();
+    
+        Map<String, Object> productMap = new HashMap<>();
+        productMap.put("products", products);
+        
+        productMap.put("toppings", toppings);
+    
+        return productMap;
     }
+
     public List<List<Object>> getBestSelling() {
         return orderProductRepository.findBestSelling();
     }

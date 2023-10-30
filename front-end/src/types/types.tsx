@@ -10,6 +10,8 @@ export interface navbarProps {
   routes: route[];
 }
 
+
+
 export interface product {
   product_id: number;
   name: string;

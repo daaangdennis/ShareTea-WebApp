@@ -9,6 +9,9 @@ import "../styles/LandingPage.css";
 import LandingContent from "../components/LandingContent";
 import { getBestSelling } from "../apis/BestSelling";
 import InfoBar from "../components/InfoBar";
+import '../styles/LandingPage.css'
+import {LoginButton, LogoutButton} from "../components/Login";
+import Profile from "../components/UserInfo";
 
 function LandingPage() {
   // const products: product[] = [
@@ -109,8 +112,33 @@ function LandingPage() {
       <ProductGrid products={bestSelling} />
       <InfoBar />
 
+<<<<<<< HEAD
       <InfoBar />
       {/* <LandingContent /> */}
+=======
+
+      {/* <div>
+      <ImageGallery images={landingPageImages.images}/> 
+        <section className="py-5 text-center container">
+          <div className="row py-lg-5">
+            <div className="col-lg-6 col-md-8 mx-auto">
+              <h1 className="fw-light">ShareTea</h1>
+              <p className="lead text-body-secondary position-absolute text-center">
+                Sharetea serves delicious bubble tea globally. Established in
+                1992 in Taiwan, we strive to create high quality tea drinks with
+                our fresh ingredients and bring the best to you!
+              </p>
+              <p>
+                <a href="#" className="btn btn-primary my-2">
+                  Order Now
+                </a>
+              </p>
+            </div>
+          </div>
+        </section>
+      </div> */}
+      <h1></h1>
+>>>>>>> edgar
     </main>
   );
 }

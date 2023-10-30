@@ -23,6 +23,10 @@ public class MainController {
     @Autowired
     private Services service;
     
+    @GetMapping("/")
+    public String home() {
+        return "Hello!";
+    }
 
     @GetMapping("/customer/get")
     public Iterable<Customer> getCustomers() {
@@ -55,7 +59,7 @@ public class MainController {
 
 
     @GetMapping("/product/get")
-    public List<Product> getProducts() {
+    public Map<String, Object> getProducts() {
         return service.getAllProducts();
         
     }
