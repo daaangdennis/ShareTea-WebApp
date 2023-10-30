@@ -8,6 +8,7 @@ import { Products } from "../atoms/product";
 import "../styles/LandingPage.css";
 import LandingContent from "../components/LandingContent";
 import { getBestSelling } from "../apis/BestSelling";
+import InfoBar from "../components/InfoBar";
 
 function LandingPage() {
   // const products: product[] = [
@@ -105,10 +106,10 @@ function LandingPage() {
         </a>
       </div>
       <h1>Trending Products</h1>
-      {/* /product/getbestselling */}
-
       <ProductGrid products={bestSelling} />
-      {/* </div> */}
+      <InfoBar />
+
+      <InfoBar />
       {/* <LandingContent /> */}
     </main>
   );
