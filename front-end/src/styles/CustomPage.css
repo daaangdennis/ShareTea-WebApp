@@ -19,9 +19,18 @@
 
 .custompage-customization-container {
     display: flex;
-    justify-content: center;
+    justify-content: left;
     gap: 40px;
     font-family: 'Poppins', 'sans-serif'
+}
+
+.custompage-customization-container h1{
+    color: #cf152d;
+    font-weight: 700;
+    text-decoration: underline;
+    text-decoration-color: black;
+    text-decoration-thickness: 4px;
+    text-underline-offset: 15px;
 }
 
 .custompage-customization-container h2{
@@ -50,3 +59,37 @@
     accent-color: #cf152d;
 }
 
+.custompage-textarea {
+    font-family: 'Poppins', 'sans-serif';
+    border: 2px solid black;
+}
+.custompage-textarea:focus {
+    box-shadow: 0 1px 1px rgba(229, 103, 23, 0.075) inset, 0 0 8px rgba(207, 21, 45, 1) !important;
+    border: 2px solid black;
+    outline: 0 none !important;
+}
+
+.custompage-button-container {
+    display: flex;
+    justify-content: end;
+    gap: 15px;
+    font-size: 1.2rem;
+}
+
+.custompage-button {
+    font-weight: 700;
+    color: white;
+    padding: 9px 25px;
+    background-color: #cf152d;
+    border: solid #cf152d;
+    border-radius: 10px;
+    transition: all 0.3s ease 0s;
+    text-align: center;
+    text-decoration: none;
+}
+
+.custompage-button:hover {
+    color: #cf152d;
+    background-color: white;
+    border: solid #cf152d;
+}

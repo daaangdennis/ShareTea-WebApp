@@ -34,7 +34,7 @@ function CustomPage() {
 
   return (
     <div className="container-fluid">
-      <div className="row custompage-drink-information">
+      <div className="row custompage-drink-information mb-4">
         <div className="col-md-4 text-center my-4 px-0">
             <img
             width="60%"
@@ -55,8 +55,9 @@ function CustomPage() {
           </h1>
         </div>
       </div>
-
-      <div className="row mt-4 mx-2 custompage-customization-container">
+      
+      <div className="row mx-2 mx-md-4 custompage-customization-container">
+        <h1>Customization</h1>
         <div className="col-md-4">
           {iceLevel && (
             <div>
@@ -83,7 +84,7 @@ function CustomPage() {
           )}
         </div>
 
-        <div className="col-md-4">
+        <div className="col">
           {toppings && (
             <div>
               <h2>Toppings (+${(toppings.price).toFixed(2)} each)</h2>
@@ -96,28 +97,25 @@ function CustomPage() {
             </div>
           )}
         </div>
-      </div>
 
-      {/* Parent Div here */}
-            
-      {/*Old Code*/}
-      <div
-        className="d-flex justify-content-between"
-        style={{ marginTop: 20, width: "50%", margin: "auto", gap: 30 }}
-      >
-      </div>
-      <div>
-        <label htmlFor="exampleFormControlTextarea1">Note</label>
-        <textarea
-          className="form-control"
-          id="exampleFormControlTextarea1"
-          rows={3}
-        ></textarea>
-      </div>
-      <hr />
-      <button onClick={addProductToCart} className="btn btn-dark">
-        add to cart
-      </button>
+        <div className="mt-2 custompage-notes-container">
+          <h2>Additional Notes</h2>
+          <textarea
+            className="form-control custompage-textarea"
+            id="exampleFormControlTextarea1"
+            rows={3}
+          ></textarea>
+        </div>
+
+        <div className="custompage-button-container">
+          <button className="custompage-button">
+            Save to Favorites
+          </button>
+          <button onClick={addProductToCart} className="custompage-button">
+            Add to Cart
+          </button>
+        </div>
+      </div>            
     </div>
   );
 }
