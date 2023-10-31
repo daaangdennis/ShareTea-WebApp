@@ -61,10 +61,11 @@
 
 .custompage-textarea {
     font-family: 'Poppins', 'sans-serif';
-    border: 2px solid black;
+    border: 2px solid black !important;
 }
+
 .custompage-textarea:focus {
-    box-shadow: 0 1px 1px rgba(229, 103, 23, 0.075) inset, 0 0 8px rgba(207, 21, 45, 1) !important;
+    box-shadow: 0 0 15px rgba(207, 21, 45, 0.8) !important;
     border: 2px solid black;
     outline: 0 none !important;
 }
