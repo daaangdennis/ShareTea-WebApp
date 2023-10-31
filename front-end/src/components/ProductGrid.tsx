@@ -1,23 +1,16 @@
 import React, { useState } from "react";
-import {
-  ProductCardProps,
-  ProductGridProps,
-  product,
-} from "../types/types";
+import { ProductCardProps, ProductGridProps, product } from "../types/types";
 import { Link } from "react-router-dom";
 var _ = require("lodash");
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-  const [data, setdata] = useState<product>(product)
+  const [data, setdata] = useState<product>(product);
 
   const handleCustom = () => {};
 
   return (
     <div className="col">
-      <Link
-        to={`/custom`}
-        state={{ data: data }}
-      >
+      <Link to={`/custom`} state={{ data: data }}>
         <div onClick={handleCustom}>
           <div className="card shadow-sm">
             <img
@@ -59,7 +52,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   );
 };
 
-const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
+const ProductGrid: React.FC<ProductGridProps> = ({ products = [] }) => {
   return (
     <div className="album py-5 bg-body-tertiary">
       <div className="container">

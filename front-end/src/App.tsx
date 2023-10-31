@@ -24,8 +24,8 @@ function App() {
       <BrowserRouter>
         <Navbar routes={routes} />
         <Routes>
-          {routes.map((item: route) => (
-            <Route path={item.path} element={item.element}></Route>
+          {routes.map((item: route, i: number) => (
+            <Route key={i} path={item.path} element={item.element}></Route>
           ))}
           <Route path="/login" element={<LoginPage />}></Route>
           <Route path="custom/" element={<CustomPage />}></Route>

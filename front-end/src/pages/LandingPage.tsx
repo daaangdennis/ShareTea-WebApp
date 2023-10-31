@@ -81,10 +81,11 @@ function LandingPage() {
   };
 
   const [bestSelling, setBestSelling] = useState<product[]>([]);
-  const [filteredBestSelling, setFilteredBestSelling] = useState<product[]>(
-    []
-  ); /**These states are probably used for atoms, but I will look into getting rid of them */
-  getBestSelling(setBestSelling, setFilteredBestSelling);
+  const [filteredBestSelling, setFilteredBestSelling] = useState<product[]>([]);
+  /**These states are probably used for atoms, but I will look into getting rid of them */
+  useEffect(() => {
+    getBestSelling(setBestSelling, setFilteredBestSelling);
+  }, []);
   return (
     <main>
       {/* <div className="container text-center"> */}
