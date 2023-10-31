@@ -22,8 +22,8 @@ function CustomPage() {
     setcartItems(newlist);
   };
 
-  const iceLevel = ["No Ice", "Light Ice", "Regular Ice", "Extra Ice", "MAKE IT HOT"];
-  const sugarLevel = ["No Sugar", "30% Sugar", "50% Sugar", "80% Sugar", "100% Sugar", "120% Sugar"];
+  const iceLevel = ["Select Ice Level", "No Ice", "Light Ice", "Regular Ice", "Extra Ice", "MAKE IT HOT"];
+  const sugarLevel = ["Select Sugar Level", "No Sugar", "30% Sugar", "50% Sugar", "80% Sugar", "100% Sugar", "120% Sugar"];
 
   const toppings = {
     items: ["item1", "item2", "item3", "item4", "item5", "item6"],
@@ -53,43 +53,56 @@ function CustomPage() {
           </h1>
         </div>
       </div>
-    
+
+      <div className="row mt-4 mx-2 custompage-customization-container">
+        <div className="col-md-4">
+          {iceLevel && (
+            <div>
+              <h2>Ice Level</h2>
+              <select className="form-control-lg custompage-dropdown">
+                {iceLevel.map((level: string) => (
+                  <option>{level}</option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          <br></br>
+          
+          {sugarLevel && (
+            <div>
+              <h2>Sugar Level</h2>
+              <select className="form-control-lg custompage-dropdown">
+                {sugarLevel.map((level: string) => (
+                  <option>{level}</option>
+                ))}
+              </select>
+            </div>
+          )}
+        </div>
+        
+        <div className="col-md-4">
+          {toppings && (
+            <div>
+              <h2>Toppings (+${(toppings.price).toFixed(2)} each)</h2>
+              {/* <select className="form-control form-control-lg">
+                {toppings.items.map((topping: string) => (
+                  <option>{topping}</option>
+                ))}
+              </select> */}
+              <ToppingsGrid toppings={toppings} />
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Parent Div here */}
+            
       {/*Old Code*/}
       <div
         className="d-flex justify-content-between"
         style={{ marginTop: 20, width: "50%", margin: "auto", gap: 30 }}
       >
-        {iceLevel && (
-          <div>
-            <h2>Ice Level</h2>
-            <select className="form-control form-control-lg">
-              {iceLevel.map((level: string) => (
-                <option>{level}</option>
-              ))}
-            </select>
-          </div>
-        )}
-        {sugarLevel && (
-          <div>
-            <h2>Sugar Level</h2>
-            <select className="form-control form-control-lg">
-              {sugarLevel.map((level: string) => (
-                <option>{level}</option>
-              ))}
-            </select>
-          </div>
-        )}
-        {toppings && (
-          <div>
-            <h2>Toppings {toppings.price} $</h2>
-            {/* <select className="form-control form-control-lg">
-              {toppings.items.map((topping: string) => (
-                <option>{topping}</option>
-              ))}
-            </select> */}
-            <ToppingsGrid toppings={toppings} />
-          </div>
-        )}
       </div>
       <div>
         <label htmlFor="exampleFormControlTextarea1">Note</label>

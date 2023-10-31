@@ -16,3 +16,24 @@
 .custompage-drink-information-text h1 {
     font-weight: 700;
 }
+
+.custompage-customization-container {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    font-family: 'Poppins', 'sans-serif'
+}
+
+.custompage-customization-container h2{
+    color: #cf152d;
+    font-weight: 700;
+}
+
+.custompage-dropdown {
+    border: 2px solid black;
+    width: 100%;
+}
+
+.custompage-dropdown:focus {
+    outline: none;
+}
