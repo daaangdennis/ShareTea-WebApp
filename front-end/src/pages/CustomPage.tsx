@@ -107,7 +107,7 @@ function CustomPage() {
           ></textarea>
         </div>
 
-        <div className="custompage-button-container">
+        <div className="custompage-button-container flex-column flex-sm-row">
           <button className="custompage-button">
             Save to Favorites
           </button>
