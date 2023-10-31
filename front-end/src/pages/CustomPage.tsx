@@ -2,6 +2,7 @@ import { useLocation } from "react-router-dom";
 import { Cart, ToppingsGridProps, product } from "../types/types";
 import { useRecoilState } from "recoil";
 import { cart } from "../atoms/cart";
+import "../styles/CustomPage.css"
 var _ = require("lodash");
 
 function CustomPage() {
@@ -30,17 +31,30 @@ function CustomPage() {
   };
 
   return (
-    <>
-      <div
-        className="d-flex album py-5 bg-body-tertiary"
-        style={{ gap: 20, margin: 20 }}
-      >
-        <img src={product.url} />
-        <div>
-          <h1>{product.name}</h1>
-          <h3>{product.price} $</h3>
+    <div className="container-fluid">
+      <div className="row custompage-drink-information">
+        <div className="col-md-4 text-center my-4 px-0">
+            <img
+            width="60%"
+            style={{
+                objectFit: "contain",
+                border: "2px solid white",
+                borderRadius: "15px",
+            }}
+            src={product.url}
+            alt={product.name}
+            />
+        </div>
+        <div className="col-md-8 px-0 my-4 text-center text-md-start custompage-drink-information-text">
+          <h1>
+            {product.name}
+            <br></br>
+            ${(product.price).toFixed(2)}
+          </h1>
         </div>
       </div>
+    
+      {/*Old Code*/}
       <div
         className="d-flex justify-content-between"
         style={{ marginTop: 20, width: "50%", margin: "auto", gap: 30 }}
@@ -89,7 +103,7 @@ function CustomPage() {
       <button onClick={addProductToCart} className="btn btn-dark">
         add to cart
       </button>
-    </>
+    </div>
   );
 }
 const ToppingsGrid: React.FC<ToppingsGridProps> = ({ toppings }) => {

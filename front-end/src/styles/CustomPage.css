@@ -1,0 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+.custompage-drink-information {
+    display: flex;
+    background-color: #cf152d;
+}
+
+.custompage-drink-information-text {
+    display: flex;
+    flex-direction: column;
+    color: white;
+    justify-content: center;
+    font-family: 'Poppins', 'sans-serif';
+}
+
+.custompage-drink-information-text h1 {
+    font-weight: 700;
+}
