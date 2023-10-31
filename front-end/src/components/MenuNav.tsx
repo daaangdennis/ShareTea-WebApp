@@ -10,7 +10,7 @@ function MenuNav() {
   return (
     <Nav justify variant="tabs" defaultActiveKey="/">
       {navItems.map((item: { path: string; name: string }, i: number) => (
-        <Nav.Item>
+        <Nav.Item key={i}>
           <Nav.Link eventKey={`link-${i}`} href={item.path}>
             {item.name}
           </Nav.Link>
