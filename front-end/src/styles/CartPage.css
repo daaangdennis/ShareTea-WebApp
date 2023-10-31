@@ -1,0 +1,106 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+.summary-column {
+    background-color: #cf152d;
+}
+
+.summary-item-container {
+    display: flex;
+    height: 100%;
+    color: white;
+    font-family: 'Poppins', 'sans-serif';
+    font-size: 18px;
+    font-weight: 700;
+    flex-direction: column;    
+}
+
+.review-order-header {
+    width: 100%;
+    padding-bottom: 10px;
+    border-bottom: 2px solid white;
+}
+
+
+.subtotal-information {
+    margin-top: 40px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.subtotal-information .col-md-6 {
+    flex: 1;
+    padding: 10px;
+    padding-left: 0px;
+}
+
+.subtotal-information .col-md-6:last-child {
+    text-align: right;
+}
+
+.total-information {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    border-top: 2px solid white;
+}
+  
+.total-information .col-md-6 {
+    flex: 1;
+    padding: 10px;
+    padding-left: 0px;
+}
+
+.total-information .col-md-6:last-child {
+    text-align: right;
+}
+
+.button-container {
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.order-button {
+    font-weight: 700;
+    color: white;
+    padding: 9px 25px;
+    background-color: #cf152d;
+    border: solid white;
+    border-radius: 15px;
+    transition: all 0.3s ease 0s;
+}
+
+.order-button:hover {
+    color: #cf152d;
+    background-color: white;
+    border: solid white;
+}
+
+.drink-order-container {
+    padding: 20px;
+    font-family: 'Poppins', 'sans-serif';
+    margin: 0 20px;
+    color: white;
+    background-color: #cf152d;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.7);
+}
+
+.drink-order-text-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.drink-order-container h2{
+    font-weight: 700;
+}
+
+.drink-order-button-container {
+    display: flex;
+    justify-content: end;
+    gap: 10px;
+    margin-top: auto;
+}
