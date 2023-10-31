@@ -1,0 +1,29 @@
+.image-gallery-container {
+  position: relative;
+  width: 100%;
+  height: auto;
+}
+
+.ImageGallery {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.gallery-button-container {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  height: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 10px;
+  z-index: 2;
+}
+
+.btn-custom {
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+}

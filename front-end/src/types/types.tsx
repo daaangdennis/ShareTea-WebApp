@@ -17,13 +17,32 @@ export interface product {
   description?: string;
   price: number;
   category: string;
+  toppings?: topping[];
+  has_ice: boolean;
+  has_toppings: boolean;
+  has_sugar: boolean;
+}
+
+export interface topping {
+  inventory_id: number;
+  name: string;
+  details: string;
+  quantity: number;
+  last_updated: string;
+  is_topping: boolean;
+}
+
+export interface listProductToppings {
+  toppings: topping[];
+  products: product[];
+  price?: number;
 }
 
 export interface ProductCardProps {
   product: product;
 }
 export interface ProductGridProps {
-  // products: product[];
+  products: product[];
 }
 
 export interface Cart {
@@ -38,4 +57,13 @@ export interface Cart {
 export interface CartTableProps {
   columns: string[];
   items: Cart;
+}
+
+export interface ImageGalleryProps {
+  images: string[];
+  style?: React.CSSProperties;
+}
+
+export interface ToppingsGridProps {
+  toppings: { items: string[]; price: number };
 }
