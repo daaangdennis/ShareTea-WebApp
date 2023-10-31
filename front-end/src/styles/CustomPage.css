@@ -37,3 +37,16 @@
 .custompage-dropdown:focus {
     outline: none;
 }
+
+.custompage-topping{
+    display: flex;
+    align-items: center;
+    font-size: 1.2rem;
+}
+
+.custompage-checkbox {
+    width: 26px;
+    height: 26px;
+    accent-color: #cf152d;
+}
+

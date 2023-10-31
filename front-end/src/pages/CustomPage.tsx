@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import { useLocation } from "react-router-dom";
 import { Cart, ToppingsGridProps, product } from "../types/types";
 import { useRecoilState } from "recoil";
@@ -24,6 +25,7 @@ function CustomPage() {
 
   const iceLevel = ["Select Ice Level", "No Ice", "Light Ice", "Regular Ice", "Extra Ice", "MAKE IT HOT"];
   const sugarLevel = ["Select Sugar Level", "No Sugar", "30% Sugar", "50% Sugar", "80% Sugar", "100% Sugar", "120% Sugar"];
+
 
   const toppings = {
     items: ["item1", "item2", "item3", "item4", "item5", "item6"],
@@ -80,12 +82,12 @@ function CustomPage() {
             </div>
           )}
         </div>
-        
+
         <div className="col-md-4">
           {toppings && (
             <div>
               <h2>Toppings (+${(toppings.price).toFixed(2)} each)</h2>
-              {/* <select className="form-control form-control-lg">
+              {/* <select className="form-control-lg">
                 {toppings.items.map((topping: string) => (
                   <option>{topping}</option>
                 ))}
@@ -121,18 +123,18 @@ function CustomPage() {
 }
 const ToppingsGrid: React.FC<ToppingsGridProps> = ({ toppings }) => {
   return (
-    <div className="form-check py-5 bg-body-tertiary">
+    <div className="py-4">
       <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
         {toppings.items.map((item: string, i: number) => (
-          <div className="col">
+          <div className="col custompage-topping">
             <input
-              className="form-check-input"
+              className="custompage-checkbox"
               type="checkbox"
               id="blankCheckbox"
-              value="option1"
+              value="{item}"
               aria-label="..."
             />
-            <>{item}</>
+            <label className="ms-3">{item}</label>
           </div>
         ))}
       </div>
