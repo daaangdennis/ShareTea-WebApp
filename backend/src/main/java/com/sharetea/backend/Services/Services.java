@@ -37,8 +37,6 @@ public class Services {
     @Autowired
     private UsersRepository usersRepository;
 
-
-
     public Iterable<Customer> getAllCustomers() {
         return customerRepository.findAll();
     }
@@ -57,10 +55,10 @@ public class Services {
         return customer;
     }
 
-    public List<List<String>> getMostandLeastOrdered(Integer customer_id){
+    public List<List<String>> getMostandLeastOrdered(Integer customer_id) {
         List<List<String>> mostAndLeastAll = productRepository.getMostandLeastOrdered(customer_id);
         List<List<String>> mostAndLeast = new ArrayList<>();
-       
+
         mostAndLeast.add(mostAndLeastAll.get(0));
         mostAndLeast.add(mostAndLeastAll.get(1));
         mostAndLeast.add(mostAndLeastAll.get(2));
@@ -71,12 +69,6 @@ public class Services {
 
         return mostAndLeast;
     }
-
-  
-
-
-
-
 
     public List<Employee> getAllEmployees() {
         return employeeRepository.findAll();
@@ -97,65 +89,60 @@ public class Services {
         return employee;
     }
 
-
-
-
-
-
     public List<Orders> getAllOrders() {
         return ordersRepository.findAll();
     }
-    public Orders addOrder(Orders order){
+
+    public Orders addOrder(Orders order) {
         return ordersRepository.save(order);
     }
 
-
-
-
-
-    
     public List<Map<String, Object>> getProductsbyCategory() {
         List<String> categories = productRepository.findCategories();
         List<Map<String, Object>> result = new ArrayList<>();
-    
+
         for (String category : categories) {
             List<Product> products = productRepository.findAllByCategory(category);
-            
+
             Map<String, Object> categoryMap = new HashMap<>();
             categoryMap.put("name", category);
-    
+
             categoryMap.put("products", products);
             result.add(categoryMap);
         }
-    
+
         return result;
     }
+
     public Map<String, Object> getAllProducts() {
         List<Product> products = productRepository.findAll();
         List<Inventory> toppings = inventoryRepository.findToppings();
-    
+
         Map<String, Object> productMap = new HashMap<>();
         productMap.put("products", products);
-        
+
         productMap.put("toppings", toppings);
-    
+
         return productMap;
     }
 
     public List<List<Object>> getBestSelling() {
         return orderProductRepository.findBestSelling();
     }
-    public Product addProduct(Product product){
+
+    public Product addProduct(Product product) {
         return productRepository.save(product);
     }
-    public Product updateProduct(Integer productID, Product productUpdate){
+
+    public Product updateProduct(Integer productID, Product productUpdate) {
         Optional<Product> productOptional = productRepository.findById(productID);
 
-        if(productOptional.isPresent()){
+        if (productOptional.isPresent()) {
             Product product = productOptional.get();
 
             if (productUpdate.getName() != null) {
-                product.setName(productUpdate.getName());;
+                product.setName(productUpdate.getName());
+                ;
             }
             if (productUpdate.getPrice() != null) {
                 product.setPrice(productUpdate.getPrice());
@@ -168,24 +155,19 @@ public class Services {
             }
 
             return productRepository.save(product);
-        }
-        else{
-            return null; 
+        } else {
+            return null;
         }
     }
-
-
-
-
-
 
     public List<Inventory> getAllInventory() {
         return inventoryRepository.findAll();
     }
-    public Inventory updateInventory(Integer inventoryID, Inventory inventoryUpdate){
+
+    public Inventory updateInventory(Integer inventoryID, Inventory inventoryUpdate) {
         Optional<Inventory> inventoryOptional = inventoryRepository.findById(inventoryID);
 
-        if(inventoryOptional.isPresent()){
+        if (inventoryOptional.isPresent()) {
             Inventory inventory = inventoryOptional.get();
 
             if (inventoryUpdate.getName() != null) {
@@ -200,9 +182,8 @@ public class Services {
             inventory.setLast_updated(new Date());
 
             return inventoryRepository.save(inventory);
-        }
-        else{
-            return null; 
+        } else {
+            return null;
         }
     }
 
