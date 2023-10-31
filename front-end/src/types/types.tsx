@@ -10,8 +10,6 @@ export interface navbarProps {
   routes: route[];
 }
 
-
-
 export interface product {
   product_id: number;
   name: string;
@@ -19,12 +17,25 @@ export interface product {
   description?: string;
   price: number;
   category: string;
-  toppings?: {
-    items: string[];
-    price: number;
-  };
-  isIce?: boolean;
-  isSugar?: boolean;
+  toppings?: topping[];
+  has_ice: boolean;
+  has_toppings: boolean;
+  has_sugar: boolean;
+}
+
+export interface topping {
+  inventory_id: number;
+  name: string;
+  details: string;
+  quantity: number;
+  last_updated: string;
+  is_topping: boolean;
+}
+
+export interface listProductToppings {
+  toppings: topping[];
+  products: product[];
+  price?: number;
 }
 
 export interface ProductCardProps {

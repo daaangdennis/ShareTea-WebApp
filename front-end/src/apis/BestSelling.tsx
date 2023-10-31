@@ -17,6 +17,9 @@ export function getBestSelling(
           product_id: innerList[2] as number,
           price: innerList[3] as number,
           category: innerList[4] as string,
+          has_ice: false,
+          has_sugar: false,
+          has_toppings: false,
         };
       });
 

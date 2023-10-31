@@ -1,5 +1,11 @@
 import { Link } from "react-router-dom";
-import { Cart, navbarProps, product, route } from "../types/types";
+import {
+  Cart,
+  listProductToppings,
+  navbarProps,
+  product,
+  route,
+} from "../types/types";
 import { useEffect, useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { Products, filteredProducts } from "../atoms/product";
@@ -10,14 +16,14 @@ import { LoginButton, LogoutButton } from "./Login";
 import { useAuth0 } from "@auth0/auth0-react";
 import UserInfo from "./UserInfo";
 
-
 const Navbar: React.FC<navbarProps> = ({ routes }) => {
   const { user, isAuthenticated, isLoading } = useAuth0();
 
   const [searchTerm, setSearchTerm] = useState("");
-  const SourceProducts = useRecoilValue<product[]>(Products);
-  const setProducts = useSetRecoilState<product[]>(Products);
-  const setFilteredProducts = useSetRecoilState<product[]>(filteredProducts);
+  const SourceProducts = useRecoilValue<listProductToppings>(Products);
+  const setProducts = useSetRecoilState<listProductToppings>(Products);
+  const setFilteredProducts =
+    useSetRecoilState<listProductToppings>(filteredProducts);
   const cartItems = useRecoilValue<Cart>(cart);
 
   const [menu, setMenu] = useState("home");
@@ -30,9 +36,12 @@ const Navbar: React.FC<navbarProps> = ({ routes }) => {
     if (searchTerm.trim() === "") {
       setFilteredProducts(SourceProducts);
     } else {
-      const filtered = SourceProducts.filter((product) =>
-        product.name.toLowerCase().includes(searchTerm.toLowerCase())
-      );
+      const filtered: listProductToppings = {
+        products: SourceProducts.products.filter((product) =>
+          product.name.toLowerCase().includes(searchTerm.toLowerCase())
+        ),
+        toppings: SourceProducts.toppings,
+      };
       setFilteredProducts(filtered);
     }
   }, [searchTerm]);
@@ -57,9 +66,15 @@ const Navbar: React.FC<navbarProps> = ({ routes }) => {
             {routes.map((item: route) =>
               item.name == "Cart" ? (
                 <li>
-                  <Link className="nav-link px-2 text-dark nav-font" style={{ textDecoration: "none", fontSize: "16px" }} to={item.path}>
+                  <Link
+                    className="nav-link px-2 text-dark nav-font"
+                    style={{ textDecoration: "none", fontSize: "16px" }}
+                    to={item.path}
+                  >
                     {item.name}
-                  <div className="nav-cart-count">{cartItems.items.length}</div>
+                    <div className="nav-cart-count">
+                      {cartItems.items.length}
+                    </div>
                   </Link>
                 </li>
               ) : (
@@ -73,19 +88,14 @@ const Navbar: React.FC<navbarProps> = ({ routes }) => {
           </ul>
 
           <div className="text-end">
-            {isAuthenticated ?(
-            <div style={{ display: "flex" }}>
-              <UserInfo />
-              <LogoutButton />
-            </div>
-            ):
-            (
+            {isAuthenticated ? (
+              <div style={{ display: "flex" }}>
+                <UserInfo />
+                <LogoutButton />
+              </div>
+            ) : (
               <LoginButton></LoginButton>
-            )
-
-            }
-            
-            
+            )}
           </div>
         </div>
       </div>

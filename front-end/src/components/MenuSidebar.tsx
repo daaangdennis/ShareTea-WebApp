@@ -1,21 +1,25 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { product } from "../types/types";
+import { listProductToppings, product } from "../types/types";
 import { Products, filteredProducts } from "../atoms/product";
 import { getProducts } from "../apis/Product";
 
 const useCategoryFilter = (searchTerm: string) => {
-  const SourceProducts = useRecoilValue<product[]>(Products);
-  const setFilteredProducts = useSetRecoilState<product[]>(filteredProducts);
+  const SourceProducts = useRecoilValue<listProductToppings>(Products);
+  const setFilteredProducts =
+    useSetRecoilState<listProductToppings>(filteredProducts);
 
   useEffect(() => {
     if (searchTerm.trim() === "") {
       setFilteredProducts(SourceProducts);
     } else {
-      const filtered = SourceProducts.filter((product) =>
-        product.category.toLowerCase().includes(searchTerm.toLowerCase())
-      );
+      const filtered: listProductToppings = {
+        products: SourceProducts.products.filter((product) =>
+          product.category.toLowerCase().includes(searchTerm.toLowerCase())
+        ),
+        toppings: SourceProducts.toppings,
+      };
       setFilteredProducts(filtered);
     }
   }, [searchTerm, SourceProducts, setFilteredProducts]);

@@ -1,12 +1,12 @@
 import { useRecoilValue } from "recoil";
-import { product } from "../types/types";
+import { listProductToppings, product } from "../types/types";
 import { filteredProducts } from "../atoms/product";
 import ProductGrid from "./ProductGrid";
 
 function MenuContent() {
-  const products = useRecoilValue<product[]>(filteredProducts);
+  const products = useRecoilValue<listProductToppings>(filteredProducts);
 
-  return <ProductGrid products={products} />;
+  return <ProductGrid products={products.products} />;
 }
 
 export default MenuContent;
