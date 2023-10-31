@@ -5,7 +5,7 @@ export function getBestSelling(
   setBestSelling: React.Dispatch<React.SetStateAction<product[]>>,
   setFiliterdBestSelling: React.Dispatch<React.SetStateAction<product[]>>
 ) {
-  Axios.get("http://localhost:8080/product/getbestselling")
+  Axios.get(process.env.REACT_APP_BACKEND_URL + "/product/getbestselling")
     .then((response) => {
       const data: any[][] = response.data;
       console.log(response.data);
