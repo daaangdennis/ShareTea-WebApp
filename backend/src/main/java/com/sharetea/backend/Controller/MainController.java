@@ -22,50 +22,56 @@ import com.sharetea.backend.Services.*;
 public class MainController {
     @Autowired
     private Services service;
-    
+
+    @GetMapping("/")
+    public String home() {
+        return "Hello!";
+    }
 
     @GetMapping("/customer/get")
     public Iterable<Customer> getCustomers() {
         return service.getAllCustomers();
     }
+
     @PostMapping("/customer/add")
     public Customer addCustomer(@RequestBody CustomerBody customer) {
         return service.addCustomer(customer);
     }
 
-
     @GetMapping("/employee/get")
     public Iterable<Employee> getEmployees() {
         return service.getAllEmployees();
     }
+
     @PostMapping("/employee/add")
     public Employee addEmployee(@RequestBody EmployeeBody employee) {
         return service.addEmployee(employee);
     }
 
-
     @GetMapping("/orders/get")
     public Iterable<Orders> getOrders() {
         return service.getAllOrders();
     }
+
     @PostMapping("/orders/add")
     public Orders addOrder(@RequestBody Orders order) {
         return service.addOrder(order);
     }
 
-
     @GetMapping("/product/get")
-    public List<Product> getProducts() {
+    public Map<String, Object> getProducts() {
         return service.getAllProducts();
-        
+
     }
+
     @GetMapping("/product/getbycategory")
     public List<Map<String, Object>> getProductsByCategory() {
-        return service.getProductsbyCategory();  
+        return service.getProductsbyCategory();
     }
+
     @GetMapping("/product/getbestselling")
     public List<List<Object>> getBestSelling() {
-        return service.getBestSelling();  
+        return service.getBestSelling();
     }
 
     @PostMapping("/product/update/{productID}")
@@ -78,16 +84,14 @@ public class MainController {
         return service.getMostandLeastOrdered(customer_id);
     }
 
-
-
     @GetMapping("/inventory/get")
     public Iterable<Inventory> getInventory() {
         return service.getAllInventory();
     }
+
     @PostMapping("/inventory/update/{inventoryID}")
     public Inventory updateInventory(@PathVariable Integer inventoryID, @RequestBody Inventory inventoryUpdate) {
         return service.updateInventory(inventoryID, inventoryUpdate);
     }
-
 
 }
