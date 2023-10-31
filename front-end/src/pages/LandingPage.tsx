@@ -111,6 +111,7 @@ function LandingPage() {
       <h1 className="text-center">Trending Products</h1>
       <ProductGrid products={bestSelling} />
       <InfoBar />
+      <InfoBar />
 
       {/* <div>
       <ImageGallery images={landingPageImages.images}/> 
