@@ -56,6 +56,7 @@ function CustomPage() {
               objectFit: "contain",
               border: "2px solid white",
               borderRadius: "15px",
+              backgroundColor: "white",
             }}
             src={product.url}
             alt={product.name}
