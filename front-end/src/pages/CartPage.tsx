@@ -15,6 +15,8 @@ function CartPage() {
     });
   };
 
+  console.log(cartItems);
+
   return (
     <div className="container-fluid">
       <div className="row">
@@ -30,27 +32,30 @@ function CartPage() {
                 Tax:
               </div>
               <div className="col-md-6">
-                ${(cartItems.total).toFixed(2)}
-                <br></br>
-                ${(cartItems.total *0.0625).toFixed(2)} 
+                ${cartItems.total.toFixed(2)}
+                <br></br>${(cartItems.total * 0.0625).toFixed(2)}
               </div>
             </div>
             <div className="total-information">
+              <div className="col-md-6">Total:</div>
               <div className="col-md-6">
-                Total:
-              </div>
-              <div className="col-md-6">
-              ${(parseFloat((cartItems.total *0.0625).toFixed(2)) + parseFloat((cartItems.total).toFixed(2))).toFixed(2)} 
+                $
+                {(
+                  parseFloat((cartItems.total * 0.0625).toFixed(2)) +
+                  parseFloat(cartItems.total.toFixed(2))
+                ).toFixed(2)}
               </div>
             </div>
             <div className="button-container">
               <button className="order-button">Place Order</button>
-              <button className="order-button" onClick={clearCart}>Cancel Order</button>
+              <button className="order-button" onClick={clearCart}>
+                Cancel Order
+              </button>
             </div>
           </div>
         </div>
         <div className="col-md-8 mt-3 mt-md-0">
-        <CartItemsGrid products={[]}/>
+          <CartItemsGrid products={[]} />
         </div>
       </div>
     </div>
