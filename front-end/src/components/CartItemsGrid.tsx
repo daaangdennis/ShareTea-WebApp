@@ -1,8 +1,8 @@
 import React, { useState }  from "react";
 import {
   Cart,
-  ProductCardProps,
-  ProductGridProps,
+  CartCardProps,
+  CartGridProps,
   product,
 } from "../types/types";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 import "../styles/CartPage.css";
 var _ = require("lodash");
 
-const CartItem: React.FC<ProductCardProps> = ({ product }) => {
+const CartItem: React.FC<CartCardProps> = ({ product }) => {
 
     const [cartItems, setcartItems] = useRecoilState<Cart>(cart);
     const [data, setdata] = useState<product>(product)
@@ -86,7 +86,7 @@ const CartItem: React.FC<ProductCardProps> = ({ product }) => {
     );
 };
 
-const CartItemsGrid: React.FC<ProductGridProps> = () => {
+const CartItemsGrid: React.FC<CartGridProps> = () => {
   const cartItems = useRecoilValue<Cart>(cart);
 
   return (
