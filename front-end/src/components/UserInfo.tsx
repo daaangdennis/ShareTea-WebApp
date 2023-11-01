@@ -27,7 +27,7 @@ const Profile = () => {
     maxHeight: "100px", 
     maxWidth: "100px"
   };
-
+  
   
 
   return (

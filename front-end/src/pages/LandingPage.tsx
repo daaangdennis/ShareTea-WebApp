@@ -8,6 +8,7 @@ import { Products } from "../atoms/product";
 import '../styles/LandingPage.css'
 import {LoginButton, LogoutButton} from "../components/Login";
 import Profile from "../components/UserInfo";
+import { useAuth0 } from "@auth0/auth0-react";
 
 function LandingPage() {
   // const products: product[] = [
@@ -72,6 +73,7 @@ function LandingPage() {
     "https://images.squarespace-cdn.com/content/v1/61e8bb2a2cf8670534839093/1697512684209-7BC17NZXSD4B5QMZHIPO/230811_EarlGreyTeaSeries_web.jpg?format=2500w"],
     style: customStyle,
   };
+
 
   return (
     <main>
