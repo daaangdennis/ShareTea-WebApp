@@ -67,3 +67,11 @@ export interface ImageGalleryProps {
 export interface ToppingsGridProps {
   toppings: { items: string[]; price: number };
 }
+
+export interface CartCardProps {
+  product: product;
+}
+
+export interface CartGridProps {
+  products: product[];
+}
