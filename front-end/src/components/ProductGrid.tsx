@@ -58,7 +58,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products = [] }) => {
       <div className="container">
         <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
           {products.map((product: product, i: number) => (
-            <ProductCard key={i} product={product} />
+            <ProductCard key={product.name + i} product={product} />
           ))}
         </div>
       </div>
