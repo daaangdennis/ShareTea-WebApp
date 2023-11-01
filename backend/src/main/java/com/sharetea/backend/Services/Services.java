@@ -10,6 +10,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sharetea.backend.Entities.*;
 import com.sharetea.backend.Repositories.*;
 import com.sharetea.backend.RequestBodies.*;
@@ -97,23 +98,11 @@ public class Services {
         return ordersRepository.save(order);
     }
 
-    public List<Map<String, Object>> getProductsbyCategory() {
-        List<String> categories = productRepository.findCategories();
-        List<Map<String, Object>> result = new ArrayList<>();
 
-        for (String category : categories) {
-            List<Product> products = productRepository.findAllByCategory(category);
 
-            Map<String, Object> categoryMap = new HashMap<>();
-            categoryMap.put("name", category);
 
-            categoryMap.put("products", products);
-            result.add(categoryMap);
-        }
 
-        return result;
-    }
-
+    
     public Map<String, Object> getAllProducts() {
         List<Product> products = productRepository.findAll();
         List<Inventory> toppings = inventoryRepository.findToppings();
@@ -126,11 +115,26 @@ public class Services {
         return productMap;
     }
 
-    public List<List<Object>> getBestSelling() {
-        return orderProductRepository.findBestSelling();
+    public List<Map<String, Object>> getBestSelling() {
+        List<List<Object>> bestSellingList = orderProductRepository.findBestSelling();
+        
+        List<Map<String, Object>> products = new ArrayList<>();
+        for (List<Object> item : bestSellingList) {
+            Map<String, Object> productMap = new HashMap<>();
+            productMap.put("product_id", item.get(0));
+            productMap.put("name", item.get(1));
+            productMap.put("url", item.get(2));
+            productMap.put("price", item.get(3));
+            productMap.put("category", item.get(4));
+
+            products.add(productMap);
+        }
+        return products;
     }
 
-    public Product addProduct(Product product) {
+
+
+    public Product addProduct(Product product){
         return productRepository.save(product);
     }
 
