@@ -1,12 +1,11 @@
 import Axios from "axios";
-import { product } from "../types/types";
+import { listProductToppings, product } from "../types/types";
 import { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 
-
 export function getProducts(
-  setProducts: React.Dispatch<React.SetStateAction<product[]>>,
-  setFiliterdProducts: React.Dispatch<React.SetStateAction<product[]>>,
+  setProducts: React.Dispatch<React.SetStateAction<listProductToppings>>,
+  setFiliterdProducts: React.Dispatch<React.SetStateAction<listProductToppings>>,
   getAccessTokenSilently: () => Promise<string>
 ) {
   getAccessTokenSilently()
@@ -17,14 +16,13 @@ export function getProducts(
         },
       })
         .then((response) => {
-          const data: product[] = response.data;
+          const data: listProductToppings = response.data;
           console.log(data);
           setProducts(data);
           setFiliterdProducts(data);
         })
         .catch((error) => {
           console.error("There was an error fetching data:", error);
-          setProducts([]);
         });
     })
     .catch((error) => {

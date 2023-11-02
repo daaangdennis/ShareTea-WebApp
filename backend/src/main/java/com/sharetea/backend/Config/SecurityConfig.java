@@ -9,9 +9,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
-/**
- * Configures our application with Spring Security to restrict access to our API endpoints.
- */
+
 @Configuration
 public class SecurityConfig {
 

@@ -10,8 +10,6 @@ export interface navbarProps {
   routes: route[];
 }
 
-
-
 export interface product {
   product_id: number;
   name: string;
@@ -19,19 +17,40 @@ export interface product {
   description?: string;
   price: number;
   category: string;
+  toppings?: topping[];
+  has_ice: boolean;
+  has_toppings: boolean;
+  has_sugar: boolean;
+}
+
+export interface topping {
+  inventory_id: number;
+  name: string;
+  details: string;
+  quantity: number;
+  last_updated: string;
+  is_topping: boolean;
+}
+
+export interface listProductToppings {
+  toppings: topping[];
+  products: product[];
+  price?: number;
 }
 
 export interface ProductCardProps {
   product: product;
 }
 export interface ProductGridProps {
-  // products: product[];
+  products: product[];
 }
 
 export interface Cart {
   items: {
     product: product;
-    toppings?: any;
+    toppings?: any | topping[];
+    ice_level?: any;
+    sugar_level?: any;
     notes?: string;
   }[];
   total: number;
@@ -45,4 +64,10 @@ export interface CartTableProps {
 export interface ImageGalleryProps {
   images: string[];
   style?: React.CSSProperties;
+}
+
+export interface ToppingsGridProps {
+  toppings: topping[];
+  setToppings: React.Dispatch<React.SetStateAction<topping[]>>;
+  sourceToppings: topping[];
 }
