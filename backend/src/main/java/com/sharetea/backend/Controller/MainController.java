@@ -34,29 +34,6 @@ import jakarta.servlet.http.HttpServletRequest;
 public class MainController {
     @Autowired
     private Services service;
-    
-
-    public String findUserByAccessToken(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException{
-        String auth = request.getHeader("Authorization");
-        String url = "https://dev-1jps85kh7htbmqki.us.auth0.com/userinfo";
-        
-        HttpRequest get = HttpRequest.newBuilder()
-        .uri(new URI(url))
-        .header("Authorization", auth)
-        .GET()
-        .build();
-
-        HttpClient httpClient = HttpClient.newHttpClient();
-        HttpResponse<String> response = httpClient.send(get, HttpResponse.BodyHandlers.ofString());
-        
-        Integer code = response.statusCode();
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode responseBody = objectMapper.readTree(response.body());
-        String email = responseBody.get("email").asText();
-
-        return email;
-    }
-
 
 
     @GetMapping("/")
@@ -90,8 +67,8 @@ public class MainController {
     }
 
     @PostMapping("/orders/add")
-    public Orders addOrder(@RequestBody Map<String, Object> orderData) {
-        return service.addOrder(orderData);
+    public Orders addOrder(HttpServletRequest request, @RequestBody Map<String, Object> orderData) throws URISyntaxException, IOException, InterruptedException {
+        return service.addOrder(request, orderData);
     }
 
 

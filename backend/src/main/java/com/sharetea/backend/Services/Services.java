@@ -1,5 +1,11 @@
 package com.sharetea.backend.Services;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -10,11 +16,13 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sharetea.backend.Entities.*;
 import com.sharetea.backend.Repositories.*;
 import com.sharetea.backend.RequestBodies.*;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 public class Services {
@@ -42,6 +50,37 @@ public class Services {
     @Autowired
     private ItemToppingsRepository itemToppingsRepository;
 
+
+
+    public Map<String, String> findUserByAccessToken(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException{
+        String auth = request.getHeader("Authorization");
+        String url = "https://dev-1jps85kh7htbmqki.us.auth0.com/userinfo";
+        
+        HttpRequest get = HttpRequest.newBuilder()
+        .uri(new URI(url))
+        .header("Authorization", auth)
+        .GET()
+        .build();
+
+        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpResponse<String> response = httpClient.send(get, HttpResponse.BodyHandlers.ofString());
+        
+        //Integer code = response.statusCode();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode responseBody = objectMapper.readTree(response.body());
+        String email = responseBody.get("email").asText();
+        String firstName = responseBody.get("given_name").asText();
+        String lastName = responseBody.get("family_name").asText();
+        Map<String, String> answerMap = new HashMap<>();
+        answerMap.put("email", email); 
+        answerMap.put("firstName", firstName); 
+        answerMap.put("lastName", lastName); 
+
+        return answerMap;
+    }
+
+
     public Iterable<Customer> getAllCustomers() {
         return customerRepository.findAll();
     }
@@ -50,7 +89,6 @@ public class Services {
         Users user = new Users();
         user.setFirst_name(customerData.getFirstName());
         user.setLast_name(customerData.getLastName());
-        user.setToken_id(customerData.getTokenID());
         user.setEmail(customerData.getEmail());
         user = usersRepository.save(user);
 
@@ -83,7 +121,6 @@ public class Services {
         Users user = new Users();
         user.setFirst_name(employeeData.getFirstName());
         user.setLast_name(employeeData.getLastName());
-        user.setToken_id(employeeData.getTokenID());
         user.setEmail(employeeData.getEmail());
         user = usersRepository.save(user);
 
@@ -100,10 +137,27 @@ public class Services {
 
 
     //param Map<String, Object> orderData
-    public Orders addOrder(Map<String, Object> orderData) {
+    public Orders addOrder(HttpServletRequest request, Map<String, Object> orderData) throws URISyntaxException, IOException, InterruptedException {
         Orders order = new Orders();
-        order.setCustomer_id(10);//change
-        order.setEmployee_id(3);//change
+
+        Map<String, String> userInfo = findUserByAccessToken(request);
+        String email = userInfo.get("email");
+        String firstName = userInfo.get("firstName");
+        String lastName = userInfo.get("lastName");
+        Users user = usersRepository.findByEmail(email);
+        if( user != null) {
+            customerRepository.addOrderCount(user.getUser_id());
+            order.setCustomer_id(user.getUser_id());
+
+        }
+        else{
+            CustomerBody customer = new CustomerBody(firstName, lastName, email);
+            Customer newCustomer = addCustomer(customer);
+            order.setCustomer_id(newCustomer.getUser_id());
+
+        }
+
+        order.setEmployee_id(3); // CHANGE LATER // CHANGE LATER // CHANGE LATER
         order.setTotal(0.00);
         Double total = 0.00;
         
@@ -117,7 +171,7 @@ public class Services {
             OrderProduct orderProduct = new OrderProduct();
             orderProduct.setOrder_id(order.getOrder_id());
             orderProduct.setProduct_id(productID);
-            orderProduct.setQuantity(1); // CHANGE LATER 
+            orderProduct.setQuantity(1); // CHANGE LATER // CHANGE LATER // CHANGE LATER
 
             total += productRepository.findPriceByID(productID);
             
@@ -142,6 +196,7 @@ public class Services {
         order.setTotal(total);
         ordersRepository.save(order);
 
+        System.out.println("Added order#" + order.getOrder_id());
         return order;
     }
 

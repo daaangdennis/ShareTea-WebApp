@@ -21,7 +21,7 @@ public class SecurityConfig {
                 .cors(withDefaults())
                 .authorizeHttpRequests((authorize) -> authorize
                     .requestMatchers(new AntPathRequestMatcher("/")).permitAll()
-                    .requestMatchers(new AntPathRequestMatcher("/orders/add")).permitAll()
+                    //.requestMatchers(new AntPathRequestMatcher("/orders/add")).permitAll()
                     .requestMatchers(new AntPathRequestMatcher("/product/**")).permitAll()
                     .anyRequest().authenticated()
                     //.requestMatchers("/api/private-scoped").hasAuthority("SCOPE_read:messages")
