@@ -26,11 +26,11 @@ const Navbar: React.FC<navbarProps> = ({ routes }) => {
     useSetRecoilState<listProductToppings>(filteredProducts);
   const cartItems = useRecoilValue<Cart>(cart);
 
-  const { getAccessTokenSilently } = useAuth0();
+  // const { getAccessTokenSilently } = useAuth0();
   const [menu, setMenu] = useState("home");
 
   useEffect(() => {
-    getProducts(setProducts, setFilteredProducts, getAccessTokenSilently);
+    getProducts(setProducts, setFilteredProducts);
     setFilteredProducts(SourceProducts);
   }, []);
   useEffect(() => {
