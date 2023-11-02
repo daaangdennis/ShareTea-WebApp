@@ -10,6 +10,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sharetea.backend.Entities.*;
 import com.sharetea.backend.Repositories.*;
@@ -37,6 +38,9 @@ public class Services {
 
     @Autowired
     private UsersRepository usersRepository;
+
+    @Autowired
+    private ItemToppingsRepository itemToppingsRepository;
 
     public Iterable<Customer> getAllCustomers() {
         return customerRepository.findAll();
@@ -94,8 +98,51 @@ public class Services {
         return ordersRepository.findAll();
     }
 
-    public Orders addOrder(Orders order) {
-        return ordersRepository.save(order);
+
+    //param Map<String, Object> orderData
+    public Orders addOrder(Map<String, Object> orderData) {
+        Orders order = new Orders();
+        order.setCustomer_id(10);//change
+        order.setEmployee_id(3);//change
+        order.setTotal(0.00);//change 
+        Double total = 0.00;
+        
+        ordersRepository.save(order);
+        List<Map<String, Object>> items = (List<Map<String, Object>>) orderData.get("items");
+
+        for (Map<String, Object> item : items) {
+            Integer productID = (Integer) ((Map<String, Object>) item.get("product")).get("product_id");
+            String note = (String) item.get("notes");
+
+            OrderProduct orderProduct = new OrderProduct();
+            orderProduct.setOrder_id(order.getOrder_id());
+            orderProduct.setProduct_id(productID);
+            orderProduct.setQuantity(1); // CHANGE LATER 
+
+            total += productRepository.findPriceByID(productID);
+            
+            if(note != null){
+                orderProduct.setNote(note);
+            }
+            orderProductRepository.save(orderProduct); // ADD SUGAR AND ICE LEVELS LATER
+
+            List<Map<String, Object>> toppings = (List<Map<String, Object>>) item.get("toppings");
+            if(toppings != null){
+                for (Map<String, Object> topping : toppings) {
+                    Integer inventoryID = (Integer) topping.get("inventory_id");
+
+                    ItemToppings itemTopping = new ItemToppings();
+                    itemTopping.setOrder_product_id(orderProduct.getOrder_product_id());
+                    itemTopping.setInventory_id(inventoryID);
+                    itemToppingsRepository.save(itemTopping);
+                }
+                total += toppings.size() * 0.75;
+            }
+        }
+        order.setTotal(total);
+        ordersRepository.save(order);
+
+        return order;
     }
 
 

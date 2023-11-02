@@ -90,8 +90,8 @@ public class MainController {
     }
 
     @PostMapping("/orders/add")
-    public Orders addOrder(@RequestBody Orders order) {
-        return service.addOrder(order);
+    public Orders addOrder(@RequestBody Map<String, Object> orderData) {
+        return service.addOrder(orderData);
     }
 
 

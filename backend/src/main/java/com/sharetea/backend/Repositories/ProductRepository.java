@@ -20,4 +20,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     @Query(value = "select * from inventory where is_topping = 'true'", nativeQuery = true)
     public List<Inventory> findToppings();
 
+    @Query(value = "select price from product where product_id = ?1" , nativeQuery = true)
+    public Double findPriceByID(Integer product_id);
+
 }
