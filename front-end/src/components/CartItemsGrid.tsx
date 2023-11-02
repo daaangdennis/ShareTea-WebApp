@@ -4,6 +4,7 @@ import {
   CartCardProps,
   CartGridProps,
   product,
+  topping,
 } from "../types/types";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { cart } from "../atoms/cart";
@@ -11,25 +12,27 @@ import { Link } from "react-router-dom";
 import "../styles/CartPage.css";
 var _ = require("lodash");
 
-const CartItem: React.FC<CartCardProps> = ({ product }) => {
+const CartItem: React.FC<CartCardProps> = ({ item }) => {
 
     const [cartItems, setcartItems] = useRecoilState<Cart>(cart);
-    const [data, setdata] = useState<product>(product)
+    const [data, setdata] = useState<product>(item.product)
 
     const addProductToCart = () => {
         const newlist: Cart = _.cloneDeep(cartItems);
         newlist.items.push({
-            product: product,
-            toppings: "none",
-            notes: "none",
+            product: item.product,
+            toppings: item.toppings,
+            ice_level: item.ice_level,
+            sugar_level: item.sugar_level,
+            notes: item.notes,
         });
-        newlist.total = newlist.total + product.price;
+        newlist.total = newlist.total + item.product.price + item.toppings.length*0.75;
         setcartItems(newlist);
     };
 
     const deleteProductFromCart = () => {
-        const newItems = cartItems.items.filter((item) => item.product !== product);
-        const newTotal = cartItems.total - product.price;
+        const newItems = cartItems.items.filter((itemToBeRemoved) => itemToBeRemoved !== item);
+        const newTotal = cartItems.total - item.product.price - item.toppings.length*0.75;
         const newlist: Cart = {
             items: newItems,
             total: newTotal,
@@ -50,31 +53,22 @@ const CartItem: React.FC<CartCardProps> = ({ product }) => {
                     borderRadius: "15px",
                     backgroundColor: "white",
                 }}
-                src={product.url}
-                alt={product.name}
+                src={item.product.url}
+                alt={item.product.name}
                 />
             </div>
             <div className="col-md-8">
                 <div className="drink-order-text-container">
                     <h2 className="py-4 pt-md-0">
-                        {product.name}
+                        {item.product.name}
                         <br></br>
-                        ${(product.price).toFixed(2)}
+                        ${(item.product.price + item.toppings.length*0.75).toFixed(2)}
                     </h2>
                     <p className="pb-4 mb-auto">
-                        Topping1
-                        <br></br>
-                        Topping2
-                        <br></br>
-                        Topping3
-                        <br></br>
-                        Topping2
-                        <br></br>
-                        Topping3
-                        <br></br>
-                        Topping2
-                        <br></br>
-                        Topping3
+                      {item.ice_level ? (<>{item.ice_level}<br></br></>) : (<>No Ice<br></br></>)}
+                      {item.sugar_level ? (<>{item.sugar_level}<br></br></>) : (<>No Sugar<br></br></>)}
+                      {item.toppings.map((topping: topping)=> <>{topping.name} (+$0.75)<br></br></>)}
+                      Additional Notes: {item.notes ? (<>{item.notes}</>) : (<>None</>)}
                     </p>
                     <div className="drink-order-button-container flex-column flex-lg-row">
                         <Link to={`/custom`} state={{ data: data }} className="order-button">Edit Drink</Link>
@@ -98,12 +92,14 @@ const CartItemsGrid: React.FC<CartGridProps> = () => {
           (
             item: {
               product: product;
-              toppings?: any;
+              toppings?: any | topping[];
+              ice_level?: any;
+              sugar_level?: any;
               notes?: string;
             },
             i: number
           ) => (
-            <CartItem key={i} product={item.product}/>
+            <CartItem key={i} item={item}/>
           )
         )}
         </div>

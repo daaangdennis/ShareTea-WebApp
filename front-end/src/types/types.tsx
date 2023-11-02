@@ -73,7 +73,13 @@ export interface ToppingsGridProps {
 }
 
 export interface CartCardProps {
-  product: product;
+  item: {
+    product: product;
+    toppings?: any | topping[];
+    ice_level?: any;
+    sugar_level?: any;
+    notes?: string;
+  };
 }
 
 export interface CartGridProps {
