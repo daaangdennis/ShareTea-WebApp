@@ -104,7 +104,7 @@ public class Services {
         Orders order = new Orders();
         order.setCustomer_id(10);//change
         order.setEmployee_id(3);//change
-        order.setTotal(0.00);//change 
+        order.setTotal(0.00);
         Double total = 0.00;
         
         ordersRepository.save(order);

@@ -13,6 +13,7 @@ import "../styles/LandingPage.css";
 import { LoginButton, LogoutButton } from "../components/Login";
 import Profile from "../components/UserInfo";
 import { useAuth0 } from "@auth0/auth0-react";
+import { cart } from "../atoms/cart";
 
 function LandingPage() {
   // const products: product[] = [
@@ -53,6 +54,7 @@ function LandingPage() {
   /**These states are probably used for atoms, but I will look into getting rid of them */
   useEffect(() => {
     getBestSelling(setBestSelling, setFilteredBestSelling);
+    console.log(cart)
   }, []);
   return (
     <main>
