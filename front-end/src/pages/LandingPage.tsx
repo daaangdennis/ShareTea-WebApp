@@ -2,7 +2,11 @@ import { useEffect, useState } from "react";
 import { getProducts } from "../apis/Product";
 import ProductGrid from "../components/ProductGrid";
 import ImageGallery from "../components/ImageGallery";
-import { ImageGalleryProps, product } from "../types/types";
+import {
+  ImageGalleryProps,
+  listProductToppings,
+  product,
+} from "../types/types";
 import { useSetRecoilState } from "recoil";
 import { Products } from "../atoms/product";
 import "../styles/LandingPage.css";
@@ -49,12 +53,15 @@ function LandingPage() {
     ],
     style: customStyle,
   };
-  const [bestSelling, setBestSelling] = useState<product[]>([]);
-  const [filteredBestSelling, setFilteredBestSelling] = useState<product[]>([]);
+  const [bestSelling, setBestSelling] = useState<listProductToppings>(
+    {} as listProductToppings
+  );
+  const [filteredBestSelling, setFilteredBestSelling] =
+    useState<listProductToppings>({} as listProductToppings);
   /**These states are probably used for atoms, but I will look into getting rid of them */
   useEffect(() => {
     getBestSelling(setBestSelling, setFilteredBestSelling);
-    console.log(cart)
+    console.log(cart);
   }, []);
   return (
     <main>
@@ -80,7 +87,7 @@ function LandingPage() {
         </a> */}
       </div>
       <h1 className="text-center">Trending Products</h1>
-      <ProductGrid products={bestSelling} />
+      <ProductGrid products={bestSelling.products} />
       <InfoBar />
       <InfoBar />
 

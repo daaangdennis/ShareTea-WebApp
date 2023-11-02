@@ -1,13 +1,15 @@
 import Axios from "axios";
-import { product } from "../types/types";
+import { listProductToppings, product } from "../types/types";
 
 export function getBestSelling(
-  setBestSelling: React.Dispatch<React.SetStateAction<product[]>>,
-  setFiliterdBestSelling: React.Dispatch<React.SetStateAction<product[]>>
+  setBestSelling: React.Dispatch<React.SetStateAction<listProductToppings>>,
+  setFiliterdBestSelling: React.Dispatch<
+    React.SetStateAction<listProductToppings>
+  >
 ) {
   Axios.get(process.env.REACT_APP_BACKEND_URL + "/product/getbestselling")
     .then((response) => {
-      const bestSelling: product[] = response.data;
+      const bestSelling: listProductToppings = response.data;
       console.log(response.data);
 
       // const bestSelling: product[] = data.map((innerList: any[]) => {
@@ -28,6 +30,5 @@ export function getBestSelling(
     })
     .catch((error) => {
       console.error("There was an error fetching data:", error);
-      setBestSelling([]);
     });
 }
