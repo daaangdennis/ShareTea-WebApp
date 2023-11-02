@@ -82,7 +82,7 @@ public class MainController {
 
 
     @GetMapping("/product/getbestselling")
-    public List<Map<String, Object>> getBestSelling() {
+    public Map<String, Object> getBestSelling() {
         return service.getBestSelling();  
     }
 

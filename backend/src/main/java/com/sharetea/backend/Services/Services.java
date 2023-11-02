@@ -217,22 +217,21 @@ public class Services {
         return productMap;
     }
 
-    public List<Map<String, Object>> getBestSelling() {
-        List<List<Object>> bestSellingList = orderProductRepository.findBestSelling();
-        
-        List<Map<String, Object>> products = new ArrayList<>();
-        for (List<Object> item : bestSellingList) {
-            Map<String, Object> productMap = new HashMap<>();
-            productMap.put("product_id", item.get(0));
-            productMap.put("name", item.get(1));
-            productMap.put("url", item.get(2));
-            productMap.put("price", item.get(3));
-            productMap.put("category", item.get(4));
+    public Map<String, Object> getBestSelling() {
+        List<Integer> bestSellingID = orderProductRepository.findBestSelling();
+        List<Optional<Product>> bestSelling = new ArrayList<>();
+        List<Inventory> toppings = inventoryRepository.findToppings();
 
-            products.add(productMap);
+        for(int i = 0; i < bestSellingID.size(); ++i){
+            bestSelling.add(productRepository.findById(bestSellingID.get(i)));
         }
-        return products;
+
+        Map<String, Object> bestSellingMap = new HashMap<>();
+        bestSellingMap.put("products", bestSelling);
+        bestSellingMap.put("toppings", toppings);
+        return bestSellingMap;
     }
+
 
 
 
