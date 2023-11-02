@@ -71,3 +71,17 @@ export interface ToppingsGridProps {
   setToppings: React.Dispatch<React.SetStateAction<topping[]>>;
   sourceToppings: topping[];
 }
+
+export interface CartCardProps {
+  item: {
+    product: product;
+    toppings?: any | topping[];
+    ice_level?: any;
+    sugar_level?: any;
+    notes?: string;
+  };
+}
+
+export interface CartGridProps {
+  products: product[];
+}

@@ -33,7 +33,7 @@ function CustomPage() {
       ice_level: selectedIceLevel,
       sugar_level: selectedSugarLevel,
     });
-    newlist.total = newlist.total + product.price;
+    newlist.total = newlist.total + product.price + listToppings.length*0.75;
     setcartItems(newlist);
   };
 
@@ -82,6 +82,7 @@ function CustomPage() {
               objectFit: "contain",
               border: "2px solid white",
               borderRadius: "15px",
+              backgroundColor: "white",
             }}
             src={product.url}
             alt={product.name}
@@ -90,7 +91,8 @@ function CustomPage() {
         <div className="col-md-8 px-0 my-4 text-center text-md-start custompage-drink-information-text">
           <h1>
             {product.name}
-            <br></br>${product.price.toFixed(2)}
+            <br></br>
+            ${(product.price + listToppings.length*0.75).toFixed(2)}
           </h1>
         </div>
       </div>

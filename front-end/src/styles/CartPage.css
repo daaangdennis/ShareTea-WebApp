@@ -4,6 +4,13 @@
     background-color: #cf152d;
 }
 
+@media (min-width: 768px) {
+    .summary-column {
+        background-color: #cf152d;
+        min-height: 100vh;
+    }
+}
+
 .summary-item-container {
     display: flex;
     height: 100%;

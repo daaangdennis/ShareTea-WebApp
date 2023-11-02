@@ -14,7 +14,6 @@ function App() {
   const routes: route[] = [
     { name: "Home", path: "/", element: <LandingPage /> },
     { name: "Menu", path: "/Menu", element: <MenuPage /> },
-    { name: "Rewards", path: "/Rewards", element: <></> },
     { name: "Contact", path: "/Contact", element: <></> },
     { name: "Cart", path: "/Cart", element: <CartPage /> },
   ];
