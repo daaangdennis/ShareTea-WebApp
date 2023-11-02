@@ -12,6 +12,7 @@ import InfoBar from "../components/InfoBar";
 import "../styles/LandingPage.css";
 import { LoginButton, LogoutButton } from "../components/Login";
 import Profile from "../components/UserInfo";
+import { useAuth0 } from "@auth0/auth0-react";
 
 function LandingPage() {
   // const products: product[] = [
@@ -30,39 +31,7 @@ function LandingPage() {
   //       "https://images.squarespace-cdn.com/content/v1/61e8bb2a2cf8670534839093/1646826556844-7DWVLZUS8RYY4TOG4EGF/2.+MilkTea_MangoGreen.jpg",
   //     description: "Refreshing mango flavor with green milk tea.",
   //     price: 5.49,
-  //   },
-  //   {
-  //     product_id: 3,
-  //     name: "QQ Happy Family Milk Tea",
-  //     image:
-  //       "https://images.squarespace-cdn.com/content/v1/61e8bb2a2cf8670534839093/1646826557156-6JEP6HB9W1AAMZHDCO8J/3.+MilkTea_QQHappyFamily.jpg",
-  //     description: "A delightful blend of multiple toppings for a fun drink.",
-  //     price: 5.99,
-  //   },
-  //   {
-  //     product_id: 4,
-  //     name: "Thai Pearl Milk Tea",
-  //     image:
-  //       "https://images.squarespace-cdn.com/content/v1/61e8bb2a2cf8670534839093/1646826557548-F11NKGMMU53UKSDUYA6V/4.+MilkTea_ThaiPearl.jpg",
-  //     description: "A taste of Thailand with our unique Thai pearl milk tea.",
-  //     price: 5.29,
-  //   },
-  //   {
-  //     product_id: 5,
-  //     name: "Honey Milk Tea (Green)",
-  //     image:
-  //       "https://images.squarespace-cdn.com/content/v1/61e8bb2a2cf8670534839093/1646826557778-94IYMHNPDHE4DWLCJJ3M/5.+ZMilkTea_HoneyMilkTea_Green.jpg",
-  //     description: "Sweet and soothing honey milk tea with a green tea base.",
-  //     price: 4.79,
-  //   },
-  //   {
-  //     product_id: 6,
-  //     name: "Matcha Red Bean Milk Tea",
-  //     image:
-  //       "https://images.squarespace-cdn.com/content/v1/61e8bb2a2cf8670534839093/1646826558246-CV3451A16SRHYMV4JNUZ/6.+MilkTea_MatchaRedBean.jpg",
-  //     description: "A delightful blend of rich matcha and sweet red beans.",
-  //     price: 5.89,
-  //   },
+  //   }
   // ];
   const customStyle = {
     backgroundImage:
@@ -79,7 +48,6 @@ function LandingPage() {
     ],
     style: customStyle,
   };
-
   const [bestSelling, setBestSelling] = useState<product[]>([]);
   const [filteredBestSelling, setFilteredBestSelling] = useState<product[]>([]);
   /**These states are probably used for atoms, but I will look into getting rid of them */

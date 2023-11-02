@@ -94,9 +94,12 @@ public class MainController {
         return service.addOrder(order);
     }
 
+
+    //PARAM: HttpServletRequest request
+    //System.out.println(findUserByAccessToken(request));
+
     @GetMapping("/product/get")
-    public Map<String, Object> getProducts(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException {
-        System.out.println(findUserByAccessToken(request));
+    public Map<String, Object> getProducts() {
         return service.getAllProducts();
     }
 
