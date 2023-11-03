@@ -54,6 +54,18 @@ function MenuSidebar() {
       className="d-flex flex-column flex-shrink-0 p-3 align-items-center"
       style={{ width: "280px" }}
     >
+      <form
+            className="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3"
+            role="search"
+          >
+            <input
+              type="search"
+              className="form-control form-control-dark text-bg-light"
+              placeholder="Search..."
+              aria-label="Search"
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </form>
       <ul className="nav nav-pills flex-column mb-auto">
         <div className="fs-2 mb-3 d-flex">
           <div onClick={handleSidebar}>
