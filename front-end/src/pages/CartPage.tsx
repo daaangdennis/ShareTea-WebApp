@@ -70,7 +70,11 @@ function CartPage() {
               </div>
             </div>
             <div className="button-container">
-              <button className="order-button" onClick={handlePlaceOrder}>Place Order</button>
+              {isAuthenticated ? 
+                (<button className="order-button" onClick={handlePlaceOrder}>Place Order</button>) 
+                : 
+                (<button className="order-button" onClick={handlePlaceOrder}>Log In To Place Order</button>)
+              }
               <button className="order-button" onClick={clearCart}>
                 Cancel Order
               </button>
