@@ -10,16 +10,16 @@
     column-gap: 40px;
     row-gap: 10px;
     display: flex;
-    flex-wrap: wrap;
     flex-direction: row;
-    justify-content: center;
-    padding-top: 15px;
-    padding-bottom: 15px;
+    justify-content: start;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 20px;
 }
 
 .menupage-navbar-link-container a{
+    position: relative;
     transition: color 0.2s;
-
 }
 
 .menupage-navbar-link-container a:hover{
