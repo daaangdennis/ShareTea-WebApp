@@ -52,7 +52,6 @@ function MenuSidebar() {
   return (
     <div
       className="d-flex flex-column flex-shrink-0 p-3 align-items-center"
-      style={{ width: "280px" }}
     >
       <form
             className="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3"
