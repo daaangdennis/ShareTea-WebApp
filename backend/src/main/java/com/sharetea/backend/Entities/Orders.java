@@ -63,10 +63,40 @@ public class Orders {
         return is_refunded;
     }
 
+    
+
     @Override
     public String toString() {
         return "Orders [order_id=" + order_id + ", customer_id=" + customer_id + ", employee_id=" + employee_id
                 + ", order_date=" + order_date + ", total=" + total + ", is_pending=" + is_pending + ", is_refunded="
                 + is_refunded + "]";
+    }
+
+    public void setOrder_id(Integer order_id) {
+        this.order_id = order_id;
+    }
+
+    public void setCustomer_id(Integer customer_id) {
+        this.customer_id = customer_id;
+    }
+
+    public void setEmployee_id(Integer employee_id) {
+        this.employee_id = employee_id;
+    }
+
+    public void setOrder_date(LocalDateTime order_date) {
+        this.order_date = order_date;
+    }
+
+    public void setTotal(Double total) {
+        this.total = total;
+    }
+
+    public void setIs_pending(Boolean is_pending) {
+        this.is_pending = is_pending;
+    }
+
+    public void setIs_refunded(Boolean is_refunded) {
+        this.is_refunded = is_refunded;
     }
 }

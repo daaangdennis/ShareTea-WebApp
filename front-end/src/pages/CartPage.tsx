@@ -4,9 +4,15 @@ import { cart } from "../atoms/cart";
 import CartItemsGrid from "../components/CartItemsGrid";
 
 import "../styles/CartPage.css";
+import { postOrder } from "../apis/Order";
+import { useAuth0 } from "@auth0/auth0-react";
 
 function CartPage() {
   const [cartItems, setcartItems] = useRecoilState<Cart>(cart);
+  const { user, isAuthenticated, isLoading } = useAuth0();
+  const { loginWithRedirect } = useAuth0();
+
+  const { getAccessTokenSilently } = useAuth0();
 
   const clearCart = () => {
     setcartItems({
@@ -14,6 +20,22 @@ function CartPage() {
       total: 0,
     });
   };
+
+  const handlePlaceOrder = async () => {
+    if(!isAuthenticated){
+      loginWithRedirect();
+    }
+    else{
+      try {
+        const accessToken = await getAccessTokenSilently();
+        postOrder(cartItems, accessToken);  
+        clearCart();
+      } catch (error) {
+        console.error("Error getting access token: ", error);
+      }
+    }
+  };
+
 
   console.log(cartItems);
 
@@ -48,7 +70,7 @@ function CartPage() {
               </div>
             </div>
             <div className="button-container">
-              <button className="order-button">Place Order</button>
+              <button className="order-button" onClick={handlePlaceOrder}>Place Order</button>
               <button className="order-button" onClick={clearCart}>
                 Cancel Order
               </button>

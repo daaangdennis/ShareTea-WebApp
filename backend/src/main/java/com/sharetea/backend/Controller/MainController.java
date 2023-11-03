@@ -1,5 +1,11 @@
 package com.sharetea.backend.Controller;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.Map;
 
@@ -9,19 +15,26 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+//import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sharetea.backend.Entities.*;
 import com.sharetea.backend.RequestBodies.CustomerBody;
 import com.sharetea.backend.RequestBodies.EmployeeBody;
 import com.sharetea.backend.Services.*;
 
-@CrossOrigin(origins = "*")
+import jakarta.servlet.http.HttpServletRequest;
+
+
 @RestController
+@CrossOrigin(origins = "*")
 public class MainController {
     @Autowired
     private Services service;
+
 
     @GetMapping("/")
     public String home() {
@@ -54,24 +67,23 @@ public class MainController {
     }
 
     @PostMapping("/orders/add")
-    public Orders addOrder(@RequestBody Orders order) {
-        return service.addOrder(order);
+    public Orders addOrder(HttpServletRequest request, @RequestBody Map<String, Object> orderData) throws URISyntaxException, IOException, InterruptedException {
+        return service.addOrder(request, orderData);
     }
+
+
+    //PARAM: HttpServletRequest request
+    //System.out.println(findUserByAccessToken(request));
 
     @GetMapping("/product/get")
     public Map<String, Object> getProducts() {
         return service.getAllProducts();
-
     }
 
-    @GetMapping("/product/getbycategory")
-    public List<Map<String, Object>> getProductsByCategory() {
-        return service.getProductsbyCategory();
-    }
 
     @GetMapping("/product/getbestselling")
-    public List<List<Object>> getBestSelling() {
-        return service.getBestSelling();
+    public Map<String, Object> getBestSelling() {
+        return service.getBestSelling();  
     }
 
     @PostMapping("/product/update/{productID}")

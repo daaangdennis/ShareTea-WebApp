@@ -6,6 +6,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Auth0Provider } from "@auth0/auth0-react";
 // import reportWebVitals from "./reportWebVitals";
 
+
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
@@ -14,6 +15,7 @@ root.render(
         domain="dev-1jps85kh7htbmqki.us.auth0.com"
         clientId="nmCphOD1XLNlTStDO7Ocemw1MoWRbFxw"
         authorizationParams={{
+          audience : "https://sharetea315/",
           redirect_uri: window.location.origin
         }}
       >
