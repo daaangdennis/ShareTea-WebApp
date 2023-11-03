@@ -82,6 +82,14 @@ export interface CartCardProps {
   };
 }
 
+export interface CartItemProp {
+  product: product;
+  toppings?: any | topping[];
+  ice_level?: any;
+  sugar_level?: any;
+  notes?: string;
+}
+
 export interface CartGridProps {
   products: product[];
 }
