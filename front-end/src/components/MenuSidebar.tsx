@@ -112,12 +112,24 @@ function MenuSidebar() {
           
           <div className={display}>
             <div className="py-3">
-              <div className="menupage-filter-category" onClick={() => setCurrentCategory("")}>
-                <div className="menupage-filter-category-text" style={currentCategory === "" ? ({color: "#cf152d", fontWeight: "700"}) : ({})}>All Drinks</div>
+              <div className="menupage-filter-category">
+                <div 
+                  className="menupage-filter-category-text" 
+                  style={currentCategory === "" ? ({color: "#cf152d", fontWeight: "700"}) : ({})}
+                  onClick={() => setCurrentCategory("")}
+                > 
+                  All Drinks
+                </div>
               </div>
               {drinks.map((item: string, i: number) => (
-                <div className="menupage-filter-category pt-3" key={i} onClick={() => setCurrentCategory(item)}>
-                  <div className="menupage-filter-category-text active" style={currentCategory === item ? ({color: "#cf152d", fontWeight: "700"}) : ({})}>{item}</div>
+                <div className="menupage-filter-category pt-3" key={i}>
+                  <div 
+                    className="menupage-filter-category-text active" 
+                    style={currentCategory === item ? ({color: "#cf152d", fontWeight: "700"}) : ({})}
+                    onClick={() => setCurrentCategory(item)}
+                  >
+                    {item}
+                  </div>
                 </div>
               ))}
             </div>
