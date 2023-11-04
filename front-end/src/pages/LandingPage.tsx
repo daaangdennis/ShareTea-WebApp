@@ -48,6 +48,7 @@ function LandingPage() {
 
   const landingPageImages: ImageGalleryProps = {
     images: [
+      "https://images.squarespace-cdn.com/content/v1/61e8bb2a2cf8670534839093/1698811520185-NMO1ZQ8G9BY3G9RS0DQB/sharetea_webbanner_2.png?format=2500w",
       "https://images.squarespace-cdn.com/content/v1/61e8bb2a2cf8670534839093/1697443158374-PEJA4EET4VF8JGAS35HL/230914_Q4PopcornCreamaSeries_web.jpg",
       "https://images.squarespace-cdn.com/content/v1/61e8bb2a2cf8670534839093/1697512684209-7BC17NZXSD4B5QMZHIPO/230811_EarlGreyTeaSeries_web.jpg?format=2500w",
     ],
