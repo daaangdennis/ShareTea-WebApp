@@ -48,3 +48,12 @@
   font-weight: 700;
 }
 
+.landingpage-text {
+  font-family: 'Poppins', 'sans-serif';
+  text-align: center;
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-color: #cf152d;
+  text-decoration-thickness: 4px;
+  text-underline-offset: 15px;
+}

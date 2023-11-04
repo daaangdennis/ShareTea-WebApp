@@ -86,10 +86,12 @@ function LandingPage() {
           Order Now
         </a> */}
       </div>
-      <h1 className="text-center">Trending Products</h1>
+      
+      <h1 className="landingpage-text my-md-4 my-5">Trending Products</h1>
       <ProductGrid products={bestSelling.products} />
       <InfoBar />
       <InfoBar />
+      
 
       {/* <div>
       <ImageGallery images={landingPageImages.images}/> 
@@ -111,7 +113,6 @@ function LandingPage() {
           </div>
         </section>
       </div> */}
-      <h1></h1>
     </main>
   );
 }
