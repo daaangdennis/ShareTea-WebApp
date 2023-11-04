@@ -5,24 +5,32 @@ import { listProductToppings, product } from "../types/types";
 import { Products, filteredProducts } from "../atoms/product";
 import { getProducts } from "../apis/Product";
 
-const useCategoryFilter = (searchTerm: string) => {
+const useCategoryFilter = (searchTerm: string, category: string) => {
   const SourceProducts = useRecoilValue<listProductToppings>(Products);
   const setFilteredProducts =
     useSetRecoilState<listProductToppings>(filteredProducts);
 
   useEffect(() => {
-    if (searchTerm.trim() === "") {
+    if (category.trim() === "" && searchTerm.trim() === "") {
       setFilteredProducts(SourceProducts);
-    } else {
+    } else if (searchTerm.trim() === "") {
       const filtered: listProductToppings = {
         products: SourceProducts.products.filter((product) =>
-          product.category.toLowerCase().includes(searchTerm.toLowerCase())
+          product.category.toLowerCase().includes(category.toLowerCase())
         ),
         toppings: SourceProducts.toppings,
       };
       setFilteredProducts(filtered);
+    } else {
+      const filtered: listProductToppings = {
+        products: SourceProducts.products.filter((product) =>
+          product.category.toLowerCase().includes(category.toLowerCase())
+        ).filter((product) => product.name.toLowerCase().includes(searchTerm.toLowerCase())),
+        toppings: SourceProducts.toppings,
+      };
+      setFilteredProducts(filtered);
     }
-  }, [searchTerm, SourceProducts, setFilteredProducts]);
+  }, [searchTerm, category, SourceProducts, setFilteredProducts]);
 };
 
 function MenuSidebar() {
@@ -38,8 +46,9 @@ function MenuSidebar() {
 
   const [display, setDisplay] = useState("");
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [currentCategory, setCurrentCategory] = useState<string>("");
 
-  useCategoryFilter(searchTerm);
+  useCategoryFilter(searchTerm, currentCategory);
 
   const handleSidebar = () => {
     if (display == "d-none") {
@@ -85,10 +94,17 @@ function MenuSidebar() {
           Drinks
         </div>
         <div className={display}>
+          <div
+                onClick={() => setCurrentCategory("")}
+                className="nav-item"
+                style={{ textDecoration: "none" }}
+              >
+                <div className="nav-link link-body-emphasis ">All Drinks</div>
+              </div>
           {drinks.map((item: string, i: number) => (
             <div
               key={i}
-              onClick={() => setSearchTerm(item)}
+              onClick={() => setCurrentCategory(item)}
               className="nav-item"
               style={{ textDecoration: "none" }}
             >
