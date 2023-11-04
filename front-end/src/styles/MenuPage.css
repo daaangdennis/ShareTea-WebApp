@@ -20,7 +20,7 @@
 
 .menupage-navbar-link-container a{
     position: relative;
-    transition: color 0.2s;
+    transition: all 0.1s ease 0s;
 }
 
 .menupage-navbar-link-container a:hover{
@@ -64,6 +64,7 @@
     font-size: 18px;
     cursor: pointer;
     display: inline;
+    transition: all 0.2s ease 0s;
 }
 
 .menupage-filter-category-text:hover{
