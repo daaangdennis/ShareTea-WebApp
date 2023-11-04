@@ -19,3 +19,19 @@
     background: #cf152d;
     color: white;
 }
+
+.navbar-login-button {
+    font-family: 'Poppins', sans-serif;
+    color: white;
+    background-color: #cf152d;
+    border: 2px solid #cf152d;
+    font-weight: 700;
+    border-radius: 15px;
+    padding: 5px 30px;
+    transition: all 0.3s ease 0s;
+}
+
+.navbar-login-button:hover {
+    background-color: white;
+    color: #cf152d;
+}
