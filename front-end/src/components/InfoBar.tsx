@@ -1,4 +1,5 @@
 import React from "react";
+import "../styles/LandingPage.css";
 
 function InfoBar() {
   const noPaddingStyles = {
@@ -8,9 +9,9 @@ function InfoBar() {
 
   return (
     <div className="container">
-      <div className="row">
-        <div className="col-8" style={noPaddingStyles}>
-          <div className="info-bar bg-danger text-white p-3 h-100">
+      <div className="row my-5 mx-2 mx-lg-0 flex-column-reverse flex-lg-row">
+        <div className="col-lg-8" style={noPaddingStyles}>
+          <div className="infobar-text-container p-4 h-100">
             <h2>Info Header</h2>
             <p>
               This is some information in the info bar. You can add your text
@@ -18,7 +19,7 @@ function InfoBar() {
             </p>
           </div>
         </div>
-        <div className="col-4" style={noPaddingStyles}>
+        <div className="col-lg-4" style={noPaddingStyles}>
           {/* Image and InfoBar with the same height */}
           <div className="d-flex flex-column h-100 align-items-end">
             <div className="info-bar-image">
@@ -31,7 +32,6 @@ function InfoBar() {
           </div>
         </div>
       </div>
-      <div className="my-4"></div>
     </div>
   );
 }

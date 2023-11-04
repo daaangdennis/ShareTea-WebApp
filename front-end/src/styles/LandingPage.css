@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
 .image-gallery-container {
   position: relative;
   width: 100%;
@@ -35,3 +37,14 @@
   transform: translateX(-50%);
   z-index: 1; /* Ensure the button is on top of the ImageGallery */
 }
+
+.infobar-text-container {
+  color: white;
+  font-family: 'Poppins', 'sans-serif';
+  background-color: #cf152d;
+}
+
+.infobar-text-container h2{
+  font-weight: 700;
+}
+
