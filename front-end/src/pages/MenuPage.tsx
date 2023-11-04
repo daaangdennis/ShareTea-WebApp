@@ -8,10 +8,10 @@ function MenuPage() {
     <div className="col">
       <MenuNav />
       <div className="row">
-        <div className="col-md-2">
+        <div className="col-lg-2 p-0">
           <MenuSidebar />
         </div>
-        <div className="col">
+        <div className="col p-0">
           <MenuContent />
         </div>  
       </div>

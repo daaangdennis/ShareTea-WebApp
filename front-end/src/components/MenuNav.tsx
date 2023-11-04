@@ -10,7 +10,7 @@ function MenuNav() {
   ];
   return (
     <div className="menupage-navbar">
-      <div className="menupage-navbar-link-container px-5">
+      <div className="menupage-navbar-link-container px-md-5">
         {navItems.map((item: { path: string; name: string }, i: number) => (
           <Nav.Item key={i}>
             <Nav.Link eventKey={`link-${i}`} href={item.path}>
