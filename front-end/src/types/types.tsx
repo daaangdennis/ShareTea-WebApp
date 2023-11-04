@@ -93,3 +93,9 @@ export interface CartItemProp {
 export interface CartGridProps {
   products: product[];
 }
+
+export interface InfoBarProps {
+  header: string;
+  information: string;
+  imageUrl: string;
+}

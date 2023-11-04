@@ -89,8 +89,20 @@ function LandingPage() {
       
       <h1 className="landingpage-text my-md-4 my-5">Trending Products</h1>
       <ProductGrid products={bestSelling.products} />
-      <InfoBar />
-      <InfoBar />
+      <InfoBar 
+        header="Sharetea x Cookie Run Collaboration is Here!"
+        information="Limited time only launching on 11/3/23, the collaboration will feature many sugary surprises for all the bubble tea lovers in 87 USA Sharetea locations as below.
+        Visit our stores and explore our exciting collaboration with Cookie Run Kingdom! We have interactive design cups perfect for your bubble tea orders. 
+        There will also be limited-edition pins and key chain featuring our beloved Cooke Run Kingdom characters - Ginger Brave, Pure Vanilla, Caramel Arrow, and Milky Way."
+        imageUrl ="https://images.squarespace-cdn.com/content/v1/61e8bb2a2cf8670534839093/04150f08-7937-4478-b8b7-b77d4e2b48f6/Square_01.jpg?format=2500w"
+      />
+      <InfoBar 
+        header="Matcha Red Bean Milk Tea - Our Winter Favorite"
+        information="The sweetness, nuttiness, and creaminess of this flavor, along with the option to serve it hot, perfectly match the desired winter tastes. Matcha red bean milk 
+        tea will warm you up even in the most freezing weather, and its dense texture will delight you - as it did with many of our customers. It's a symbol of our taste preferences 
+        during the colder seasons. To fully comprehend why we, and others like you, love it so much, you simply need to try it."
+        imageUrl ="https://images.squarespace-cdn.com/content/v1/61e8bb2a2cf8670534839093/14140f00-6e01-47c8-b2c2-b05028b05fbe/image4.png?format=2500w"
+      />
       
 
       {/* <div>

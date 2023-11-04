@@ -1,7 +1,10 @@
 import React from "react";
+import {
+  InfoBarProps,
+} from "../types/types";
 import "../styles/LandingPage.css";
 
-function InfoBar() {
+function InfoBar({ header, information, imageUrl } :InfoBarProps) {
   const noPaddingStyles = {
     padding: 0,
     margin: 0,
@@ -12,11 +15,8 @@ function InfoBar() {
       <div className="row my-5 mx-2 mx-lg-0 flex-column-reverse flex-lg-row">
         <div className="col-lg-8" style={noPaddingStyles}>
           <div className="infobar-text-container p-4 h-100">
-            <h2>Info Header</h2>
-            <p>
-              This is some information in the info bar. You can add your text
-              here.
-            </p>
+            <h2 className="mb-4">{header}</h2>
+            <p>{information}</p>
           </div>
         </div>
         <div className="col-lg-4" style={noPaddingStyles}>
@@ -24,7 +24,7 @@ function InfoBar() {
           <div className="d-flex flex-column h-100 align-items-end">
             <div className="info-bar-image">
               <img
-                src="https://shareteahouston.com/wp-content/uploads/2022/03/Menu-No-Prices-scaled.jpg"
+                src= {imageUrl}
                 alt="Info Bar Image"
                 className="img-fluid"
               />
