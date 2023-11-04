@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
-/* Styling for menu main navbar */
+/* Menu Main Navbar Styling*/
 .menupage-navbar {
     background-color: #cf152d;
     color: white;
@@ -28,7 +28,7 @@
 }
 
 
-/* Styling for menu sidebar */
+/* Menu Sidebar Styling */
 .menupage-sidebar-container {
     display: flex;
     flex-direction: column;
@@ -71,3 +71,26 @@
     font-weight: 700;
 }
 
+/* Product Grid Styling */
+.menupage-productgrid-container {
+    background-color: white;
+}
+
+.menupage-productcard {
+    font-family: 'Poppins', 'sans-serif';
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.7);
+}
+
+.menupage-productcard h3 {
+    text-align: center;
+    margin-bottom: auto;
+    font-weight: 700;
+    color: white;
+}
+
+.menupage-productcard h2 {
+    text-align: center;
+    margin-bottom: auto;
+    font-weight: 700;
+    color: white;
+}

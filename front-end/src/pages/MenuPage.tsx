@@ -11,7 +11,7 @@ function MenuPage() {
         <div className="col-lg-2 p-0">
           <MenuSidebar />
         </div>
-        <div className="col p-0">
+        <div className="col">
           <MenuContent />
         </div>  
       </div>
