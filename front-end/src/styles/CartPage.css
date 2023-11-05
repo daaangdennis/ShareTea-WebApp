@@ -9,6 +9,10 @@
         background-color: #cf152d;
         min-height: 100vh;
     }
+
+    .cartpage-order-complete {
+        min-height: 75vh;
+    }
 }
 
 .summary-item-container {
@@ -112,4 +116,19 @@
     justify-content: end;
     gap: 10px;
     margin-top: auto;
+}
+
+.cartpage-order-complete {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.cartpage-order-complete h1{
+    font-family: 'Poppins', 'sans-serif';
+    font-weight: 700;
+    color: black;
+    text-align: center;
 }
