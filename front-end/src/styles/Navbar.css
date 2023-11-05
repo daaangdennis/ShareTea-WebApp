@@ -1,8 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
-.nav-font {
+.navbar-link {
+    color: black;
     font-family: 'Poppins', sans-serif;
     font-size: 18px;
+    font-weight: 500;
+}
+
+.navbar-link:hover {
+    text-decoration: underline;
+    text-decoration-color: #cf152d;
+    text-decoration-thickness: 4px;
+    text-underline-offset: 10px;
 }
 
 .nav-cart-count {
@@ -11,8 +20,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: -30px;
-    margin-left: 38px;
+    margin-top: -35px;
+    margin-left: 40px;
     border-radius: 11px;
     font-family: 'Poppins', sans-serif;
     font-size:  14px;
