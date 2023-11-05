@@ -90,7 +90,7 @@ const Navbar: React.FC<navbarProps> = ({ routes }) => {
 
           <div className="text-end">
             {isAuthenticated ? (
-              <div style={{ display: "flex" }}>
+              <div style={{ display: "flex"}}>
                 <UserInfo />
                 <LogoutButton />
               </div>
