@@ -12,7 +12,7 @@ function CartPage() {
   const [cartItems, setcartItems] = useRecoilState<Cart>(cart);
   const { user, isAuthenticated, isLoading } = useAuth0();
   const { loginWithRedirect } = useAuth0();
-  const [orderComplete, setOrderComplete] = useState<boolean>(true)
+  const [orderComplete, setOrderComplete] = useState<boolean>(false)
 
   const { getAccessTokenSilently } = useAuth0();
 
