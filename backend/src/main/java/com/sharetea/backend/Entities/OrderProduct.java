@@ -43,10 +43,32 @@ public class OrderProduct {
         return note;
     }
 
+    
+
     @Override
     public String toString() {
         return "OrderProduct [order_product_id=" + order_product_id + ", product_id=" + product_id + ", order_id="
                 + order_id + ", quantity=" + quantity + ", note=" + note + "]";
+    }
+
+    public void setOrder_product_id(Integer order_product_id) {
+        this.order_product_id = order_product_id;
+    }
+
+    public void setProduct_id(Integer product_id) {
+        this.product_id = product_id;
+    }
+
+    public void setOrder_id(Integer order_id) {
+        this.order_id = order_id;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 
     

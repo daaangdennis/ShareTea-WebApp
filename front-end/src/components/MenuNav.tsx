@@ -1,22 +1,25 @@
 import Nav from "react-bootstrap/Nav";
+import "../styles/MenuPage.css";
 
 function MenuNav() {
   const navItems = [
-    { path: "/", name: "Menu" },
+    { path: "/Menu", name: "Menu" },
     { path: "/", name: "Recommended" },
-    { path: "/", name: "Previous" },
-    { path: "/", name: "Favorite" },
+    { path: "/", name: "Previous Orders" },
+    { path: "/", name: "Favorites" },
   ];
   return (
-    <Nav justify variant="tabs" defaultActiveKey="/">
-      {navItems.map((item: { path: string; name: string }, i: number) => (
-        <Nav.Item key={i}>
-          <Nav.Link eventKey={`link-${i}`} href={item.path}>
-            {item.name}
-          </Nav.Link>
-        </Nav.Item>
-      ))}
-    </Nav>
+    <div className="menupage-navbar">
+      <div className="menupage-navbar-link-container px-md-5">
+        {navItems.map((item: { path: string; name: string }, i: number) => (
+          <Nav.Item key={i}>
+            <Nav.Link eventKey={`link-${i}`} href={item.path}>
+              {item.name}
+            </Nav.Link>
+          </Nav.Item>
+        ))}
+      </div>
+    </div>
   );
 }
 

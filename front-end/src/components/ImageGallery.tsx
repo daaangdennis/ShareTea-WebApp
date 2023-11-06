@@ -24,7 +24,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, style }) => {
 
   return (
     <>
-      <div className="container col-md-12 d-flex">
+      <div className="col-md-12">
         {/* <div className="row"> */}
         <div className="image-gallery-container d-flex" style={{ ...style }}>
           <img
