@@ -148,16 +148,13 @@ public class Services {
         if( user != null) {
             customerRepository.addOrderCount(user.getUser_id());
             order.setCustomer_id(user.getUser_id());
-
         }
         else{
             CustomerBody customer = new CustomerBody(firstName, lastName, email);
             Customer newCustomer = addCustomer(customer);
             order.setCustomer_id(newCustomer.getUser_id());
-
         }
 
-        order.setEmployee_id(3); // CHANGE LATER // CHANGE LATER // CHANGE LATER
         order.setTotal(0.00);
         Double total = 0.00;
         

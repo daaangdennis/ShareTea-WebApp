@@ -22,8 +22,6 @@ public class Orders {
 
     @NotNull private Integer customer_id;
 
-    @NotNull private Integer employee_id;
-
     @CreationTimestamp @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime order_date;
     
@@ -43,9 +41,6 @@ public class Orders {
         return customer_id;
     }
 
-    public Integer getEmployee_id() {
-        return employee_id;
-    }
 
     public LocalDateTime getOrder_date() {
         return order_date;
@@ -67,7 +62,7 @@ public class Orders {
 
     @Override
     public String toString() {
-        return "Orders [order_id=" + order_id + ", customer_id=" + customer_id + ", employee_id=" + employee_id
+        return "Orders [order_id=" + order_id + ", customer_id=" + customer_id 
                 + ", order_date=" + order_date + ", total=" + total + ", is_pending=" + is_pending + ", is_refunded="
                 + is_refunded + "]";
     }
@@ -78,10 +73,6 @@ public class Orders {
 
     public void setCustomer_id(Integer customer_id) {
         this.customer_id = customer_id;
-    }
-
-    public void setEmployee_id(Integer employee_id) {
-        this.employee_id = employee_id;
     }
 
     public void setOrder_date(LocalDateTime order_date) {

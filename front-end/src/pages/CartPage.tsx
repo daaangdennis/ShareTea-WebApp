@@ -28,6 +28,7 @@ function CartPage() {
     else{
       try {
         const accessToken = await getAccessTokenSilently();
+        console.log(accessToken)
         postOrder(cartItems, accessToken);  
         clearCart();
       } catch (error) {
