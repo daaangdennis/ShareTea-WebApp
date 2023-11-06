@@ -20,8 +20,6 @@ public class Users {
     @NotEmpty
     private String last_name;
     @NotEmpty
-    private String token_id;
-    @NotEmpty
     private String email;
 
     public Integer getUser_id() {
@@ -34,10 +32,6 @@ public class Users {
 
     public String getLast_name() {
         return last_name;
-    }
-
-    public String getToken_id() {
-        return token_id;
     }
 
     public String getEmail() {
@@ -54,10 +48,6 @@ public class Users {
 
     public void setLast_name(String last_name) {
         this.last_name = last_name;
-    }
-
-    public void setToken_id(String token_id) {
-        this.token_id = token_id;
     }
 
     public void setEmail(String email) {

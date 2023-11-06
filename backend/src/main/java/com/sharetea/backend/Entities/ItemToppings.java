@@ -18,8 +18,6 @@ public class ItemToppings {
 
     @NotNull private Integer inventory_id;
 
-    private Double amount;
-
     public Integer getItem_toppings_id() {
         return item_toppings_id;
     }
@@ -30,10 +28,6 @@ public class ItemToppings {
 
     public Integer getInventory_id() {
         return inventory_id;
-    }
-
-    public Double getAmount() {
-        return amount;
     }
 
     public void setItem_toppings_id(Integer item_toppings_id) {
@@ -48,19 +42,11 @@ public class ItemToppings {
         this.inventory_id = inventory_id;
     }
 
-    public void setAmount(Double amount) {
-        this.amount = amount;
-    }
 
     @Override
     public String toString() {
         return "ItemToppings [item_toppings_id=" + item_toppings_id + ", order_product_id=" + order_product_id
-                + ", inventory_id=" + inventory_id + ", amount=" + amount + "]";
+                + ", inventory_id=" + inventory_id + "]";
     }
-
-
-    
-
-    
 
 }

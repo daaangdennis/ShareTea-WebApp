@@ -19,6 +19,7 @@ import UserInfo from "./UserInfo";
 const Navbar: React.FC<navbarProps> = ({ routes }) => {
   const { user, isAuthenticated, isLoading } = useAuth0();
 
+  const [activePage, setActivePage] = useState("Home");
   const [searchTerm, setSearchTerm] = useState("");
   const SourceProducts = useRecoilValue<listProductToppings>(Products);
   const setProducts = useSetRecoilState<listProductToppings>(Products);
@@ -26,6 +27,7 @@ const Navbar: React.FC<navbarProps> = ({ routes }) => {
     useSetRecoilState<listProductToppings>(filteredProducts);
   const cartItems = useRecoilValue<Cart>(cart);
 
+  // const { getAccessTokenSilently } = useAuth0();
   const [menu, setMenu] = useState("home");
 
   useEffect(() => {
@@ -63,24 +65,50 @@ const Navbar: React.FC<navbarProps> = ({ routes }) => {
           </Link>
 
           <ul className="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-            {routes.map((item: route) =>
+            {routes.map((item: route, i: number) =>
               item.name == "Cart" ? (
-                <li>
+                <li key={i}>
                   <Link
-                    className="nav-link px-2 text-dark nav-font"
-                    style={{ textDecoration: "none", fontSize: "16px" }}
+                    className="nav-link px-2 text-dark"
                     to={item.path}
+                    onClick={() => setActivePage(item.name)}
                   >
-                    {item.name}
+                    <p className="navbar-link m-0" 
+                      style={activePage === item.name ? 
+                        ({
+                          textDecoration: "underline",
+                          textDecorationColor: "#cf152d",
+                          textDecorationThickness: "4px",
+                          textUnderlineOffset: "10px",
+                        }) 
+                        : 
+                        ({})
+                      }>
+                      {item.name}
+                    </p>
                     <div className="nav-cart-count">
                       {cartItems.items.length}
                     </div>
                   </Link>
                 </li>
               ) : (
-                <li>
-                  <Link className="nav-link text-dark nav-font" to={item.path}>
-                    {item.name}
+                <li key={i}>
+                  <Link 
+                    className="nav-link text-dark" 
+                    to={item.path} 
+                    style={activePage === item.name ? 
+                      ({
+                        textDecoration: "underline",
+                        textDecorationColor: "#cf152d",
+                        textDecorationThickness: "4px",
+                        textUnderlineOffset: "10px",
+                      }) 
+                      : 
+                      ({})
+                    }
+                    onClick={() => setActivePage(item.name)}
+                  >
+                    <p className="navbar-link m-0">{item.name}</p>
                   </Link>
                 </li>
               )
@@ -89,7 +117,7 @@ const Navbar: React.FC<navbarProps> = ({ routes }) => {
 
           <div className="text-end">
             {isAuthenticated ? (
-              <div style={{ display: "flex" }}>
+              <div style={{ display: "flex"}}>
                 <UserInfo />
                 <LogoutButton />
               </div>

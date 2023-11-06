@@ -5,10 +5,15 @@ import jakarta.validation.constraints.NotEmpty;
 public class CustomerBody {
     @NotEmpty private String firstName;
     @NotEmpty private String lastName;
-    @NotEmpty private String tokenID;
     @NotEmpty private String email;
 
 
+    public CustomerBody(@NotEmpty String firstName, @NotEmpty String lastName, @NotEmpty String email) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+    }
+    
     public String getFirstName() {
         return firstName;
     }
@@ -20,12 +25,6 @@ public class CustomerBody {
     }
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-    public String getTokenID() {
-        return tokenID;
-    }
-    public void setTokenID(String tokenID) {
-        this.tokenID = tokenID;
     }
     public String getEmail() {
         return email;

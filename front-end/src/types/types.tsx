@@ -48,7 +48,9 @@ export interface ProductGridProps {
 export interface Cart {
   items: {
     product: product;
-    toppings?: any;
+    toppings?: any | topping[];
+    ice_level?: any;
+    sugar_level?: any;
     notes?: string;
   }[];
   total: number;
@@ -65,5 +67,35 @@ export interface ImageGalleryProps {
 }
 
 export interface ToppingsGridProps {
-  toppings: { items: string[]; price: number };
+  toppings: topping[];
+  setToppings: React.Dispatch<React.SetStateAction<topping[]>>;
+  sourceToppings: topping[];
+}
+
+export interface CartCardProps {
+  item: {
+    product: product;
+    toppings?: any | topping[];
+    ice_level?: any;
+    sugar_level?: any;
+    notes?: string;
+  };
+}
+
+export interface CartItemProp {
+  product: product;
+  toppings?: any | topping[];
+  ice_level?: any;
+  sugar_level?: any;
+  notes?: string;
+}
+
+export interface CartGridProps {
+  products: product[];
+}
+
+export interface InfoBarProps {
+  header: string;
+  information: string;
+  imageUrl: string;
 }
