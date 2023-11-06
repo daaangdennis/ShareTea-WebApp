@@ -70,20 +70,22 @@ const Navbar: React.FC<navbarProps> = ({ routes }) => {
                 <li key={i}>
                   <Link
                     className="nav-link px-2 text-dark"
-                    style={activePage === item.name ? 
-                      ({
-                        textDecoration: "underline",
-                        textDecorationColor: "#cf152d",
-                        textDecorationThickness: "4px",
-                        textUnderlineOffset: "10px",
-                      }) 
-                      : 
-                      ({})
-                    }
                     to={item.path}
                     onClick={() => setActivePage(item.name)}
                   >
-                    <p className="navbar-link m-0">{item.name}</p>
+                    <p className="navbar-link m-0" 
+                      style={activePage === item.name ? 
+                        ({
+                          textDecoration: "underline",
+                          textDecorationColor: "#cf152d",
+                          textDecorationThickness: "4px",
+                          textUnderlineOffset: "10px",
+                        }) 
+                        : 
+                        ({})
+                      }>
+                      {item.name}
+                    </p>
                     <div className="nav-cart-count">
                       {cartItems.items.length}
                     </div>
