@@ -12,7 +12,7 @@ export async function postOrder(cartData: Cart, accessTokenPromise : String) {
         Authorization: `Bearer ${accessToken}`,
       };
   
-      const response = await Axios.post("http://localhost:8080/orders/add", cartData, { headers });
+      const response = await Axios.post(process.env.REACT_APP_BACKEND_URL + "/orders/add", cartData, { headers });
       console.log(response);
     } catch (error) {
       console.error("There was an error ordering: ", error);
