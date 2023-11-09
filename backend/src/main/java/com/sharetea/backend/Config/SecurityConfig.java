@@ -5,6 +5,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -21,14 +23,28 @@ public class SecurityConfig {
                 .cors(withDefaults())
                 .authorizeHttpRequests((authorize) -> authorize
                     .requestMatchers(new AntPathRequestMatcher("/")).permitAll()
-                    //.requestMatchers(new AntPathRequestMatcher("/orders/add")).permitAll()
                     .requestMatchers(new AntPathRequestMatcher("/product/**")).permitAll()
+                    .requestMatchers(new AntPathRequestMatcher("/orders/pending")).permitAll()
+                    .requestMatchers(new AntPathRequestMatcher("/permissions")).hasAnyAuthority("manager")
                     .anyRequest().authenticated()
                     //.requestMatchers("/api/private-scoped").hasAuthority("SCOPE_read:messages")
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
-                    .jwt(withDefaults())
+                    .jwt(jwt -> jwt.jwtAuthenticationConverter(makePermissionsConverter()))
+                    
                 )
+                
                 .build();
+    }
+    
+    private JwtAuthenticationConverter makePermissionsConverter() {
+        final var jwtAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
+        jwtAuthoritiesConverter.setAuthoritiesClaimName("permissions");
+        jwtAuthoritiesConverter.setAuthorityPrefix("");
+
+        final var jwtAuthConverter = new JwtAuthenticationConverter();
+        jwtAuthConverter.setJwtGrantedAuthoritiesConverter(jwtAuthoritiesConverter);
+
+        return jwtAuthConverter;
     }
 }

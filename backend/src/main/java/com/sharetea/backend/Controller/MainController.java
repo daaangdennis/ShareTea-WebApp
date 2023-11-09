@@ -1,11 +1,7 @@
 package com.sharetea.backend.Controller;
 
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.Map;
 
@@ -19,8 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sharetea.backend.Entities.*;
 import com.sharetea.backend.RequestBodies.CustomerBody;
 import com.sharetea.backend.RequestBodies.EmployeeBody;
@@ -39,6 +33,11 @@ public class MainController {
     @GetMapping("/")
     public String home() {
         return "Hello!";
+    }
+
+    @GetMapping("/permissions")
+    public String getPermissions() throws URISyntaxException, IOException, InterruptedException {
+        return "You are a manager!";
     }
 
     @GetMapping("/customer/get")
@@ -69,6 +68,11 @@ public class MainController {
     @PostMapping("/orders/add")
     public Orders addOrder(HttpServletRequest request, @RequestBody Map<String, Object> orderData) throws URISyntaxException, IOException, InterruptedException {
         return service.addOrder(request, orderData);
+    }
+
+    @GetMapping("/orders/pending")
+    public List<Map<String,Object>> getPendingOrders() {
+        return service.pendingOrders();
     }
 
 

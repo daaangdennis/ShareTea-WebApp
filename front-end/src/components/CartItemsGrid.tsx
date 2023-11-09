@@ -3,6 +3,7 @@ import {
   Cart,
   CartCardProps,
   CartGridProps,
+  CartItemProp,
   product,
   topping,
 } from "../types/types";
@@ -15,7 +16,7 @@ var _ = require("lodash");
 const CartItem: React.FC<CartCardProps> = ({ item }) => {
 
     const [cartItems, setcartItems] = useRecoilState<Cart>(cart);
-    const [data, setdata] = useState<product>(item.product)
+    const [data, setdata] = useState<CartItemProp>(item)
 
     const addProductToCart = () => {
         const newlist: Cart = _.cloneDeep(cartItems);
