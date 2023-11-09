@@ -39,8 +39,7 @@ function CustomPage() {
     ) {
       const newlist: Cart = _.cloneDeep(cartItems);
       newlist.total =
-        newlist.total -
-        (customItem.item.toppings?.length + listToppings.length) * 0.75;
+        newlist.total - (customItem.item.toppings?.length * 0.75) + (listToppings.length * 0.75);
       newlist.items[customItem.item.cartId] = {
         product: customItem.item.product,
         toppings: listToppings,
@@ -202,7 +201,7 @@ function CustomPage() {
           <button className="custompage-button">Save to Favorites</button>
           {customItem.isEdit ? (
             <button onClick={editProductToCart} className="custompage-button">
-              Edit
+              Save Changes
             </button>
           ) : (
             <button onClick={addProductToCart} className="custompage-button">
