@@ -1,0 +1,34 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+
+.pendingpage-orders-information-container {
+    background-color: #cf152d;
+    font-family: 'Poppins', 'sans-serif';
+    color: white;
+}
+
+@media (min-width: 768px) {
+    .pendingpage-orders-information-container {
+        min-height: 75vh;
+    }
+}
+
+.pendingpage-product-card {
+    padding: 10px;
+    font-family: 'Poppins', 'sans-serif';
+    margin: 20px;
+    color: white;
+    background-color: #cf152d;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: space-between;
+}
+
+.pendingpage-product-card-left {
+    display: inline-block;
+}
+
+.pendingpage-product-card-right {
+    display: inline-block;
+}
