@@ -46,13 +46,7 @@ export interface ProductGridProps {
 }
 
 export interface Cart {
-  items: {
-    product: product;
-    toppings?: any | topping[];
-    ice_level?: any;
-    sugar_level?: any;
-    notes?: string;
-  }[];
+  items: ICartItem[];
   total: number;
 }
 
@@ -73,20 +67,15 @@ export interface ToppingsGridProps {
 }
 
 export interface CartCardProps {
-  item: {
-    product: product;
-    toppings?: any | topping[];
-    ice_level?: any;
-    sugar_level?: any;
-    notes?: string;
-  };
+  item: ICartItem;
 }
 
-export interface CartItemProp {
+export interface ICartItem {
   product: product;
-  toppings?: any | topping[];
-  ice_level?: any;
-  sugar_level?: any;
+  cartId?: number;
+  toppings?: topping[];
+  ice_level?: string;
+  sugar_level?: string;
   notes?: string;
 }
 
@@ -98,4 +87,9 @@ export interface InfoBarProps {
   header: string;
   information: string;
   imageUrl: string;
+}
+
+export interface customItem {
+  isEdit: boolean;
+  item: ICartItem;
 }
