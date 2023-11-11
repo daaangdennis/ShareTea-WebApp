@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Cart,
   CartCardProps,
@@ -18,6 +18,12 @@ const CartItem: React.FC<CartCardProps> = ({ item }) => {
   const [cartItems, setcartItems] = useRecoilState<Cart>(cart);
   const [data, setdata] = useState<customItem>({ isEdit: true, item });
 
+  useEffect(() => {
+    setdata({ isEdit: true, item });
+  }, [item]);
+
+  console.log("bug1 data:", data, ", item: ", item);
+
   const toppingsCount: number = item.toppings?.length || 0;
 
   const addProductToCart = () => {
@@ -36,7 +42,7 @@ const CartItem: React.FC<CartCardProps> = ({ item }) => {
 
   const deleteProductFromCart = () => {
     if (item.cartId != undefined) {
-      const newItems = cartItems;
+      const newItems = _.cloneDeep(cartItems);
       const newTotal =
         cartItems.total - item.product.price - toppingsCount * 0.75;
       const newlist: Cart = {

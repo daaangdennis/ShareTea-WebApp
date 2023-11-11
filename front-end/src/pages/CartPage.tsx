@@ -15,6 +15,7 @@ function CartPage() {
   const [orderComplete, setOrderComplete] = useState<boolean>(false);
 
   const { getAccessTokenSilently } = useAuth0();
+  console.log("total bug", cartItems);
 
   const clearCart = () => {
     setcartItems({
@@ -40,8 +41,6 @@ function CartPage() {
       }
     }
   };
-
-  console.log(cartItems);
 
   return (
     <div className="container-fluid">

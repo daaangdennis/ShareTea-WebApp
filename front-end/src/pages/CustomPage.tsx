@@ -18,6 +18,8 @@ function CustomPage() {
   const navigate = useNavigate();
   const customItem: customItem = location.state && location.state.data;
 
+  console.log("bug2", customItem);
+
   const [cartItems, setcartItems] = useRecoilState<Cart>(cart);
   const sourceProducts = useRecoilValue<listProductToppings>(Products);
   const [selectedIceLevel, setSelectedIceLevel] = useState<string>(
