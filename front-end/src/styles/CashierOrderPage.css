@@ -1,0 +1,143 @@
+.OrderContainer {
+  position: relative;
+  height: 100vh;
+  padding-bottom: 100px;
+}
+
+.FoodItemContainer {
+  background-color: white;
+  border: 2px solid red;
+  height: 100vh;
+  width: 400px;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.CategoryNavBar {
+  background-color: red;
+  border: 100px, solid, red;
+  height: 200px;
+  width: 1390px;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.cashier-page-item-text {
+  text-align: center;
+}
+
+.cashier-page-textarea {
+  font-family: "Poppins", "sans-serif";
+  border: 2px solid black !important;
+}
+
+.cashier-page-textarea:focus {
+  box-shadow: 0 0 15px rgba(207, 21, 45, 0.8) !important;
+  border: 2px solid black;
+  outline: 0 none !important;
+}
+
+.cashier-ice-dropdown {
+  position: relative;
+  width: 380px;
+  left: 10px;
+}
+
+.cashier-sugar-dropdown {
+  position: relative;
+  width: 380px;
+  top: 20px;
+  left: 10px;
+}
+
+.cashier-notes-container {
+  width: 380px;
+  position: relative;
+  margin-bottom: 20px;
+  left: 10px;
+}
+
+.ViewOrder {
+  position: absolute;
+  right: 500px;
+  bottom: 50px;
+}
+
+.cashier-page-button-container {
+  display: flex;
+  justify-content: end;
+  gap: 15px;
+  font-size: 1.2rem;
+}
+
+.cashier-page-button {
+  font-weight: 700;
+  color: white;
+  padding: 9px 25px;
+  background-color: #cf152d;
+  border: solid #cf152d;
+  border-radius: 10px;
+  transition: all 0.3s ease 0s;
+  text-align: center;
+  text-decoration: none;
+}
+
+.cashier-page-button:hover {
+  color: #cf152d;
+  background-color: white;
+  border: solid #cf152d;
+}
+
+.cashier-topping-grid {
+  position: relative;
+  top: 20px;
+  width: 400px;
+  left: 10px;
+}
+
+.cashier-add-to-order-container {
+  position: relative;
+}
+
+.cashier-add-to-order {
+  position: absolute;
+  left: 110px;
+}
+
+.OrderDetailsContainer {
+  background-color: red;
+  border: 1px solid white;
+  height: 100vh;
+  width: 400px;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.OrderHeader {
+  height: 120px;
+  border-bottom: 3px solid white;
+  margin-bottom: 10px;
+}
+
+.ItemCategories {
+  height: 40px;
+  border-bottom: 3px solid white;
+  margin-bottom: 10px;
+}
+
+.orderColumns {
+  overflow-wrap: "break-word";
+}
+
+.dashed-line {
+  border: 1px dashed white;
+  width: 100%;
+}
+
+.FoodItemButtons {
+  position: absolute;
+  top: 200px;
+}
