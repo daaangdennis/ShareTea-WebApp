@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, Navigate } from "react-router-dom";
 import {
   Cart,
   ToppingsGridProps,
@@ -13,12 +13,9 @@ import "../styles/CustomPage.css";
 import { Products } from "../atoms/product";
 var _ = require("lodash");
 
-function CustomPage() {
+const CustomPage = () => {
   const location = useLocation();
-  const navigate = useNavigate();
   const customItem: customItem = location.state && location.state.data;
-
-  console.log("bug2", customItem);
 
   const [cartItems, setcartItems] = useRecoilState<Cart>(cart);
   const sourceProducts = useRecoilValue<listProductToppings>(Products);
@@ -32,6 +29,17 @@ function CustomPage() {
     customItem.item?.toppings || []
   );
   const [note, setNote] = useState<string>(customItem.item?.notes || "");
+  const [isValidAccess, setIsValidAccess] = useState(false);
+
+  useEffect(() => {
+    if (customItem.isEdit) {
+      setIsValidAccess(true);
+    }
+  }, []);
+
+  if (!isValidAccess) {
+    return <Navigate to="/" />;
+  }
 
   const editProductToCart = () => {
     console.log(customItem);
@@ -41,7 +49,9 @@ function CustomPage() {
     ) {
       const newlist: Cart = _.cloneDeep(cartItems);
       newlist.total =
-        newlist.total - (customItem.item.toppings?.length * 0.75) + (listToppings.length * 0.75);
+        newlist.total -
+        customItem.item.toppings?.length * 0.75 +
+        listToppings.length * 0.75;
       newlist.items[customItem.item.cartId] = {
         product: customItem.item.product,
         toppings: listToppings,
@@ -50,7 +60,7 @@ function CustomPage() {
         sugar_level: selectedSugarLevel,
       };
       setcartItems(newlist);
-      navigate("/cart");
+      return <Navigate to="/cart" />;
     }
   };
 
@@ -68,7 +78,7 @@ function CustomPage() {
       customItem.item.product.price +
       listToppings.length * 0.75;
     setcartItems(newlist);
-    navigate("/cart");
+    return <Navigate to="/cart" />;
   };
 
   const handleIceLevelChange = (event: any) => {
@@ -100,11 +110,6 @@ function CustomPage() {
     "100% Sugar",
     "120% Sugar",
   ];
-
-  // const toppings = {
-  //   items: ["item1", "item2", "item3", "item4", "item5", "item6"],
-  //   price: 0.75,
-  // };
 
   return (
     <div className="container-fluid">
@@ -214,7 +219,8 @@ function CustomPage() {
       </div>
     </div>
   );
-}
+};
+
 const ToppingsGrid: React.FC<ToppingsGridProps> = ({
   toppings,
   setToppings,

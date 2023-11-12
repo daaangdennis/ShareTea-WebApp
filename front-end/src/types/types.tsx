@@ -1,4 +1,4 @@
-import { ReactElement } from "react";
+import { ReactElement, ReactNode } from "react";
 
 export interface route {
   name: string;
@@ -92,4 +92,12 @@ export interface InfoBarProps {
 export interface customItem {
   isEdit: boolean;
   item: ICartItem;
+}
+
+export interface SubNavProps {
+  children: ReactNode;
+}
+
+export interface ProtectedRouteProps {
+  roles: string[];
 }
