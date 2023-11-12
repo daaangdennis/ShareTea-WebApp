@@ -16,6 +16,19 @@ function App() {
     { name: "Home", path: "/", element: <LandingPage /> },
     { name: "Menu", path: "/Menu", element: <MenuPage /> },
     { name: "Cart", path: "/Cart", element: <CartPage /> },
+    { name: "Stat", path: "/Stat", element: <></>, roles: ["manager"] },
+    {
+      name: "Inventory",
+      path: "/Inventory",
+      element: <></>,
+      roles: ["cashier", "manager"],
+    },
+    {
+      name: "Pending",
+      path: "/Pending",
+      element: <></>,
+      roles: ["manager", "cashier"],
+    },
   ];
 
   return (
@@ -42,4 +55,6 @@ function App() {
 
 export default App;
 
-<Route path="/login" element={<LoginPage />}></Route>;
+{
+  /* <Route path="/login" element={<LoginPage />}></Route>; */
+}

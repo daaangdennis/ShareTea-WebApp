@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, Navigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   Cart,
   ToppingsGridProps,
@@ -20,29 +20,18 @@ const CustomPage = () => {
   const [cartItems, setcartItems] = useRecoilState<Cart>(cart);
   const sourceProducts = useRecoilValue<listProductToppings>(Products);
   const [selectedIceLevel, setSelectedIceLevel] = useState<string>(
-    customItem.item?.ice_level || ""
+    customItem?.item?.ice_level || ""
   );
   const [selectedSugarLevel, setSelectedSugarLevel] = useState<string>(
-    customItem.item?.sugar_level || ""
+    customItem?.item?.sugar_level || ""
   );
   const [listToppings, setListToppings] = useState<topping[]>(
-    customItem.item?.toppings || []
+    customItem?.item?.toppings || []
   );
-  const [note, setNote] = useState<string>(customItem.item?.notes || "");
-  const [isValidAccess, setIsValidAccess] = useState(false);
-
-  useEffect(() => {
-    if (customItem.isEdit) {
-      setIsValidAccess(true);
-    }
-  }, []);
-
-  if (!isValidAccess) {
-    return <Navigate to="/" />;
-  }
+  const [note, setNote] = useState<string>(customItem?.item?.notes || "");
+  const navigate = useNavigate();
 
   const editProductToCart = () => {
-    console.log(customItem);
     if (
       customItem.item.cartId != undefined &&
       customItem.item.toppings?.length != undefined
@@ -60,7 +49,7 @@ const CustomPage = () => {
         sugar_level: selectedSugarLevel,
       };
       setcartItems(newlist);
-      return <Navigate to="/cart" />;
+      navigate("/cart");
     }
   };
 
@@ -78,7 +67,7 @@ const CustomPage = () => {
       customItem.item.product.price +
       listToppings.length * 0.75;
     setcartItems(newlist);
-    return <Navigate to="/cart" />;
+    navigate("/cart");
   };
 
   const handleIceLevelChange = (event: any) => {
@@ -111,7 +100,7 @@ const CustomPage = () => {
     "120% Sugar",
   ];
 
-  return (
+  return customItem?.isAdd || customItem?.isEdit ? (
     <div className="container-fluid">
       <div className="row custompage-drink-information mb-4">
         <div className="col-md-4 text-center my-4 px-0">
@@ -218,6 +207,8 @@ const CustomPage = () => {
         </div>
       </div>
     </div>
+  ) : (
+    <h1>No item to customize</h1>
   );
 };
 

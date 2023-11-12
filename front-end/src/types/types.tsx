@@ -4,6 +4,7 @@ export interface route {
   name: string;
   path: string;
   element: ReactElement;
+  roles?: string[];
 }
 
 export interface navbarProps {
@@ -90,6 +91,7 @@ export interface InfoBarProps {
 }
 
 export interface customItem {
+  isAdd: boolean;
   isEdit: boolean;
   item: ICartItem;
 }

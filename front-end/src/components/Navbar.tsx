@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import {
   Cart,
   listProductToppings,
@@ -15,9 +15,10 @@ import "../styles/Navbar.css";
 import { LoginButton, LogoutButton } from "./Login";
 import { useAuth0 } from "@auth0/auth0-react";
 import UserInfo from "./UserInfo";
+import useUserRole from "../hooks/useUserRole";
 
 const Navbar: React.FC<navbarProps> = ({ routes }) => {
-  const { user, isAuthenticated, isLoading } = useAuth0();
+  const { isAuthenticated } = useAuth0();
 
   const [activePage, setActivePage] = useState("Home");
   const [searchTerm, setSearchTerm] = useState("");
@@ -26,8 +27,10 @@ const Navbar: React.FC<navbarProps> = ({ routes }) => {
   const setFilteredProducts =
     useSetRecoilState<listProductToppings>(filteredProducts);
   const cartItems = useRecoilValue<Cart>(cart);
+  const { userRole } = useUserRole();
 
   const [menu, setMenu] = useState("home");
+  const location = useLocation();
 
   useEffect(() => {
     getProducts(setProducts, setFilteredProducts);
@@ -65,17 +68,41 @@ const Navbar: React.FC<navbarProps> = ({ routes }) => {
 
           <ul className="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
             {routes.map((item: route, i: number) =>
-              item.name == "Cart" ? (
-                <li key={i}>
-                  <Link
-                    className="nav-link px-2 text-dark"
-                    to={item.path}
-                    onClick={() => setActivePage(item.name)}
-                  >
-                    <p
-                      className="navbar-link m-0"
+              (!item.roles && !userRole) || !item.roles ? (
+                item.name == "Cart" ? (
+                  <li key={i}>
+                    <Link
+                      className="nav-link px-2 text-dark"
+                      to={item.path}
+                      onClick={() => setActivePage(item.name)}
+                    >
+                      <p
+                        className="navbar-link m-0"
+                        style={
+                          location.pathname == item.path
+                            ? {
+                                textDecoration: "underline",
+                                textDecorationColor: "#cf152d",
+                                textDecorationThickness: "4px",
+                                textUnderlineOffset: "10px",
+                              }
+                            : {}
+                        }
+                      >
+                        {item.name}
+                      </p>
+                      <div className="nav-cart-count">
+                        {cartItems.items.length}
+                      </div>
+                    </Link>
+                  </li>
+                ) : (
+                  <li key={i}>
+                    <Link
+                      className="nav-link text-dark"
+                      to={item.path}
                       style={
-                        activePage === item.name
+                        location.pathname == item.path
                           ? {
                               textDecoration: "underline",
                               textDecorationColor: "#cf152d",
@@ -84,15 +111,13 @@ const Navbar: React.FC<navbarProps> = ({ routes }) => {
                             }
                           : {}
                       }
+                      onClick={() => setActivePage(item.name)}
                     >
-                      {item.name}
-                    </p>
-                    <div className="nav-cart-count">
-                      {cartItems.items.length}
-                    </div>
-                  </Link>
-                </li>
-              ) : (
+                      <p className="navbar-link m-0">{item.name}</p>
+                    </Link>
+                  </li>
+                )
+              ) : item.roles.includes(userRole) ? (
                 <li key={i}>
                   <Link
                     className="nav-link text-dark"
@@ -112,6 +137,8 @@ const Navbar: React.FC<navbarProps> = ({ routes }) => {
                     <p className="navbar-link m-0">{item.name}</p>
                   </Link>
                 </li>
+              ) : (
+                <></>
               )
             )}
           </ul>
@@ -123,7 +150,7 @@ const Navbar: React.FC<navbarProps> = ({ routes }) => {
                 <LogoutButton />
               </div>
             ) : (
-              <LoginButton></LoginButton>
+              <LoginButton />
             )}
           </div>
         </div>
