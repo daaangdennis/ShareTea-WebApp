@@ -1,11 +1,15 @@
 package com.sharetea.backend.Services;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -45,6 +49,9 @@ public class Services {
     private InventoryRepository inventoryRepository;
 
     @Autowired
+    private InventoryProductRepository inventoryProductRepository;
+
+    @Autowired
     private UsersRepository usersRepository;
 
     @Autowired
@@ -70,7 +77,6 @@ public class Services {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode responseBody = objectMapper.readTree(response.body());
 
-        System.out.println(responseBody);
 
         String email = responseBody.get("email").asText();
         String firstName = responseBody.get("given_name").asText();
@@ -225,6 +231,7 @@ public class Services {
 
             List<Map<String,Object>> productList = orderProductRepository.getProductsbyOrderID(orderID);
             List<Map<String,Object>> itemList = new ArrayList<>();
+
             for(Map<String, Object> product : productList){
                 Map<String,Object> itemMap = new HashMap<>();
                 Map<String, Object> productNamePrice = productRepository.findProductNamePrice((Integer) product.get("product_id"));
@@ -294,7 +301,24 @@ public class Services {
         return productRepository.save(product);
     }
 
+    public List<Map<String, Object>> productSales(LocalDate start, LocalDate end){
+        return productRepository.productSales(start, end);
+    }
+
+    public List<Map<String, Object>> commonPairs(LocalDate start, LocalDate end){
+        return productRepository.commonPairings(start, end);
+    }
+
     public Product updateProduct(Integer productID, Product productUpdate) {
+        if(productID == -1){
+            if(productUpdate.getPrice() != null && productUpdate.getCategory() != null && productUpdate.getName() != null){
+                return productRepository.save(productUpdate);
+            }
+            else{
+                return null;
+            }
+        }
+        
         Optional<Product> productOptional = productRepository.findById(productID);
 
         if (productOptional.isPresent()) {
@@ -302,7 +326,6 @@ public class Services {
 
             if (productUpdate.getName() != null) {
                 product.setName(productUpdate.getName());
-                ;
             }
             if (productUpdate.getPrice() != null) {
                 product.setPrice(productUpdate.getPrice());
@@ -315,7 +338,8 @@ public class Services {
             }
 
             return productRepository.save(product);
-        } else {
+        } 
+        else{
             return null;
         }
     }
@@ -345,6 +369,28 @@ public class Services {
         } else {
             return null;
         }
+    }
+
+    public List<Map<String, Object>> lowStock(){
+        return inventoryRepository.findLowStock();
+    }
+
+    public List<Map<String, Object>> excessStock(LocalDate date) {
+        List<Map<String, Object>> finalStock = new ArrayList<>();
+        List<Map<String, Object>> allStock = inventoryProductRepository.excessStock(date);
+    
+        for (Map<String, Object> s : allStock) {
+            BigDecimal used = new BigDecimal(s.get("used").toString());
+            BigDecimal quantity = new BigDecimal(s.get("quantity").toString());
+    
+            BigDecimal ratio = used.divide(used.add(quantity), 2, RoundingMode.HALF_UP);
+    
+            BigDecimal threshold = new BigDecimal("0.10");
+            if (ratio.compareTo(threshold) < 0) {
+                finalStock.add(s);
+            }
+        }
+        return finalStock;
     }
 
 }

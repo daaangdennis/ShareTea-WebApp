@@ -2,8 +2,10 @@ package com.sharetea.backend.Controller;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -90,9 +92,14 @@ public class MainController {
         return service.getBestSelling();  
     }
 
-    @PostMapping("/product/update/{productID}")
-    public Product updateProduct(@PathVariable Integer productID, @RequestBody Product productUpdate) {
-        return service.updateProduct(productID, productUpdate);
+    @PostMapping("/product/update")
+    public Product updateProduct(@RequestParam(required = false) Integer productID, @RequestBody Product productUpdate) {
+        if(productID != null){
+            return service.updateProduct(productID, productUpdate);
+        }
+        else{
+            return service.updateProduct(-1, productUpdate);
+        }
     }
 
     @GetMapping("/product/getmostandleast")
@@ -100,13 +107,33 @@ public class MainController {
         return service.getMostandLeastOrdered(customer_id);
     }
 
+    @GetMapping("/product/sales")
+    public List<Map<String, Object>> productSales(@RequestParam String startDate, @RequestParam String endDate) {
+        return service.productSales(LocalDate.parse(startDate), LocalDate.parse(endDate));
+    }
+
+    @GetMapping("/product/commonpairings")
+    public List<Map<String, Object>> commonPairs(@RequestParam String startDate, @RequestParam String endDate) {
+        return service.commonPairs(LocalDate.parse(startDate), LocalDate.parse(endDate));
+    }
+
     @GetMapping("/inventory/get")
     public Iterable<Inventory> getInventory() {
         return service.getAllInventory();
     }
 
-    @PostMapping("/inventory/update/{inventoryID}")
-    public Inventory updateInventory(@PathVariable Integer inventoryID, @RequestBody Inventory inventoryUpdate) {
+    @GetMapping("/inventory/low")
+    public List<Map<String, Object>> getLowStock() {
+        return service.lowStock();
+    }
+
+    @GetMapping("/inventory/excess")
+    public List<Map<String, Object>> getLowStock(@RequestParam String date) {
+        return service.excessStock(LocalDate.parse(date));
+    }
+
+    @PostMapping("/inventory/update")
+    public Inventory updateInventory(@RequestParam Integer inventoryID, @RequestBody Inventory inventoryUpdate) {
         return service.updateInventory(inventoryID, inventoryUpdate);
     }
 
