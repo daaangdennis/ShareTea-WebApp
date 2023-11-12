@@ -123,7 +123,7 @@ const Navbar: React.FC<navbarProps> = ({ routes }) => {
                     className="nav-link text-dark"
                     to={item.path}
                     style={
-                      activePage === item.name
+                      location.pathname == item.path
                         ? {
                             textDecoration: "underline",
                             textDecorationColor: "#cf152d",

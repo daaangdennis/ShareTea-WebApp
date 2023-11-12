@@ -10,6 +10,7 @@ import CartPage from "./pages/CartPage";
 import MenuPage from "./pages/MenuPage";
 import CustomPage from "./pages/CustomPage";
 import ProtectedRoute from "./components/ProtectedRoute";
+import InventoryPage from "./pages/InventoryPage";
 
 function App() {
   const routes: route[] = [
@@ -20,7 +21,7 @@ function App() {
     {
       name: "Inventory",
       path: "/Inventory",
-      element: <></>,
+      element: <InventoryPage />,
       roles: ["cashier", "manager"],
     },
     {
@@ -45,6 +46,7 @@ function App() {
           </Route>
           <Route element={<ProtectedRoute roles={["manager"]} />}>
             {/* Add routes accessible by manager only here */}
+            <Route path="/Inventory" element={<InventoryPage />} />
           </Route>
         </Routes>
         <Footer />
