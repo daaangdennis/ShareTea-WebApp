@@ -402,46 +402,31 @@ public class Services {
         return productRepository.commonPairings(start, end);
     }
 
-    public Product updateProduct(Integer productID, Product productUpdate) {
-        if(productID == -1){
-            if(productUpdate.getPrice() != null && productUpdate.getCategory() != null && productUpdate.getName() != null){
-                return productRepository.save(productUpdate);
-            }
-            else{
-                return null;
-            }
+    public Product updateProduct(String name, String category, Double price) {
+        Product product = productRepository.findByName(name);
+        if(product == null){
+            Product newProduct = new Product();
+            newProduct.setName(name);
+            newProduct.setCategory(category);
+            newProduct.setPrice(price);
+            productRepository.save(newProduct);
         }
-        
-        Optional<Product> productOptional = productRepository.findById(productID);
-
-        if (productOptional.isPresent()) {
-            Product product = productOptional.get();
-
-            if (productUpdate.getName() != null) {
-                product.setName(productUpdate.getName());
-            }
-            if (productUpdate.getPrice() != null) {
-                product.setPrice(productUpdate.getPrice());
-            }
-            if (productUpdate.getCategory() != null) {
-                product.setCategory(productUpdate.getCategory());
-            }
-            if (productUpdate.getUrl() != null) {
-                product.setUrl(productUpdate.getUrl());
-            }
-
-            return productRepository.save(product);
-        } 
         else{
-            return null;
+            if(category != null){
+                product.setCategory(category);
+            }
+            if(price != null){
+                product.setPrice(price);
+            }
+            return productRepository.save(product);
         }
+        return null;
     }
 
-    public String deleteProduct(Integer productID){
-        Optional<Product> product = productRepository.findById(productID);
-        Product realProduct = product.get();
-        String name = realProduct.getName();
-        productRepository.deleteById(productID);
+    public String deleteProduct(String productName){
+        Product product = productRepository.findByName(productName);
+        String name = product.getName();
+        productRepository.deleteByName(name);
         return ("Deleted " + name);
     }
 
@@ -449,43 +434,28 @@ public class Services {
         return inventoryRepository.findAll();
     }
 
-    public Inventory updateInventory(Integer inventoryID, Inventory inventoryUpdate) {
-        if(inventoryID == -1){
-            if(inventoryUpdate.getName() != null){
-                return inventoryRepository.save(inventoryUpdate);
+    public Inventory updateInventory(String name, Integer quantity) {
+        Inventory inventory = inventoryRepository.findByName(name);
+        if(inventory == null){
+            Inventory newInventory = new Inventory();
+            newInventory.setName(name);
+            if(quantity != null){
+                newInventory.setQuantity(quantity);
             }
-            else{
-                return null;
-            }
+            inventoryRepository.save(newInventory);
         }
-        
-        Optional<Inventory> inventoryOptional = inventoryRepository.findById(inventoryID);
-
-        if (inventoryOptional.isPresent()) {
-            Inventory inventory = inventoryOptional.get();
-
-            if (inventoryUpdate.getName() != null) {
-                inventory.setName(inventoryUpdate.getName());
-            }
-            if (inventoryUpdate.getQuantity() != null) {
-                inventory.setQuantity(inventoryUpdate.getQuantity());
-            }
-            if (inventoryUpdate.getIs_topping() != null) {
-                inventory.setIs_topping(inventoryUpdate.getIs_topping());
-            }
-            inventory.setLast_updated(new Date());
-
+        else{
+            inventory.setQuantity(quantity);
             return inventoryRepository.save(inventory);
-        } else {
-            return null;
         }
+        return null;
     }
 
-    public String deleteInventory(Integer inventoryID){
-        Inventory inventory = inventoryRepository.findById(inventoryID).get();
-        String name = inventory.getName();
-        inventoryRepository.deleteById(inventoryID);
-        return ("Deleted " + name);
+    public String deleteInventory(String name){
+        Inventory inventory = inventoryRepository.findByName(name);
+        String invName = inventory.getName();
+        inventoryRepository.deleteByName(invName);
+        return ("Deleted " + invName);
     }
 
     public List<Map<String, Object>> lowStock(){

@@ -8,8 +8,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import com.sharetea.backend.Entities.*;
 
+import jakarta.transaction.Transactional;
+
 @Repository
 public interface InventoryRepository extends JpaRepository<Inventory, Integer> {
+    Inventory findByName(String name);
+    @Transactional void deleteByName(String name);
+
     @Query(value = "select * from inventory where is_topping = 'true'", nativeQuery = true)
     public List<Inventory> findToppings();
 

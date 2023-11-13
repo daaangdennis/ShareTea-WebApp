@@ -93,18 +93,13 @@ public class MainController {
     }
 
     @PostMapping("/product/update")
-    public Product updateProduct(@RequestParam(required = false) Integer productID, @RequestBody Product productUpdate) {
-        if(productID != null){
-            return service.updateProduct(productID, productUpdate);
-        }
-        else{
-            return service.updateProduct(-1, productUpdate);
-        }
+    public Product updateProduct(@RequestParam String productName, @RequestParam(required = false) String category, @RequestParam(required = false) Double price) {
+        return service.updateProduct(productName, category, price);
     }
 
     @PostMapping("/product/delete")
-    public String deleteProduct(@RequestParam Integer productID) {
-        return service.deleteProduct(productID);
+    public String deleteProduct(@RequestParam String productName) {
+        return service.deleteProduct(productName);
     }
 
     @GetMapping("/product/getmostandleast")
@@ -138,18 +133,13 @@ public class MainController {
     }
 
     @PostMapping("/inventory/update")
-    public Inventory updateInventory(@RequestParam(required = false) Integer inventoryID, @RequestBody Inventory inventoryUpdate) {
-        if(inventoryID != null){
-            return service.updateInventory(inventoryID, inventoryUpdate);
-        }
-        else{
-            return service.updateInventory(-1, inventoryUpdate);
-        }
+    public Inventory updateInventory(@RequestParam String inventoryName, @RequestParam(required = false) Integer quantity) {
+        return service.updateInventory(inventoryName, quantity);
     }
 
     @PostMapping("/inventory/delete")
-    public String inventoryDelete(@RequestParam Integer inventoryID) {
-        return service.deleteInventory(inventoryID);
+    public String inventoryDelete(@RequestParam String inventoryName) {
+        return service.deleteInventory(inventoryName);
     }
 
 }
