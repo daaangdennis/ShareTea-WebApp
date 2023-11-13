@@ -1,11 +1,15 @@
 package com.sharetea.backend.Services;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -45,6 +49,9 @@ public class Services {
     private InventoryRepository inventoryRepository;
 
     @Autowired
+    private InventoryProductRepository inventoryProductRepository;
+
+    @Autowired
     private UsersRepository usersRepository;
 
     @Autowired
@@ -69,6 +76,8 @@ public class Services {
 
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode responseBody = objectMapper.readTree(response.body());
+
+
         String email = responseBody.get("email").asText();
         String firstName = responseBody.get("given_name").asText();
         String lastName = responseBody.get("family_name").asText();
@@ -148,16 +157,13 @@ public class Services {
         if( user != null) {
             customerRepository.addOrderCount(user.getUser_id());
             order.setCustomer_id(user.getUser_id());
-
         }
         else{
             CustomerBody customer = new CustomerBody(firstName, lastName, email);
             Customer newCustomer = addCustomer(customer);
             order.setCustomer_id(newCustomer.getUser_id());
-
         }
 
-        order.setEmployee_id(3); // CHANGE LATER // CHANGE LATER // CHANGE LATER
         order.setTotal(0.00);
         Double total = 0.00;
         
@@ -167,18 +173,27 @@ public class Services {
         for (Map<String, Object> item : items) {
             Integer productID = (Integer) ((Map<String, Object>) item.get("product")).get("product_id");
             String note = (String) item.get("notes");
+            String sugar = (String) item.get("sugar_level");
+            String ice = (String) item.get("ice_level");
 
             OrderProduct orderProduct = new OrderProduct();
             orderProduct.setOrder_id(order.getOrder_id());
             orderProduct.setProduct_id(productID);
-            orderProduct.setQuantity(1); // CHANGE LATER // CHANGE LATER // CHANGE LATER
+            orderProduct.setQuantity(1); //Change maybe
 
             total += productRepository.findPriceByID(productID);
             
             if(note != null){
                 orderProduct.setNote(note);
             }
-            orderProductRepository.save(orderProduct); // ADD SUGAR AND ICE LEVELS LATER
+            if(sugar != null){
+                orderProduct.setSugar_level(sugar);
+            }
+            if(ice != null){
+                orderProduct.setIce_level(ice);
+            }
+
+            orderProductRepository.save(orderProduct);
 
             List<Map<String, Object>> toppings = (List<Map<String, Object>>) item.get("toppings");
             if(toppings != null){
@@ -198,6 +213,53 @@ public class Services {
 
         System.out.println("Added order#" + order.getOrder_id());
         return order;
+    }
+
+
+    public List<Map<String,Object>> pendingOrders(){
+        List<Map<String,Object>> pendingOrders = ordersRepository.pendingOrders();
+
+        List<Map<String,Object>> finalPendingList = new ArrayList<>();
+
+        for(Map<String,Object> order : pendingOrders){
+            Map<String,Object> orderMap = new HashMap<>();
+            Integer orderID = (Integer) order.get("order_id");
+            orderMap.put("order_id", orderID);
+            orderMap.put("order_date", order.get("order_date"));
+            orderMap.put("first_name", order.get("first_name"));
+            orderMap.put("last_name", order.get("last_name"));
+
+            List<Map<String,Object>> productList = orderProductRepository.getProductsbyOrderID(orderID);
+            List<Map<String,Object>> itemList = new ArrayList<>();
+
+            for(Map<String, Object> product : productList){
+                Map<String,Object> itemMap = new HashMap<>();
+                Map<String, Object> productNamePrice = productRepository.findProductNamePrice((Integer) product.get("product_id"));
+                itemMap.put("product", productNamePrice.get("name"));
+                itemMap.put("price", productNamePrice.get("price"));
+                if(product.get("note") != null){
+                    itemMap.put("note", product.get("note"));
+                }
+                if(product.get("sugar_level") != null){
+                    itemMap.put("sugar_level", product.get("sugar_level"));
+                }
+                if(product.get("ice_level") != null){
+                    itemMap.put("ice_level", product.get("ice_level"));
+                }
+
+                Integer order_product_id = (Integer) product.get("order_product_id");
+                List<String> toppings = itemToppingsRepository.getToppingsByopID(order_product_id);
+                itemMap.put("toppings", toppings);
+
+
+                itemList.add(itemMap);
+            }   
+
+            orderMap.put("items", itemList);
+            finalPendingList.add(orderMap);
+        }
+        return finalPendingList;
+
     }
 
 
@@ -239,7 +301,24 @@ public class Services {
         return productRepository.save(product);
     }
 
+    public List<Map<String, Object>> productSales(LocalDate start, LocalDate end){
+        return productRepository.productSales(start, end);
+    }
+
+    public List<Map<String, Object>> commonPairs(LocalDate start, LocalDate end){
+        return productRepository.commonPairings(start, end);
+    }
+
     public Product updateProduct(Integer productID, Product productUpdate) {
+        if(productID == -1){
+            if(productUpdate.getPrice() != null && productUpdate.getCategory() != null && productUpdate.getName() != null){
+                return productRepository.save(productUpdate);
+            }
+            else{
+                return null;
+            }
+        }
+        
         Optional<Product> productOptional = productRepository.findById(productID);
 
         if (productOptional.isPresent()) {
@@ -247,7 +326,6 @@ public class Services {
 
             if (productUpdate.getName() != null) {
                 product.setName(productUpdate.getName());
-                ;
             }
             if (productUpdate.getPrice() != null) {
                 product.setPrice(productUpdate.getPrice());
@@ -260,7 +338,8 @@ public class Services {
             }
 
             return productRepository.save(product);
-        } else {
+        } 
+        else{
             return null;
         }
     }
@@ -290,6 +369,28 @@ public class Services {
         } else {
             return null;
         }
+    }
+
+    public List<Map<String, Object>> lowStock(){
+        return inventoryRepository.findLowStock();
+    }
+
+    public List<Map<String, Object>> excessStock(LocalDate date) {
+        List<Map<String, Object>> finalStock = new ArrayList<>();
+        List<Map<String, Object>> allStock = inventoryProductRepository.excessStock(date);
+    
+        for (Map<String, Object> s : allStock) {
+            BigDecimal used = new BigDecimal(s.get("used").toString());
+            BigDecimal quantity = new BigDecimal(s.get("quantity").toString());
+    
+            BigDecimal ratio = used.divide(used.add(quantity), 2, RoundingMode.HALF_UP);
+    
+            BigDecimal threshold = new BigDecimal("0.10");
+            if (ratio.compareTo(threshold) < 0) {
+                finalStock.add(s);
+            }
+        }
+        return finalStock;
     }
 
 }
