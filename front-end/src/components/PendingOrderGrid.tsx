@@ -10,7 +10,7 @@ function PendingOrderCard({ order }: PendingOrderCardProp) {
                 <b>Order #{order.order_id}:</b> {order.first_name} {order.last_name}
             </div>
             <div className="pendingpage-product-card-right">
-                Total: $24.00
+                Total: ${(order.total * 1.0825).toFixed(2)}
             </div>
         </div>
     );

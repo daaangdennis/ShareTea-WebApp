@@ -111,6 +111,7 @@ export interface OrderItem {
   last_name: string;
   order_date: string;
   order_id: number;
+  total: number;
 }
 export interface PendingOrders {
   orders: OrderItem[];
