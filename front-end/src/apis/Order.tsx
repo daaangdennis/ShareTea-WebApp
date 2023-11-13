@@ -1,5 +1,5 @@
 import Axios from "axios";
-import { Cart, listProductToppings, product } from "../types/types";
+import { Cart, listProductToppings, product, OrderItem, PendingOrders } from "../types/types";
 import { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { cart } from "../atoms/cart";
@@ -18,3 +18,19 @@ export async function postOrder(cartData: Cart, accessTokenPromise : String) {
       console.error("There was an error ordering: ", error);
     }
   }
+
+
+export function getPendingOrders(
+  setPendingOrder: React.Dispatch<React.SetStateAction<PendingOrders>>
+) {
+  Axios.get(process.env.REACT_APP_BACKEND_URL + "/orders/pending")
+    .then((response) => {
+      const pending: PendingOrders = response.data;
+      //console.log(pending);
+      setPendingOrder(pending);
+
+    })
+    .catch((error) => {
+      console.error("There was an error fetching data:", error);
+    });
+}

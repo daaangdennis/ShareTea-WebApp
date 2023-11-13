@@ -99,3 +99,27 @@ export interface InfoBarProps {
   information: string;
   imageUrl: string;
 }
+
+export interface OrderItem {
+  first_name: string;
+  items: {
+    note?: string;
+    price: number;
+    product: string;
+    toppings: string[];
+  }
+  last_name: string;
+  order_date: string;
+  order_id: number;
+}
+export interface PendingOrders {
+  orders: OrderItem[];
+}
+
+export interface PendingOrderGridProp {
+  orders: OrderItem[];
+}
+
+export interface PendingOrderCardProp {
+  order: OrderItem;
+}
