@@ -3,12 +3,12 @@ package com.sharetea.backend.RequestBodies;
 import jakarta.validation.constraints.NotEmpty;
 
 public class CustomerBody {
-    @NotEmpty private String firstName;
-    @NotEmpty private String lastName;
+    private String firstName;
+    private String lastName;
     @NotEmpty private String email;
 
 
-    public CustomerBody(@NotEmpty String firstName, @NotEmpty String lastName, @NotEmpty String email) {
+    public CustomerBody(String firstName, String lastName, @NotEmpty String email) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;

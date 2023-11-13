@@ -37,6 +37,11 @@ public class MainController {
         return "Hello!";
     }
 
+    @GetMapping("/user/orders")
+    public Map<String, List<Map<String, Object>>> userOrders(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException {
+        return service.userOrders(request);
+    }
+
     @GetMapping("/permissions")
     public String getPermissions() throws URISyntaxException, IOException, InterruptedException {
         return "You are a manager!";
@@ -69,7 +74,12 @@ public class MainController {
 
     @PostMapping("/orders/add")
     public Orders addOrder(HttpServletRequest request, @RequestBody Map<String, Object> orderData) throws URISyntaxException, IOException, InterruptedException {
-        return service.addOrder(request, orderData);
+        return service.addOrder(request, null, orderData);
+    }
+
+    @PostMapping("/orders/cashieradd")
+    public Orders cashierAddOrder(@RequestParam String email, @RequestBody Map<String, Object> orderData) throws URISyntaxException, IOException, InterruptedException {
+        return service.addOrder(null, email, orderData);
     }
 
     @GetMapping("/orders/pending")

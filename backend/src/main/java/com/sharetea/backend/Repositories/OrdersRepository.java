@@ -17,7 +17,7 @@ public interface OrdersRepository extends JpaRepository<Orders, Integer> {
     @Query(value = "select order_id, order_date, first_name, last_name from orders join users on  orders.customer_id = users.user_id where is_pending = true and customer_id = ?1", nativeQuery = true)
     public List<Map<String,Object>> userPendingOrders(Integer customerID);
 
-    @Query(value = "select order_id, order_date, first_name, last_name from orders join users on  orders.customer_id = users.user_id where is_pending = false and customer_id = ?1", nativeQuery = true)
+    @Query(value = "select order_id, order_date, first_name, last_name from orders join users on  orders.customer_id = users.user_id where is_pending = false and customer_id = ?1 order by order_date limit 5", nativeQuery = true)
     public List<Map<String,Object>> userCompletedOrders(Integer customerID);
 
 }
