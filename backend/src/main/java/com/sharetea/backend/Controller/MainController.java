@@ -102,6 +102,11 @@ public class MainController {
         }
     }
 
+    @PostMapping("/product/delete")
+    public String deleteProduct(@RequestParam Integer productID) {
+        return service.deleteProduct(productID);
+    }
+
     @GetMapping("/product/getmostandleast")
     public List<List<String>> updateProduct(@RequestParam Integer customer_id) {
         return service.getMostandLeastOrdered(customer_id);
@@ -135,6 +140,11 @@ public class MainController {
     @PostMapping("/inventory/update")
     public Inventory updateInventory(@RequestParam Integer inventoryID, @RequestBody Inventory inventoryUpdate) {
         return service.updateInventory(inventoryID, inventoryUpdate);
+    }
+
+    @PostMapping("/inventory/delete")
+    public String inventoryDelete(@RequestParam Integer inventoryID) {
+        return service.deleteInventory(inventoryID);
     }
 
 }
