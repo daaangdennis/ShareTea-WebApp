@@ -83,7 +83,7 @@ public class MainController {
     }
 
     @GetMapping("/orders/pending")
-    public List<Map<String,Object>> getPendingOrders() {
+    public  Map<String, List<Map<String, Object>>> getPendingOrders() {
         return service.pendingOrders();
     }
 

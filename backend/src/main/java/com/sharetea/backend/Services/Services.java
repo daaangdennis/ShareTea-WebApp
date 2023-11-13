@@ -329,7 +329,7 @@ public class Services {
     }
 
 
-    public List<Map<String,Object>> pendingOrders(){
+    public  Map<String, List<Map<String, Object>>> pendingOrders(){
         List<Map<String,Object>> pendingOrders = ordersRepository.pendingOrders();
 
         List<Map<String,Object>> finalPendingList = new ArrayList<>();
@@ -371,7 +371,10 @@ public class Services {
             orderMap.put("items", itemList);
             finalPendingList.add(orderMap);
         }
-        return finalPendingList;
+        Map<String, List<Map<String, Object>>> result = new HashMap<>();
+        result.put("orders", finalPendingList);
+
+        return result;
 
     }
 
