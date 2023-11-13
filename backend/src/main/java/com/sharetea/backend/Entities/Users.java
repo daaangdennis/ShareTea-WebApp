@@ -15,9 +15,7 @@ public class Users {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer user_id;
 
-    @NotEmpty
     private String first_name;
-    @NotEmpty
     private String last_name;
     @NotEmpty
     private String email;

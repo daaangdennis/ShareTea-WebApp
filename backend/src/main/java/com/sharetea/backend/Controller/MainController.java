@@ -37,6 +37,11 @@ public class MainController {
         return "Hello!";
     }
 
+    @GetMapping("/user/orders")
+    public Map<String, List<Map<String, Object>>> userOrders(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException {
+        return service.userOrders(request);
+    }
+
     @GetMapping("/permissions")
     public String getPermissions() throws URISyntaxException, IOException, InterruptedException {
         return "You are a manager!";
@@ -69,7 +74,12 @@ public class MainController {
 
     @PostMapping("/orders/add")
     public Orders addOrder(HttpServletRequest request, @RequestBody Map<String, Object> orderData) throws URISyntaxException, IOException, InterruptedException {
-        return service.addOrder(request, orderData);
+        return service.addOrder(request, null, orderData);
+    }
+
+    @PostMapping("/orders/cashieradd")
+    public Orders cashierAddOrder(@RequestParam String email, @RequestBody Map<String, Object> orderData) throws URISyntaxException, IOException, InterruptedException {
+        return service.addOrder(null, email, orderData);
     }
 
     @GetMapping("/orders/pending")
@@ -93,13 +103,13 @@ public class MainController {
     }
 
     @PostMapping("/product/update")
-    public Product updateProduct(@RequestParam(required = false) Integer productID, @RequestBody Product productUpdate) {
-        if(productID != null){
-            return service.updateProduct(productID, productUpdate);
-        }
-        else{
-            return service.updateProduct(-1, productUpdate);
-        }
+    public Product updateProduct(@RequestParam String productName, @RequestParam(required = false) String category, @RequestParam(required = false) Double price) {
+        return service.updateProduct(productName, category, price);
+    }
+
+    @PostMapping("/product/delete")
+    public String deleteProduct(@RequestParam String productName) {
+        return service.deleteProduct(productName);
     }
 
     @GetMapping("/product/getmostandleast")
@@ -133,8 +143,13 @@ public class MainController {
     }
 
     @PostMapping("/inventory/update")
-    public Inventory updateInventory(@RequestParam Integer inventoryID, @RequestBody Inventory inventoryUpdate) {
-        return service.updateInventory(inventoryID, inventoryUpdate);
+    public Inventory updateInventory(@RequestParam String inventoryName, @RequestParam(required = false) Integer quantity) {
+        return service.updateInventory(inventoryName, quantity);
+    }
+
+    @PostMapping("/inventory/delete")
+    public String inventoryDelete(@RequestParam String inventoryName) {
+        return service.deleteInventory(inventoryName);
     }
 
 }

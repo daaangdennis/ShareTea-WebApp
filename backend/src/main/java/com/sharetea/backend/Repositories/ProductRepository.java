@@ -9,8 +9,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import com.sharetea.backend.Entities.*;
 
+import jakarta.transaction.Transactional;
+
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Integer> {
+    Product findByName(String name);
+
+    @Transactional void deleteByName(String name);
+
     @Query(value = "select name, price from product where product_id = ?1", nativeQuery = true)
     public Map<String, Object> findProductNamePrice(Integer productID);
 
