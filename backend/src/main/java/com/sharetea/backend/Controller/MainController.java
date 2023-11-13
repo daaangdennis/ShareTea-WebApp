@@ -138,8 +138,13 @@ public class MainController {
     }
 
     @PostMapping("/inventory/update")
-    public Inventory updateInventory(@RequestParam Integer inventoryID, @RequestBody Inventory inventoryUpdate) {
-        return service.updateInventory(inventoryID, inventoryUpdate);
+    public Inventory updateInventory(@RequestParam(required = false) Integer inventoryID, @RequestBody Inventory inventoryUpdate) {
+        if(inventoryID != null){
+            return service.updateInventory(inventoryID, inventoryUpdate);
+        }
+        else{
+            return service.updateInventory(-1, inventoryUpdate);
+        }
     }
 
     @PostMapping("/inventory/delete")
