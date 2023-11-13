@@ -1,7 +1,9 @@
 .OrderContainer {
   position: relative;
-  height: 100vh;
-  padding-bottom: 100px;
+  padding-bottom: 300px; /* Adjust as needed */
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
 }
 
 .FoodItemContainer {
@@ -9,7 +11,7 @@
   border: 2px solid red;
   height: 100vh;
   width: 400px;
-  position: absolute;
+  position: relative;
   right: 0;
   top: 0;
 }
@@ -61,13 +63,11 @@
 
 .ViewOrder {
   position: absolute;
-  right: 500px;
-  bottom: 50px;
+  right: 300px;
+  top: 1100px;
 }
 
 .cashier-page-button-container {
-  display: flex;
-  justify-content: end;
   gap: 15px;
   font-size: 1.2rem;
 }
@@ -110,9 +110,9 @@
   background-color: red;
   border: 1px solid white;
   height: 100vh;
-  width: 400px;
-  position: absolute;
-  right: 0;
+  width: 480px;
+  position: relative;
+  right: 0px;
   top: 0;
 }
 
@@ -137,7 +137,16 @@
   width: 100%;
 }
 
-.FoodItemButtons {
-  position: absolute;
+.FoodItemButtonsContainer {
+  position: relative;
   top: 200px;
+  left: 30px;
+  width: 1300px;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+}
+
+.cashierItemButton {
+  margin-bottom: 10px;
 }

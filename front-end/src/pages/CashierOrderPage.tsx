@@ -1,12 +1,18 @@
 import "../styles/CashierOrderPage.css";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Products } from "../atoms/product";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { DefaultValue, useRecoilState, useRecoilValue } from "recoil";
+import { getProducts } from "../apis/Product";
+import ProductGrid from "../components/ProductGrid";
 import {
   topping,
   listProductToppings,
   ToppingsGridProps,
+  product,
+  Cart,
 } from "../types/types";
+import { cart } from "../atoms/cart";
+var _ = require("lodash");
 
 interface ItemEntry {
   itemName: string;
@@ -18,13 +24,33 @@ interface ItemEntry {
 
 function CashierOrderPage() {
   const [note, setNote] = useState<string>("");
+  const [category, setCategory] = useState<string>("");
   const [customerName, setCustomerName] = useState<string>("");
   const [selectedIceLevel, setSelectedIceLevel] = useState<string>("");
   const [selectedSugarLevel, setSelectedSugarLevel] = useState<string>("");
   const [listToppings, setListToppings] = useState<topping[]>([]);
   const sourceProducts = useRecoilValue<listProductToppings>(Products);
-  const [showOrderDetails, setShowOrderDetails] = useState(true);
+  const [showOrderDetails, setShowOrderDetails] = useState(false);
   const [rows, setRows] = useState<ItemEntry[]>([]);
+  const [bestSelling, setBestSelling] = useState<listProductToppings>({
+    toppings: [],
+    products: [],
+  });
+  const [filteredBestSelling, setFilteredBestSelling] =
+    useState<listProductToppings>({} as listProductToppings);
+  const [selectedProduct, setSelectedProduct] = useState<product>({
+    product_id: 0,
+    name: "item",
+    url: "",
+    price: 0,
+    category: "",
+    has_ice: false,
+    has_toppings: false,
+    has_sugar: false,
+  });
+  const [subTotal, setSubTotal] = useState<number>(0.0);
+  const [cartItems, setcartItems] = useRecoilState<Cart>(cart);
+  const [itemsPreserved, setItemsPreserved] = useState(false);
 
   // Add product functionality like checking to see if a product has toppings
 
@@ -57,6 +83,20 @@ function CashierOrderPage() {
     "Fresh Milk",
   ];
 
+  const addProductToCart = () => {
+    const newlist: Cart = _.cloneDeep(cartItems);
+    newlist.items.push({
+      product: selectedProduct,
+      toppings: listToppings,
+      notes: note,
+      ice_level: selectedIceLevel,
+      sugar_level: selectedSugarLevel,
+    });
+    newlist.total =
+      newlist.total + selectedProduct.price + listToppings.length * 0.75;
+    setcartItems(newlist);
+  };
+
   const handleNoteChange = (event: any) => {
     setNote(event.target.value);
   };
@@ -80,26 +120,87 @@ function CashierOrderPage() {
   const handleCancelButton = () => {
     setRows([]);
     setCustomerName("");
+    setSubTotal(0.0);
+    setcartItems({
+      items: [],
+      total: 0,
+    });
+  };
+
+  const handleCashierMenuButton = (product: product) => {
+    setShowOrderDetails(true);
+    setSelectedProduct(product);
   };
 
   const addNewItem = (
-    _Name: string,
+    product: product,
     _Ice: string,
     _Sugar: string,
-    _Toppings: string,
-    _Price: string
+    _Toppings: topping[]
   ) => {
     setRows((prevRows) => [
       ...prevRows,
       {
-        itemName: _Name,
+        itemName: product.name,
         itemIce: _Ice,
         itemSugar: _Sugar,
-        itemToppings: _Toppings,
-        itemPrice: _Price,
+        itemToppings: _Toppings.map((topping) => topping.name).join(", "),
+        itemPrice: product.price.toFixed(2),
       },
     ]);
+    setShowOrderDetails(false);
+    addProductToCart();
+    setSubTotal((prevSubTotal) => prevSubTotal + product.price);
+    setSelectedIceLevel("");
+    setSelectedSugarLevel("");
+    setSelectedProduct({
+      product_id: 0,
+      name: "item",
+      url: "",
+      price: 0,
+      category: "",
+      has_ice: false,
+      has_toppings: false,
+      has_sugar: false,
+    });
+    setListToppings([]);
   };
+
+  /**These states are probably used for atoms, but I will look into getting rid of them */
+  useEffect(() => {
+    getProducts(setBestSelling, setFilteredBestSelling);
+    console.log(cart);
+  }, []);
+
+  useEffect(() => {
+    if (!itemsPreserved) {
+      cartItems.items.map((item) => {
+        const value: ItemEntry = {
+          itemName: item.product.name,
+          itemIce: item.ice_level,
+          itemSugar: item.sugar_level,
+          itemToppings: item.toppings
+            .map((topping: topping) => topping.name)
+            .join(", "),
+          itemPrice: item.product.price.toFixed(2),
+        };
+        setRows([...rows, value]);
+      });
+      setItemsPreserved(true);
+    }
+  });
+
+  const handleCategoryButton = (category: string) => {
+    setCategory(category);
+  };
+
+  let filteredProducts = bestSelling.products.filter(
+    (product) => product.category === category
+  );
+
+  if (filteredProducts.length === 0) {
+    filteredProducts = bestSelling.products;
+  }
 
   return (
     <main>
@@ -107,23 +208,64 @@ function CashierOrderPage() {
         <div className="CategoryNavBar">
           {/*scrollable navigation bar*/}
           {/* create category buttons here */}
-          <button className="cashier-page-button">{drinks[0]}</button>
-          <button className="cashier-page-button">{drinks[1]}</button>
-          <button className="cashier-page-button">{drinks[2]}</button>
-          <button className="cashier-page-button">{drinks[3]}</button>
-          <button className="cashier-page-button">{drinks[4]}</button>
-          <button className="cashier-page-button">{drinks[5]}</button>
+          <button
+            onClick={() => handleCategoryButton(drinks[0])}
+            className="cashier-page-button"
+          >
+            {drinks[0]}
+          </button>
+          <button
+            onClick={() => handleCategoryButton(drinks[1])}
+            className="cashier-page-button"
+          >
+            {drinks[1]}
+          </button>
+          <button
+            onClick={() => handleCategoryButton(drinks[2])}
+            className="cashier-page-button"
+          >
+            {drinks[2]}
+          </button>
+          <button
+            onClick={() => handleCategoryButton(drinks[3])}
+            className="cashier-page-button"
+          >
+            {drinks[3]}
+          </button>
+          <button
+            onClick={() => handleCategoryButton(drinks[4])}
+            className="cashier-page-button"
+          >
+            {drinks[4]}
+          </button>
+          <button
+            onClick={() => handleCategoryButton(drinks[5])}
+            className="cashier-page-button"
+          >
+            {drinks[5]}
+          </button>
         </div>
-        <div className="FoodItemButtons">
+        <div className="FoodItemButtonsContainer py-md-5">
           {/* create food item buttons and add them here */}
           {/* when button is clicked FoodItemContainer pops into frame to edit the options for the order */}
+          {/* <ProductGrid products={filteredProducts} /> */}
+          <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+            {filteredProducts.map((product: product) => (
+              <button
+                className="cashierItemButton btn btn-primary"
+                onClick={() => handleCashierMenuButton(product)}
+              >
+                {product.name}
+              </button>
+            ))}
+          </div>
         </div>
         {showOrderDetails ? (
           <div className="FoodItemContainer">
             {/* box used to contain details about the food item selected */}
             <div className="cashier-page-item-text">
-              <h1>Food Item #1</h1>
-              <h2>$0.00</h2>
+              <h1>{selectedProduct.name}</h1>
+              <h2>${selectedProduct.price.toFixed(2)}</h2>
             </div>
 
             <div className="cashier-ice-dropdown">
@@ -186,11 +328,10 @@ function CashierOrderPage() {
               <button
                 onClick={() =>
                   addNewItem(
-                    "TestName",
-                    "TestIce",
-                    "TestSugar",
-                    "TestToppings",
-                    "TestPrice"
+                    selectedProduct,
+                    selectedIceLevel,
+                    selectedSugarLevel,
+                    listToppings
                   )
                 }
                 className="cashier-page-button cashier-add-to-order"
@@ -208,7 +349,7 @@ function CashierOrderPage() {
               <div className="order-customer-name">
                 <textarea
                   className="form-control cashier-page-textarea"
-                  placeholder="Enter Customer Name..."
+                  placeholder="Enter Customer Email..."
                   rows={1}
                   value={customerName}
                   onChange={handleNameChange}
@@ -242,19 +383,19 @@ function CashierOrderPage() {
               {rows.map((rowData, index) => (
                 <div key={index} className="CartItems row">
                   <div className="col orderColumns" style={{ maxWidth: "20%" }}>
-                    <p className="text-truncate">{rowData.itemName}</p>
+                    <p>{rowData.itemName}</p>
                   </div>
                   <div className="col orderColumns" style={{ maxWidth: "20%" }}>
-                    <p className="text-truncate">{rowData.itemIce}</p>
+                    <p>{rowData.itemIce}</p>
                   </div>
                   <div className="col orderColumns" style={{ maxWidth: "20%" }}>
-                    <p className="text-truncate">{rowData.itemSugar}</p>
+                    <p>{rowData.itemSugar}</p>
                   </div>
                   <div className="col orderColumns" style={{ maxWidth: "20%" }}>
-                    <p className="text-truncate">{rowData.itemToppings}</p>
+                    <p>{rowData.itemToppings}</p>
                   </div>
                   <div className="col orderColumns" style={{ maxWidth: "20%" }}>
-                    <p className="text-truncate">{rowData.itemPrice}</p>
+                    <p>${rowData.itemPrice}</p>
                   </div>
                 </div>
               ))}
@@ -264,10 +405,10 @@ function CashierOrderPage() {
                 Tax:
                 White Dashed Line
                 Total: */}
-              <h1>Subtotal: $0.00</h1>
-              <h1>Tax: $0.00</h1>
+              <h1>Subtotal: ${subTotal.toFixed(2)}</h1>
+              <h1>Tax: ${(subTotal * 0.0825).toFixed(2)}</h1>
               <div className="dashed-line"></div>
-              <h1>Total: $0.00</h1>
+              <h1>Total: ${(subTotal * 1.0825).toFixed(2)}</h1>
             </div>
             <div className="OrderDetailsButtonContainer">
               {/* Proceed Button */}
@@ -285,12 +426,7 @@ function CashierOrderPage() {
         <div className="ViewOrder cashier-page-button-container flex-column flex-sm-row">
           {/* create view order button and add api functionality */}
           {/* switches pages to the orderViewPage */}
-          <button
-            onClick={handleShowOrderDetails}
-            className="cashier-page-button"
-          >
-            View Order
-          </button>
+          <button className="cashier-page-button">View Order</button>
         </div>
       </div>
     </main>
