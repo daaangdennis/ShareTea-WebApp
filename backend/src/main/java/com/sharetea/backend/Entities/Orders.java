@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,14 +23,13 @@ public class Orders {
 
     @NotNull private Integer customer_id;
 
-    @NotNull private Integer employee_id;
-
     @CreationTimestamp @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime order_date;
     
     @NotNull private Double total;
 
-    private Boolean is_pending = true;
+    @Column(name = "is_pending")
+    private Boolean isPending = true;
 
     private Boolean is_refunded = false;
 
@@ -43,9 +43,6 @@ public class Orders {
         return customer_id;
     }
 
-    public Integer getEmployee_id() {
-        return employee_id;
-    }
 
     public LocalDateTime getOrder_date() {
         return order_date;
@@ -56,7 +53,7 @@ public class Orders {
     }
 
     public Boolean getIs_pending() {
-        return is_pending;
+        return isPending;
     }
 
     public Boolean getIs_refunded() {
@@ -67,8 +64,8 @@ public class Orders {
 
     @Override
     public String toString() {
-        return "Orders [order_id=" + order_id + ", customer_id=" + customer_id + ", employee_id=" + employee_id
-                + ", order_date=" + order_date + ", total=" + total + ", is_pending=" + is_pending + ", is_refunded="
+        return "Orders [order_id=" + order_id + ", customer_id=" + customer_id 
+                + ", order_date=" + order_date + ", total=" + total + ", is_pending=" + isPending + ", is_refunded="
                 + is_refunded + "]";
     }
 
@@ -80,10 +77,6 @@ public class Orders {
         this.customer_id = customer_id;
     }
 
-    public void setEmployee_id(Integer employee_id) {
-        this.employee_id = employee_id;
-    }
-
     public void setOrder_date(LocalDateTime order_date) {
         this.order_date = order_date;
     }
@@ -93,7 +86,7 @@ public class Orders {
     }
 
     public void setIs_pending(Boolean is_pending) {
-        this.is_pending = is_pending;
+        this.isPending = is_pending;
     }
 
     public void setIs_refunded(Boolean is_refunded) {

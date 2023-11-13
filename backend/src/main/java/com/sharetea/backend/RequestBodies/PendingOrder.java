@@ -1,19 +1,32 @@
 package com.sharetea.backend.RequestBodies;
 
-import jakarta.validation.constraints.NotEmpty;
+import java.time.LocalDateTime;
 
-public class CustomerBody {
+public class PendingOrder {
+    private Integer ID;
+    private LocalDateTime Date;
     private String firstName;
     private String lastName;
-    @NotEmpty private String email;
 
-
-    public CustomerBody(String firstName, String lastName, @NotEmpty String email) {
+    public PendingOrder(Integer iD, LocalDateTime date, String firstName, String lastName) {
+        ID = iD;
+        Date = date;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.email = email;
     }
-    
+
+    public Integer getID() {
+        return ID;
+    }
+    public void setID(Integer iD) {
+        ID = iD;
+    }
+    public LocalDateTime getDate() {
+        return Date;
+    }
+    public void setDate(LocalDateTime date) {
+        Date = date;
+    }
     public String getFirstName() {
         return firstName;
     }
@@ -25,12 +38,6 @@ public class CustomerBody {
     }
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-    public String getEmail() {
-        return email;
-    }
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     
