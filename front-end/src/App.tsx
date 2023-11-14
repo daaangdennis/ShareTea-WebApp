@@ -10,6 +10,7 @@ import CartPage from "./pages/CartPage";
 import MenuPage from "./pages/MenuPage";
 import CustomPage from "./pages/CustomPage";
 import CashierOrderPage from "./pages/CashierOrderPage";
+import StatsPage from "./pages/StatsPage";
 
 function App() {
   const routes: route[] = [
@@ -22,6 +23,7 @@ function App() {
       path: "/CashierOrder",
       element: <CashierOrderPage />,
     },
+    { name: "Statistics", path: "/stats", element: <StatsPage /> },
   ];
 
   return (

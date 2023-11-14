@@ -12,6 +12,7 @@ import {
   Cart,
 } from "../types/types";
 import { cart } from "../atoms/cart";
+import { postCashierOrder } from "../apis/CashierOrder";
 var _ = require("lodash");
 
 interface ItemEntry {
@@ -25,7 +26,7 @@ interface ItemEntry {
 function CashierOrderPage() {
   const [note, setNote] = useState<string>("");
   const [category, setCategory] = useState<string>("");
-  const [customerName, setCustomerName] = useState<string>("");
+  const [customerEmail, setCustomerEmail] = useState<string>("");
   const [selectedIceLevel, setSelectedIceLevel] = useState<string>("");
   const [selectedSugarLevel, setSelectedSugarLevel] = useState<string>("");
   const [listToppings, setListToppings] = useState<topping[]>([]);
@@ -83,6 +84,11 @@ function CashierOrderPage() {
     "Fresh Milk",
   ];
 
+  const handleProceedButton = () => {
+    postCashierOrder(customerEmail, cartItems);
+    handleCancelButton();
+  };
+
   const addProductToCart = () => {
     const newlist: Cart = _.cloneDeep(cartItems);
     newlist.items.push({
@@ -101,8 +107,8 @@ function CashierOrderPage() {
     setNote(event.target.value);
   };
 
-  const handleNameChange = (event: any) => {
-    setCustomerName(event.target.value);
+  const handleEmailChange = (event: any) => {
+    setCustomerEmail(event.target.value);
   };
 
   const handleIceLevelChange = (event: any) => {
@@ -119,7 +125,7 @@ function CashierOrderPage() {
 
   const handleCancelButton = () => {
     setRows([]);
-    setCustomerName("");
+    setCustomerEmail("");
     setSubTotal(0.0);
     setcartItems({
       items: [],
@@ -190,6 +196,7 @@ function CashierOrderPage() {
     }
   });
 
+  console.log("render");
   const handleCategoryButton = (category: string) => {
     setCategory(category);
   };
@@ -351,8 +358,8 @@ function CashierOrderPage() {
                   className="form-control cashier-page-textarea"
                   placeholder="Enter Customer Email..."
                   rows={1}
-                  value={customerName}
-                  onChange={handleNameChange}
+                  value={customerEmail}
+                  onChange={handleEmailChange}
                 ></textarea>
               </div>
             </div>
@@ -412,7 +419,12 @@ function CashierOrderPage() {
             </div>
             <div className="OrderDetailsButtonContainer">
               {/* Proceed Button */}
-              <button className="cashier-page-button">Proceed</button>
+              <button
+                onClick={handleProceedButton}
+                className="cashier-page-button"
+              >
+                Proceed
+              </button>
               {/* Cancel Button */}
               <button
                 onClick={handleCancelButton}

@@ -12,15 +12,15 @@
   height: 100vh;
   width: 400px;
   position: relative;
-  right: 0;
-  top: 0;
+  right: 0px;
+  top: 0px;
 }
 
 .CategoryNavBar {
   background-color: red;
   border: 100px, solid, red;
   height: 200px;
-  width: 1390px;
+  width: 1090px;
   position: absolute;
   left: 0;
   top: 0;
@@ -140,8 +140,8 @@
 .FoodItemButtonsContainer {
   position: relative;
   top: 200px;
-  left: 30px;
-  width: 1300px;
+  left: 20px;
+  width: 1000px;
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
