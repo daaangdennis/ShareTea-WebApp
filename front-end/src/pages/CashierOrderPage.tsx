@@ -27,8 +27,9 @@ function CashierOrderPage() {
   const [note, setNote] = useState<string>("");
   const [category, setCategory] = useState<string>("");
   const [customerEmail, setCustomerEmail] = useState<string>("");
-  const [selectedIceLevel, setSelectedIceLevel] = useState<string>("");
-  const [selectedSugarLevel, setSelectedSugarLevel] = useState<string>("");
+  const [selectedIceLevel, setSelectedIceLevel] = useState<string>("No Ice");
+  const [selectedSugarLevel, setSelectedSugarLevel] =
+    useState<string>("No Sugar");
   const [listToppings, setListToppings] = useState<topping[]>([]);
   const sourceProducts = useRecoilValue<listProductToppings>(Products);
   const [showOrderDetails, setShowOrderDetails] = useState(false);
@@ -157,8 +158,8 @@ function CashierOrderPage() {
     setShowOrderDetails(false);
     addProductToCart();
     setSubTotal((prevSubTotal) => prevSubTotal + product.price);
-    setSelectedIceLevel("");
-    setSelectedSugarLevel("");
+    setSelectedIceLevel("No Ice");
+    setSelectedSugarLevel("No Sugar");
     setSelectedProduct({
       product_id: 0,
       name: "item",

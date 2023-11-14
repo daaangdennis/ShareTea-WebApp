@@ -15,14 +15,20 @@ function StatsPage() {
 
   const handleProductUsageButton = () => {
     setShowProductUsage((prevValue) => !prevValue);
+    setShowRestockUsage(false);
+    setShowExcessUsage(false);
   };
 
   const handleRestockButton = () => {
     setShowRestockUsage((prevValue) => !prevValue);
+    setShowProductUsage(false);
+    setShowExcessUsage(false);
   };
 
   const handleExcessButton = () => {
     setShowExcessUsage((prevValue) => !prevValue);
+    setShowProductUsage(false);
+    setShowRestockUsage(false);
   };
 
   return (

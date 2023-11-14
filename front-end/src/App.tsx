@@ -23,8 +23,14 @@ function App() {
       name: "CashierOrder",
       path: "/CashierOrder",
       element: <CashierOrderPage />,
+      roles: ["cashier", "manager"],
     },
-    { name: "Statistics", path: "/stats", element: <StatsPage /> },
+    {
+      name: "Statistics",
+      path: "/stats",
+      element: <StatsPage />,
+      roles: ["cashier", "manager"],
+    },
     {
       name: "Inventory",
       path: "/Inventory",
