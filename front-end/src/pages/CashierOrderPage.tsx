@@ -152,12 +152,14 @@ function CashierOrderPage() {
         itemIce: _Ice,
         itemSugar: _Sugar,
         itemToppings: _Toppings.map((topping) => topping.name).join(", "),
-        itemPrice: product.price.toFixed(2),
+        itemPrice: (product.price + _Toppings.length * 0.75).toFixed(2),
       },
     ]);
     setShowOrderDetails(false);
     addProductToCart();
-    setSubTotal((prevSubTotal) => prevSubTotal + product.price);
+    setSubTotal(
+      (prevSubTotal) => prevSubTotal + (product.price + _Toppings.length * 0.75)
+    );
     setSelectedIceLevel("No Ice");
     setSelectedSugarLevel("No Sugar");
     setSelectedProduct({
