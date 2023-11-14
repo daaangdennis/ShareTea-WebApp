@@ -1,7 +1,6 @@
 package com.sharetea.backend.Entities;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 import org.hibernate.annotations.CreationTimestamp;
 
