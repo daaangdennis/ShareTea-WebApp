@@ -240,9 +240,6 @@ public class Services {
             return "Couldn't find product.";
         }
         Integer productID = product.getProduct_id();
-        if(productID == null){
-            return "Couldn't find product.";
-        }
         UserFavorite favorite = new UserFavorite();
         favorite.setProduct_id(productID);
         favorite.setUser_id(user_id);

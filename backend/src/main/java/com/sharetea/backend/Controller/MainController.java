@@ -130,6 +130,10 @@ public class MainController {
         return service.commonPairs(LocalDate.parse(startDate), LocalDate.parse(endDate));
     }
 
+    @GetMapping("/inventory/get")
+    public Iterable<Inventory> getInventory() {
+        return service.getAllInventory();
+    }
 
     @GetMapping("/inventory/low")
     public List<Map<String, Object>> getLowStock() {
