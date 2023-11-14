@@ -1,9 +1,10 @@
-import { ReactElement } from "react";
+import { ReactElement, ReactNode } from "react";
 
 export interface route {
   name: string;
   path: string;
   element: ReactElement;
+  roles?: string[];
 }
 
 export interface navbarProps {
@@ -46,13 +47,7 @@ export interface ProductGridProps {
 }
 
 export interface Cart {
-  items: {
-    product: product;
-    toppings?: any | topping[];
-    ice_level?: any;
-    sugar_level?: any;
-    notes?: string;
-  }[];
+  items: ICartItem[];
   total: number;
 }
 
@@ -73,20 +68,15 @@ export interface ToppingsGridProps {
 }
 
 export interface CartCardProps {
-  item: {
-    product: product;
-    toppings?: any | topping[];
-    ice_level?: any;
-    sugar_level?: any;
-    notes?: string;
-  };
+  item: ICartItem;
 }
 
-export interface CartItemProp {
+export interface ICartItem {
   product: product;
-  toppings?: any | topping[];
-  ice_level?: any;
-  sugar_level?: any;
+  cartId?: number;
+  toppings?: topping[];
+  ice_level?: string;
+  sugar_level?: string;
   notes?: string;
 }
 
@@ -98,4 +88,31 @@ export interface InfoBarProps {
   header: string;
   information: string;
   imageUrl: string;
+}
+
+export interface customItem {
+  isAdd: boolean;
+  isEdit: boolean;
+  item: ICartItem;
+}
+
+export interface SubNavProps {
+  children: ReactNode;
+}
+
+export interface ProtectedRouteProps {
+  roles: string[];
+}
+
+export interface InventoryList {
+  items: InventoryItem[];
+}
+
+export interface InventoryItem {
+  inventory_id: number;
+  name: string;
+  details?: string;
+  quantity: number;
+  last_updated: string;
+  is_topping: boolean;
 }
