@@ -1,19 +1,33 @@
 import React, { useState } from "react";
-import { ProductCardProps, ProductGridProps, product } from "../types/types";
+import {
+  ProductCardProps,
+  ProductGridProps,
+  customItem,
+  product,
+} from "../types/types";
 import { Link } from "react-router-dom";
-import "../styles/MenuPage.css"
+import "../styles/MenuPage.css";
 var _ = require("lodash");
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-  const [data, setdata] = useState<product>(product);
-
-  const handleCustom = () => {};
+  const [data, setdata] = useState<customItem>({
+    isEdit: false,
+    isAdd: true,
+    item: { product },
+  });
 
   return (
     <div className="col mb-4">
-      <Link to={`/custom`} state={{ data: data }} style={{textDecoration: "none"}}>
-        <div onClick={handleCustom}>
-          <div className="card menupage-productcard p-4" style={{backgroundColor: "#cf152d", borderRadius: "15px"}}>
+      <Link
+        to={`/custom`}
+        state={{ data: data }}
+        style={{ textDecoration: "none" }}
+      >
+        <div>
+          <div
+            className="card menupage-productcard p-4"
+            style={{ backgroundColor: "#cf152d", borderRadius: "15px" }}
+          >
             <img
               className="card-img-top"
               width="220"
@@ -34,7 +48,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               >
                 {product.name}
               </h2>
-              <h3 className="card-text pt-3">${(product.price).toFixed(2)}</h3>
+              <h3 className="card-text pt-3">${product.price.toFixed(2)}</h3>
               {/* <div className="d-flex justify-content-between align-items-center">
             <button
               type="button"
