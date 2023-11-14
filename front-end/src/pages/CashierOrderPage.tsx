@@ -183,11 +183,11 @@ function CashierOrderPage() {
       cartItems.items.map((item) => {
         const value: ItemEntry = {
           itemName: item.product.name,
-          itemIce: item.ice_level,
-          itemSugar: item.sugar_level,
-          itemToppings: item.toppings
-            .map((topping: topping) => topping.name)
-            .join(", "),
+          itemIce: item.ice_level || "",
+          itemSugar: item.sugar_level || "",
+          itemToppings:
+            item.toppings?.map((topping: topping) => topping.name).join(", ") ||
+            "",
           itemPrice: item.product.price.toFixed(2),
         };
         setRows([...rows, value]);
