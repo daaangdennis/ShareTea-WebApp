@@ -9,9 +9,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -341,6 +339,7 @@ public class Services {
             orderMap.put("order_date", order.get("order_date"));
             orderMap.put("first_name", order.get("first_name"));
             orderMap.put("last_name", order.get("last_name"));
+            orderMap.put("total", order.get("total"));
 
             List<Map<String,Object>> productList = orderProductRepository.getProductsbyOrderID(orderID);
             List<Map<String,Object>> itemList = new ArrayList<>();
@@ -422,6 +421,9 @@ public class Services {
     public Product updateProduct(String name, String category, Double price) {
         Product product = productRepository.findByName(name);
         if(product == null){
+            if(name == null && category == null && price == null){
+                return null;
+            }
             Product newProduct = new Product();
             newProduct.setName(name);
             newProduct.setCategory(category);
@@ -442,6 +444,9 @@ public class Services {
 
     public String deleteProduct(String productName){
         Product product = productRepository.findByName(productName);
+        if(product == null){
+            return ("Could not find " + productName + " in the product list.");
+        }
         String name = product.getName();
         productRepository.deleteByName(name);
         return ("Deleted " + name);
@@ -464,6 +469,7 @@ public class Services {
         else{
             if(quantity != null){
                 inventory.setQuantity(quantity);
+                inventory.setLast_updated(LocalDate.now());
                 return inventoryRepository.save(inventory);
             }
         }
@@ -472,6 +478,9 @@ public class Services {
 
     public String deleteInventory(String name){
         Inventory inventory = inventoryRepository.findByName(name);
+        if(inventory == null){
+            return ("Could not find " + name + " in the inventory list.");
+        }
         String invName = inventory.getName();
         inventoryRepository.deleteByName(invName);
         return ("Deleted " + invName);
