@@ -25,7 +25,6 @@ function App() {
       element: <CashierOrderPage />,
     },
     { name: "Statistics", path: "/stats", element: <StatsPage /> },
-    { name: "Stat", path: "/Stat", element: <></>, roles: ["manager"] },
     {
       name: "Inventory",
       path: "/Inventory",
@@ -49,11 +48,14 @@ function App() {
           <Route path="/Menu" element={<MenuPage />} />
           <Route path="/Cart" element={<CartPage />} />
           <Route path="/custom" element={<CustomPage />} />
+
           <Route element={<ProtectedRoute roles={["cashier", "manager"]} />}>
             {/* Add routes accessible by cashier and manager here */}
+            <Route path="/CashierOrder" element={<CashierOrderPage />} />
           </Route>
           <Route element={<ProtectedRoute roles={["manager"]} />}>
             {/* Add routes accessible by manager only here */}
+            <Route path="/stats" element={<StatsPage />} />
             <Route path="/Inventory" element={<InventoryPage />} />
           </Route>
         </Routes>
