@@ -67,7 +67,7 @@ const CustomPage = () => {
       customItem.item.product.price +
       listToppings.length * 0.75;
     setcartItems(newlist);
-    navigate("/cart");
+    navigate("/Menu");
   };
 
   const handleIceLevelChange = (event: any) => {

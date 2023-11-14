@@ -103,3 +103,16 @@ export interface SubNavProps {
 export interface ProtectedRouteProps {
   roles: string[];
 }
+
+export interface InventoryList {
+  items: InventoryItem[];
+}
+
+export interface InventoryItem {
+  inventory_id: number;
+  name: string;
+  details?: string;
+  quantity: number;
+  last_updated: string;
+  is_topping: boolean;
+}
