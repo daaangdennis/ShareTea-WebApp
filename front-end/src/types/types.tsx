@@ -100,27 +100,33 @@ export interface InfoBarProps {
   imageUrl: string;
 }
 
-export interface OrderItem {
+export interface Order {
   first_name: string;
-  items: {
-    note?: string;
-    price: number;
-    product: string;
-    toppings: string[];
-  }
+  items: OrderItem[];
   last_name: string;
   order_date: string;
   order_id: number;
   total: number;
 }
+
+export interface OrderItem {
+  note?: string;
+  price: number;
+  product: string;
+  toppings: string[];
+  sugar_level: string;
+  ice_level: string;
+}
 export interface PendingOrders {
-  orders: OrderItem[];
+  orders: Order[];
 }
 
 export interface PendingOrderGridProp {
-  orders: OrderItem[];
+  orders: Order[];
+  onCardClick: (items: OrderItem[]) => void;
 }
 
 export interface PendingOrderCardProp {
-  order: OrderItem;
+  order: Order;
+  onCardClick: (items: OrderItem[]) => void;
 }
