@@ -21,4 +21,6 @@ public interface InventoryRepository extends JpaRepository<Inventory, Integer> {
     @Query(value = "select name, quantity from inventory where quantity < 100", nativeQuery = true)
     public List<Map<String, Object>> findLowStock();
 
+    List<Inventory> findByActive(Boolean active);
+
 }

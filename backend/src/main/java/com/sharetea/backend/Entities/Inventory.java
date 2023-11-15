@@ -30,61 +30,71 @@ public class Inventory {
 
     private Boolean is_topping;
 
+    private Boolean active;
 
     public Integer getInventory_id() {
         return inventory_id;
+    }
+
+    public void setInventory_id(Integer inventory_id) {
+        this.inventory_id = inventory_id;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getDetails() {
-        return details;
-    }
-
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public LocalDate getLast_updated() {
-        return last_updated;
-    }
-
-    public Boolean getIs_topping() {
-        return is_topping;
-    }
-
-
-    public void setInventory_id(Integer inventory_id) {
-        this.inventory_id = inventory_id;
-    }
-
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDetails() {
+        return details;
     }
 
     public void setDetails(String details) {
         this.details = details;
     }
 
+    public Integer getQuantity() {
+        return quantity;
+    }
+
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
+    }
+
+    public LocalDate getLast_updated() {
+        return last_updated;
     }
 
     public void setLast_updated(LocalDate last_updated) {
         this.last_updated = last_updated;
     }
 
+    public Boolean getIs_topping() {
+        return is_topping;
+    }
+
     public void setIs_topping(Boolean is_topping) {
         this.is_topping = is_topping;
-    } 
-    
-    
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
     @Override
     public String toString() {
         return "Inventory [inventory_id=" + inventory_id + ", name=" + name + ", details=" + details + ", quantity="
-                + quantity + ", last_updated=" + last_updated + ", is_topping=" + is_topping + "]";
+                + quantity + ", last_updated=" + last_updated + ", is_topping=" + is_topping + ", active=" + active
+                + "]";
     }
+
+
     
 }
