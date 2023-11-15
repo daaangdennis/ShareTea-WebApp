@@ -1,11 +1,21 @@
 package com.sharetea.backend.Repositories;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import com.sharetea.backend.Entities.*;
+
+import jakarta.transaction.Transactional;
 
 
 @Repository
 public interface UsersRepository extends JpaRepository<Users, Integer> {
     public Users findByEmail(String email);
+
+    @Transactional @Modifying @Query(value = "update users set order_count = order_count + 1 where user_id = ?1 ", nativeQuery = true)
+    public void addOrderCount(Integer userID);
+        
 }

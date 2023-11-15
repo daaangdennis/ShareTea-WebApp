@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sharetea.backend.Entities.*;
-import com.sharetea.backend.RequestBodies.CustomerBody;
+import com.sharetea.backend.RequestBodies.UserBody;
 import com.sharetea.backend.RequestBodies.EmployeeBody;
 import com.sharetea.backend.Services.*;
 
@@ -35,10 +35,10 @@ public class MainController {
         return "Hello!";
     }
 
-    @GetMapping("/user/orders")
-    public Map<String, List<Map<String, Object>>> userOrders(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException {
-        return service.userOrders(request);
-    }
+    // @GetMapping("/user/orders")
+    // public Map<String, List<Map<String, Object>>> userOrders(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException {
+    //     return service.userOrders(request);
+    // }
 
     @PostMapping("/user/favorite")
     public String favorite(HttpServletRequest request, @RequestParam String productName) throws URISyntaxException, IOException, InterruptedException {
@@ -50,15 +50,7 @@ public class MainController {
         return "You are a manager!";
     }
 
-    @GetMapping("/customer/get")
-    public Iterable<Customer> getCustomers() {
-        return service.getAllCustomers();
-    }
-
-    @PostMapping("/customer/add")
-    public Customer addCustomer(@RequestBody CustomerBody customer) {
-        return service.addCustomer(customer);
-    }
+    
 
     @GetMapping("/employee/get")
     public Iterable<Employee> getEmployees() {
@@ -82,12 +74,18 @@ public class MainController {
 
     @PostMapping("/orders/add")
     public Orders addOrder(HttpServletRequest request, @RequestBody Map<String, Object> orderData) throws URISyntaxException, IOException, InterruptedException {
-        return service.addOrder(request, null, orderData);
+        return service.addOrder(request, null, null, null, orderData);
     }
 
     @PostMapping("/orders/cashieradd")
-    public Orders cashierAddOrder(@RequestParam String email, @RequestBody Map<String, Object> orderData) throws URISyntaxException, IOException, InterruptedException {
-        return service.addOrder(null, email, orderData);
+    public Orders cashierAddOrder(@RequestParam(required = false) String email, @RequestParam(required = false) String firstName, @RequestParam(required = false) String lastName, @RequestBody Map<String, Object> orderData) throws URISyntaxException, IOException, InterruptedException {
+        if(firstName == null){
+            return service.addOrder(null, email, null, null, orderData);
+        }
+        else{
+            return service.addOrder(null, null, firstName, lastName, orderData);
+        }
+
     }
 
     @GetMapping("/orders/pending")

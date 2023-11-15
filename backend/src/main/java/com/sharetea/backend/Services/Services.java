@@ -29,9 +29,6 @@ import jakarta.servlet.http.HttpServletRequest;
 @Service
 public class Services {
     @Autowired
-    private CustomerRepository customerRepository;
-
-    @Autowired
     private EmployeeRepository employeeRepository;
 
     @Autowired
@@ -90,22 +87,20 @@ public class Services {
         return answerMap;
     }
 
-
-    public Iterable<Customer> getAllCustomers() {
-        return customerRepository.findAll();
-    }
-
-    public Customer addCustomer(CustomerBody customerData) {
-        Users user = new Users();
-        user.setFirst_name(customerData.getFirstName());
-        user.setLast_name(customerData.getLastName());
-        user.setEmail(customerData.getEmail());
-        user = usersRepository.save(user);
-
-        Customer customer = new Customer();
-        customer.setUser_id(user.getUser_id());
-        customer = customerRepository.save(customer);
-        return customer;
+    public String addFavorite(HttpServletRequest request, String productName) throws URISyntaxException, IOException, InterruptedException{
+        Map<String, String> userInfo = findUserByAccessToken(request);
+        String email = userInfo.get("email");
+        Integer user_id = usersRepository.findByEmail(email).getUser_id();
+        Product product = productRepository.findByName(productName);
+        if(product == null){
+            return "Couldn't find product.";
+        }
+        Integer productID = product.getProduct_id();
+        UserFavorite favorite = new UserFavorite();
+        favorite.setProduct_id(productID);
+        favorite.setUser_id(user_id);
+        userFavoriteRepository.save(favorite);
+        return "Added favorite.";
     }
 
     public List<List<String>> getMostandLeastOrdered(Integer customer_id) {
@@ -147,7 +142,7 @@ public class Services {
 
 
 
-    public Orders addOrder(HttpServletRequest request, String cashierEmail, Map<String, Object> orderData) throws URISyntaxException, IOException, InterruptedException {
+    public Orders addOrder(HttpServletRequest request, String cashierEmail, String cashierFirstName, String cashierLastName, Map<String, Object> orderData) throws URISyntaxException, IOException, InterruptedException {
         Orders order = new Orders();
 
         if(request != null){
@@ -157,27 +152,47 @@ public class Services {
             String lastName = userInfo.get("lastName");
             Users user = usersRepository.findByEmail(email);
             if( user != null) {
-                customerRepository.addOrderCount(user.getUser_id());
+                if(user.getFirst_name() != firstName){
+                    user.setFirst_name(firstName);
+                }
+                if(user.getLast_name() != lastName){
+                    user.setLast_name(lastName);
+                }
+                usersRepository.addOrderCount(user.getUser_id());
                 order.setCustomer_id(user.getUser_id());
             }
             else{
-                CustomerBody customer = new CustomerBody(firstName, lastName, email);
-                Customer newCustomer = addCustomer(customer);
-                order.setCustomer_id(newCustomer.getUser_id());
+                Users newUser = new Users();
+                newUser.setEmail(email);
+                newUser.setFirst_name(firstName);
+                newUser.setLast_name(lastName);
+                usersRepository.save(newUser);
+                order.setCustomer_id(newUser.getUser_id());
             }
         }
         else{
-            Users user = usersRepository.findByEmail(cashierEmail);
-            if( user != null) {
-                customerRepository.addOrderCount(user.getUser_id());
-                order.setCustomer_id(user.getUser_id());
+            if(cashierEmail != null){
+                Users user = usersRepository.findByEmail(cashierEmail);
+                if( user != null) {
+                    usersRepository.addOrderCount(user.getUser_id());
+                    order.setCustomer_id(user.getUser_id());
+                }
+                else{
+                    return(null); // CASHIER ENTERED EMAIL WASN'T FOUND
+                    // CustomerBody customer = new CustomerBody(null, null, cashierEmail);
+                    // Customer newCustomer = addCustomer(customer);
+                    // order.setCustomer_id(newCustomer.getUser_id());   
+                }
+            }
+            else if(cashierFirstName != null && cashierLastName != null){
+                Users newUser = new Users();
+                newUser.setFirst_name(cashierLastName);
+                newUser.setLast_name(cashierLastName);
+                order.setCustomer_id(newUser.getUser_id());
             }
             else{
-                CustomerBody customer = new CustomerBody(null, null, cashierEmail);
-                Customer newCustomer = addCustomer(customer);
-                order.setCustomer_id(newCustomer.getUser_id());
+                return(null);
             }
-
         }
 
         order.setTotal(0.00);
@@ -231,117 +246,117 @@ public class Services {
         return order;
     }
 
-    public String addFavorite(HttpServletRequest request, String productName) throws URISyntaxException, IOException, InterruptedException{
-        Map<String, String> userInfo = findUserByAccessToken(request);
-        String email = userInfo.get("email");
-        Integer user_id = usersRepository.findByEmail(email).getUser_id();
-        Product product = productRepository.findByName(productName);
-        if(product == null){
-            return "Couldn't find product.";
+    public List<Map<String, Object>> userOrders(HttpServletRequest request){
+        Map<String, String> userInfo = null;
+        try {
+            userInfo = findUserByAccessToken(request);
+        } catch(Exception e) {
+            System.out.println("User info error.");
         }
-        Integer productID = product.getProduct_id();
-        UserFavorite favorite = new UserFavorite();
-        favorite.setProduct_id(productID);
-        favorite.setUser_id(user_id);
-        userFavoriteRepository.save(favorite);
-        return "Added favorite.";
-    }
-
-    public Map<String, List<Map<String,Object>>> userOrders(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException{
-        Map<String, String> userInfo = findUserByAccessToken(request);
         String email = userInfo.get("email");
         Integer customer_id = usersRepository.findByEmail(email).getUser_id();
+        Map<String, Object> finalMap = new HashMap<>();
+
         
-        List<Map<String,Object>> pendingOrders = ordersRepository.userPendingOrders(customer_id);
-        List<Map<String,Object>> completedOrders = ordersRepository.userCompletedOrders(customer_id);
 
-
-        List<Map<String,Object>> pendingList = new ArrayList<>();
-        List<Map<String,Object>> completedList = new ArrayList<>();
-
-        Map<String, List<Map<String,Object>>> finalList = new HashMap<>();
-
-        for(Map<String,Object> order : pendingOrders){
-            Map<String,Object> orderMap = new HashMap<>();
-            Integer orderID = (Integer) order.get("order_id");
-            orderMap.put("order_id", orderID);
-            orderMap.put("order_date", order.get("order_date"));
-            orderMap.put("first_name", order.get("first_name"));
-            orderMap.put("last_name", order.get("last_name"));
-
-            List<Map<String,Object>> productList = orderProductRepository.getProductsbyOrderID(orderID);
-            List<Map<String,Object>> itemList = new ArrayList<>();
-
-            for(Map<String, Object> product : productList){
-                Map<String,Object> itemMap = new HashMap<>();
-                Map<String, Object> productNamePrice = productRepository.findProductNamePrice((Integer) product.get("product_id"));
-                itemMap.put("product", productNamePrice.get("name"));
-                itemMap.put("price", productNamePrice.get("price"));
-                if(product.get("note") != null){
-                    itemMap.put("note", product.get("note"));
-                }
-                if(product.get("sugar_level") != null){
-                    itemMap.put("sugar_level", product.get("sugar_level"));
-                }
-                if(product.get("ice_level") != null){
-                    itemMap.put("ice_level", product.get("ice_level"));
-                }
-
-                Integer order_product_id = (Integer) product.get("order_product_id");
-                List<String> toppings = itemToppingsRepository.getToppingsByopID(order_product_id);
-                itemMap.put("toppings", toppings);
-
-
-                itemList.add(itemMap);
-            }   
-
-            orderMap.put("items", itemList);
-            pendingList.add(orderMap);
-        }
-
-        for(Map<String,Object> order : completedOrders){
-            Map<String,Object> orderMap = new HashMap<>();
-            Integer orderID = (Integer) order.get("order_id");
-            orderMap.put("order_id", orderID);
-            orderMap.put("order_date", order.get("order_date"));
-            orderMap.put("first_name", order.get("first_name"));
-            orderMap.put("last_name", order.get("last_name"));
-
-            List<Map<String,Object>> productList = orderProductRepository.getProductsbyOrderID(orderID);
-            List<Map<String,Object>> itemList = new ArrayList<>();
-
-            for(Map<String, Object> product : productList){
-                Map<String,Object> itemMap = new HashMap<>();
-                Map<String, Object> productNamePrice = productRepository.findProductNamePrice((Integer) product.get("product_id"));
-                itemMap.put("product", productNamePrice.get("name"));
-                itemMap.put("price", productNamePrice.get("price"));
-                if(product.get("note") != null){
-                    itemMap.put("note", product.get("note"));
-                }
-                if(product.get("sugar_level") != null){
-                    itemMap.put("sugar_level", product.get("sugar_level"));
-                }
-                if(product.get("ice_level") != null){
-                    itemMap.put("ice_level", product.get("ice_level"));
-                }
-
-                Integer order_product_id = (Integer) product.get("order_product_id");
-                List<String> toppings = itemToppingsRepository.getToppingsByopID(order_product_id);
-                itemMap.put("toppings", toppings);
-
-
-                itemList.add(itemMap);
-            }   
-
-            orderMap.put("items", itemList);
-            completedList.add(orderMap);
-        }
-
-        finalList.put("pending", pendingList);
-        finalList.put("completed", completedList);
-        return finalList;
-
+        
+        return null;
     }
+    // public Map<String, List<Map<String,Object>>> userOrders(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException{
+    //     Map<String, String> userInfo = findUserByAccessToken(request);
+    //     String email = userInfo.get("email");
+    //     Integer customer_id = usersRepository.findByEmail(email).getUser_id();
+        
+    //     List<Map<String,Object>> pendingOrders = ordersRepository.userPendingOrders(customer_id);
+    //     List<Map<String,Object>> completedOrders = ordersRepository.userCompletedOrders(customer_id);
+
+
+    //     List<Map<String,Object>> pendingList = new ArrayList<>();
+    //     List<Map<String,Object>> completedList = new ArrayList<>();
+
+    //     Map<String, List<Map<String,Object>>> finalList = new HashMap<>();
+
+    //     for(Map<String,Object> order : pendingOrders){
+    //         Map<String,Object> orderMap = new HashMap<>();
+    //         Integer orderID = (Integer) order.get("order_id");
+    //         orderMap.put("order_id", orderID);
+    //         orderMap.put("order_date", order.get("order_date"));
+    //         orderMap.put("first_name", order.get("first_name"));
+    //         orderMap.put("last_name", order.get("last_name"));
+
+    //         List<Map<String,Object>> productList = orderProductRepository.getProductsbyOrderID(orderID);
+    //         List<Map<String,Object>> itemList = new ArrayList<>();
+
+    //         for(Map<String, Object> product : productList){
+    //             Map<String,Object> itemMap = new HashMap<>();
+    //             Map<String, Object> productNamePrice = productRepository.findProductNamePrice((Integer) product.get("product_id"));
+    //             itemMap.put("product", productNamePrice.get("name"));
+    //             itemMap.put("price", productNamePrice.get("price"));
+    //             if(product.get("note") != null){
+    //                 itemMap.put("note", product.get("note"));
+    //             }
+    //             if(product.get("sugar_level") != null){
+    //                 itemMap.put("sugar_level", product.get("sugar_level"));
+    //             }
+    //             if(product.get("ice_level") != null){
+    //                 itemMap.put("ice_level", product.get("ice_level"));
+    //             }
+
+    //             Integer order_product_id = (Integer) product.get("order_product_id");
+    //             List<String> toppings = itemToppingsRepository.getToppingsByopID(order_product_id);
+    //             itemMap.put("toppings", toppings);
+
+
+    //             itemList.add(itemMap);
+    //         }   
+
+    //         orderMap.put("items", itemList);
+    //         pendingList.add(orderMap);
+    //     }
+
+    //     for(Map<String,Object> order : completedOrders){
+    //         Map<String,Object> orderMap = new HashMap<>();
+    //         Integer orderID = (Integer) order.get("order_id");
+    //         orderMap.put("order_id", orderID);
+    //         orderMap.put("order_date", order.get("order_date"));
+    //         orderMap.put("first_name", order.get("first_name"));
+    //         orderMap.put("last_name", order.get("last_name"));
+
+    //         List<Map<String,Object>> productList = orderProductRepository.getProductsbyOrderID(orderID);
+    //         List<Map<String,Object>> itemList = new ArrayList<>();
+
+    //         for(Map<String, Object> product : productList){
+    //             Map<String,Object> itemMap = new HashMap<>();
+    //             Map<String, Object> productNamePrice = productRepository.findProductNamePrice((Integer) product.get("product_id"));
+    //             itemMap.put("product", productNamePrice.get("name"));
+    //             itemMap.put("price", productNamePrice.get("price"));
+    //             if(product.get("note") != null){
+    //                 itemMap.put("note", product.get("note"));
+    //             }
+    //             if(product.get("sugar_level") != null){
+    //                 itemMap.put("sugar_level", product.get("sugar_level"));
+    //             }
+    //             if(product.get("ice_level") != null){
+    //                 itemMap.put("ice_level", product.get("ice_level"));
+    //             }
+
+    //             Integer order_product_id = (Integer) product.get("order_product_id");
+    //             List<String> toppings = itemToppingsRepository.getToppingsByopID(order_product_id);
+    //             itemMap.put("toppings", toppings);
+
+
+    //             itemList.add(itemMap);
+    //         }   
+
+    //         orderMap.put("items", itemList);
+    //         completedList.add(orderMap);
+    //     }
+
+    //     finalList.put("pending", pendingList);
+    //     finalList.put("completed", completedList);
+    //     return finalList;
+
+    // }
 
 
     public List<Map<String,Object>> pendingOrders(){
