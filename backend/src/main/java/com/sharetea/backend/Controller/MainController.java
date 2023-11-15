@@ -75,6 +75,11 @@ public class MainController {
         return service.getAllOrders();
     }
 
+    @GetMapping("/orders/next")
+    public Integer getNextOrder(){
+        return service.maxOrder();    
+    }
+
     @PostMapping("/orders/add")
     public Orders addOrder(HttpServletRequest request, @RequestBody Map<String, Object> orderData) throws URISyntaxException, IOException, InterruptedException {
         return service.addOrder(request, null, orderData);

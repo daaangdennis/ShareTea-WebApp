@@ -391,6 +391,9 @@ public class Services {
 
     }
 
+    public Integer maxOrder(){
+        return ordersRepository.maxOrder();
+    }
 
 
 
@@ -470,7 +473,7 @@ public class Services {
     }
 
     public List<Inventory> getAllInventory() {
-        return inventoryRepository.findAll();
+        return inventoryRepository.findByActive(true);
     }
 
     public Inventory updateInventory(String name, Integer quantity) {
@@ -478,17 +481,21 @@ public class Services {
         if(inventory == null){
             Inventory newInventory = new Inventory();
             newInventory.setName(name);
+            newInventory.setActive(true);
             if(quantity != null){
                 newInventory.setQuantity(quantity);
             }
             inventoryRepository.save(newInventory);
         }
         else{
+            if(inventory.getActive() == false){
+                inventory.setActive(true);
+            }
             if(quantity != null){
                 inventory.setQuantity(quantity);
                 inventory.setLast_updated(LocalDate.now());
-                return inventoryRepository.save(inventory);
             }
+            return inventoryRepository.save(inventory);
         }
         return null;
     }
@@ -499,7 +506,8 @@ public class Services {
             return ("Could not find " + name + " in the inventory list.");
         }
         String invName = inventory.getName();
-        inventoryRepository.deleteByName(invName);
+        inventory.setActive(false);
+        inventoryRepository.save(inventory);
         return ("Deleted " + invName);
     }
 
