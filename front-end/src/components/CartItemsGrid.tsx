@@ -16,6 +16,7 @@ var _ = require("lodash");
 
 const CartItem: React.FC<CartCardProps> = ({ item }) => {
   const [cartItems, setcartItems] = useRecoilState<Cart>(cart);
+
   const [data, setdata] = useState<customItem>({
     isEdit: true,
     isAdd: false,

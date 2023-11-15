@@ -91,6 +91,7 @@ export interface InfoBarProps {
 }
 
 export interface customItem {
+
   isAdd: boolean;
   isEdit: boolean;
   item: ICartItem;
@@ -128,3 +129,4 @@ export interface excessProducts {
   name: string;
   inventory_id: number;
 }
+
