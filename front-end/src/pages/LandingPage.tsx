@@ -38,6 +38,7 @@ function LandingPage() {
   //     price: 5.49,
   //   }
   // ];
+
   const customStyle = {
     backgroundImage:
       "linear-gradient(rgba(50, 50, 50, 0.25), rgba(50, 50, 50, 0.25))",
