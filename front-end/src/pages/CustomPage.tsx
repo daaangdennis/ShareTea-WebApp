@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   Cart,
   ToppingsGridProps,
+  customItem,
   listProductToppings,
-  product,
   topping,
 } from "../types/types";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -13,28 +13,69 @@ import "../styles/CustomPage.css";
 import { Products } from "../atoms/product";
 var _ = require("lodash");
 
-function CustomPage() {
+const CustomPage = () => {
   const location = useLocation();
-  const product: product = location.state && location.state.data;
+
+  const customItem: customItem = location.state && location.state.data;
+
 
   const [cartItems, setcartItems] = useRecoilState<Cart>(cart);
   const sourceProducts = useRecoilValue<listProductToppings>(Products);
-  const [selectedIceLevel, setSelectedIceLevel] = useState<string>("");
-  const [selectedSugarLevel, setSelectedSugarLevel] = useState<string>("");
-  const [listToppings, setListToppings] = useState<topping[]>([]);
-  const [note, setNote] = useState<string>("");
+  const [selectedIceLevel, setSelectedIceLevel] = useState<string>(
+
+    customItem?.item?.ice_level || ""
+  );
+  const [selectedSugarLevel, setSelectedSugarLevel] = useState<string>(
+    customItem?.item?.sugar_level || ""
+  );
+  const [listToppings, setListToppings] = useState<topping[]>(
+    customItem?.item?.toppings || []
+  );
+  const [note, setNote] = useState<string>(customItem?.item?.notes || "");
+  const navigate = useNavigate();
+
+  const editProductToCart = () => {
+
+    if (
+      customItem.item.cartId != undefined &&
+      customItem.item.toppings?.length != undefined
+    ) {
+      const newlist: Cart = _.cloneDeep(cartItems);
+      newlist.total =
+
+        newlist.total -
+        customItem.item.toppings?.length * 0.75 +
+        listToppings.length * 0.75;
+
+      newlist.items[customItem.item.cartId] = {
+        product: customItem.item.product,
+        toppings: listToppings,
+        notes: note,
+        ice_level: selectedIceLevel,
+        sugar_level: selectedSugarLevel,
+      };
+      setcartItems(newlist);
+      navigate("/cart");
+    }
+  };
 
   const addProductToCart = () => {
     const newlist: Cart = _.cloneDeep(cartItems);
     newlist.items.push({
-      product: product,
+      product: customItem.item.product,
       toppings: listToppings,
       notes: note,
       ice_level: selectedIceLevel,
       sugar_level: selectedSugarLevel,
     });
-    newlist.total = newlist.total + product.price + listToppings.length*0.75;
+    newlist.total =
+      newlist.total +
+      customItem.item.product.price +
+      listToppings.length * 0.75;
     setcartItems(newlist);
+
+    navigate("/Menu");
+
   };
 
   const handleIceLevelChange = (event: any) => {
@@ -67,12 +108,7 @@ function CustomPage() {
     "120% Sugar",
   ];
 
-  // const toppings = {
-  //   items: ["item1", "item2", "item3", "item4", "item5", "item6"],
-  //   price: 0.75,
-  // };
-
-  return (
+  return customItem?.isAdd || customItem?.isEdit ? (
     <div className="container-fluid">
       <div className="row custompage-drink-information mb-4">
         <div className="col-md-4 text-center my-4 px-0">
@@ -84,15 +120,18 @@ function CustomPage() {
               borderRadius: "15px",
               backgroundColor: "white",
             }}
-            src={product.url}
-            alt={product.name}
+            src={customItem.item.product.url}
+            alt={customItem.item.product.name}
           />
         </div>
         <div className="col-md-8 px-0 my-4 text-center text-md-start custompage-drink-information-text">
           <h1>
-            {product.name}
-            <br></br>
-            ${(product.price + listToppings.length*0.75).toFixed(2)}
+            {customItem.item.product.name}
+            <br></br>$
+            {(
+              customItem.item.product.price +
+              listToppings.length * 0.75
+            ).toFixed(2)}
           </h1>
         </div>
       </div>
@@ -100,7 +139,7 @@ function CustomPage() {
       <div className="row mx-2 mx-md-4 custompage-customization-container">
         <h1>Customization</h1>
         <div className="col-md-4">
-          {iceLevel && product.has_ice && (
+          {iceLevel && customItem.item.product.has_ice && (
             <div>
               <h2>Ice Level</h2>
               <select
@@ -117,7 +156,7 @@ function CustomPage() {
 
           <br></br>
 
-          {sugarLevel && product.has_sugar && (
+          {sugarLevel && customItem.item.product.has_sugar && (
             <div>
               <h2>Sugar Level</h2>
               <select
@@ -134,7 +173,7 @@ function CustomPage() {
         </div>
 
         <div className="col">
-          {sourceProducts.toppings && product.has_toppings && (
+          {sourceProducts.toppings && customItem.item.product.has_toppings && (
             <div>
               <h2>Toppings (+${0.75} each)</h2>
               {/* <select className="form-control-lg">
@@ -164,14 +203,23 @@ function CustomPage() {
 
         <div className="custompage-button-container flex-column flex-sm-row">
           <button className="custompage-button">Save to Favorites</button>
-          <button onClick={addProductToCart} className="custompage-button">
-            Add to Cart
-          </button>
+          {customItem.isEdit ? (
+            <button onClick={editProductToCart} className="custompage-button">
+              Save Changes
+            </button>
+          ) : (
+            <button onClick={addProductToCart} className="custompage-button">
+              Add to Cart
+            </button>
+          )}
         </div>
       </div>
     </div>
+  ) : (
+    <h1>No item to customize</h1>
   );
-}
+};
+
 const ToppingsGrid: React.FC<ToppingsGridProps> = ({
   toppings,
   setToppings,
@@ -179,24 +227,21 @@ const ToppingsGrid: React.FC<ToppingsGridProps> = ({
 }) => {
   const [checkedToppings, setCheckedToppings] = useState<any>({});
 
+  useEffect(() => {
+    setCheckedToppings(
+      Object.fromEntries(toppings.map((item: topping) => [item.name, true]))
+    );
+  }, []);
+
   const handleCheckboxChange = (item: topping) => (event: any) => {
     setCheckedToppings((prevState: topping[]) => ({
       ...prevState,
       [item.name]: event.target.checked,
     }));
     if (event.target.checked) {
-      const newListToppings: topping[] = [...toppings];
-      newListToppings.push(item);
-      setToppings(newListToppings);
+      setToppings((prevToppings) => [...prevToppings, item]);
     } else {
-      const newListToppings: topping[] = [];
-
-      for (let i = 0; i < toppings.length; i++) {
-        if (toppings[i] != item) {
-          newListToppings.push(toppings[i]);
-        }
-      }
-      setToppings(newListToppings);
+      setToppings(toppings.filter((topping) => topping.name != item.name));
     }
   };
 

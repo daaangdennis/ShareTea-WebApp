@@ -26,8 +26,6 @@ public class Product {
     private Boolean has_toppings;
     private Boolean has_sugar;
 
-
-
     public Integer getProduct_id() {
         return product_id;
     }
