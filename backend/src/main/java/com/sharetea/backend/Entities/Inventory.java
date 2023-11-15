@@ -1,6 +1,6 @@
 package com.sharetea.backend.Entities;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -26,7 +26,7 @@ public class Inventory {
     private Integer quantity;
 
     @CreationTimestamp @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date last_updated;
+    private LocalDate last_updated;
 
     private Boolean is_topping;
 
@@ -47,7 +47,7 @@ public class Inventory {
         return quantity;
     }
 
-    public Date getLast_updated() {
+    public LocalDate getLast_updated() {
         return last_updated;
     }
 
@@ -72,7 +72,7 @@ public class Inventory {
         this.quantity = quantity;
     }
 
-    public void setLast_updated(Date last_updated) {
+    public void setLast_updated(LocalDate last_updated) {
         this.last_updated = last_updated;
     }
 

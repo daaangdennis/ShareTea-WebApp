@@ -13,35 +13,40 @@ import "../styles/CustomPage.css";
 import { Products } from "../atoms/product";
 var _ = require("lodash");
 
-function CustomPage() {
+const CustomPage = () => {
   const location = useLocation();
-  const navigate = useNavigate();
+
   const customItem: customItem = location.state && location.state.data;
 
-  console.log("bug2", customItem);
 
   const [cartItems, setcartItems] = useRecoilState<Cart>(cart);
   const sourceProducts = useRecoilValue<listProductToppings>(Products);
   const [selectedIceLevel, setSelectedIceLevel] = useState<string>(
-    customItem.item?.ice_level || ""
+
+    customItem?.item?.ice_level || ""
   );
   const [selectedSugarLevel, setSelectedSugarLevel] = useState<string>(
-    customItem.item?.sugar_level || ""
+    customItem?.item?.sugar_level || ""
   );
   const [listToppings, setListToppings] = useState<topping[]>(
-    customItem.item?.toppings || []
+    customItem?.item?.toppings || []
   );
-  const [note, setNote] = useState<string>(customItem.item?.notes || "");
+  const [note, setNote] = useState<string>(customItem?.item?.notes || "");
+  const navigate = useNavigate();
 
   const editProductToCart = () => {
-    console.log(customItem);
+
     if (
       customItem.item.cartId != undefined &&
       customItem.item.toppings?.length != undefined
     ) {
       const newlist: Cart = _.cloneDeep(cartItems);
       newlist.total =
-        newlist.total - (customItem.item.toppings?.length * 0.75) + (listToppings.length * 0.75);
+
+        newlist.total -
+        customItem.item.toppings?.length * 0.75 +
+        listToppings.length * 0.75;
+
       newlist.items[customItem.item.cartId] = {
         product: customItem.item.product,
         toppings: listToppings,
@@ -68,7 +73,9 @@ function CustomPage() {
       customItem.item.product.price +
       listToppings.length * 0.75;
     setcartItems(newlist);
-    navigate("/cart");
+
+    navigate("/Menu");
+
   };
 
   const handleIceLevelChange = (event: any) => {
@@ -101,12 +108,7 @@ function CustomPage() {
     "120% Sugar",
   ];
 
-  // const toppings = {
-  //   items: ["item1", "item2", "item3", "item4", "item5", "item6"],
-  //   price: 0.75,
-  // };
-
-  return (
+  return customItem?.isAdd || customItem?.isEdit ? (
     <div className="container-fluid">
       <div className="row custompage-drink-information mb-4">
         <div className="col-md-4 text-center my-4 px-0">
@@ -213,8 +215,11 @@ function CustomPage() {
         </div>
       </div>
     </div>
+  ) : (
+    <h1>No item to customize</h1>
   );
-}
+};
+
 const ToppingsGrid: React.FC<ToppingsGridProps> = ({
   toppings,
   setToppings,

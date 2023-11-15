@@ -7,4 +7,15 @@ export const cart = atom({
     items: [],
     total: 0,
   } as Cart,
+  effects_UNSTABLE: [
+    ({ onSet, setSelf }) => {
+      const savedCart = localStorage.getItem("cart");
+      if (savedCart != null) {
+        setSelf(JSON.parse(savedCart));
+      }
+      onSet((newValue) => {
+        localStorage.setItem("cart", JSON.stringify(newValue));
+      });
+    },
+  ],
 });

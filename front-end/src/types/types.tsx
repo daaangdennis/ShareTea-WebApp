@@ -1,9 +1,10 @@
-import { ReactElement } from "react";
+import { ReactElement, ReactNode } from "react";
 
 export interface route {
   name: string;
   path: string;
   element: ReactElement;
+  roles?: string[];
 }
 
 export interface navbarProps {
@@ -90,6 +91,42 @@ export interface InfoBarProps {
 }
 
 export interface customItem {
+
+  isAdd: boolean;
   isEdit: boolean;
   item: ICartItem;
 }
+
+export interface SubNavProps {
+  children: ReactNode;
+}
+
+export interface ProtectedRouteProps {
+  roles: string[];
+}
+
+export interface InventoryList {
+  items: InventoryItem[];
+}
+
+export interface InventoryItem {
+  inventory_id: number;
+  name: string;
+  details?: string;
+  quantity: number;
+  last_updated: string;
+  is_topping: boolean;
+}
+
+export interface productSales {
+  name: string;
+  count: number;
+}
+
+export interface excessProducts {
+  used: number;
+  quantity: number;
+  name: string;
+  inventory_id: number;
+}
+

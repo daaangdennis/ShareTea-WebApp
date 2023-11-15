@@ -12,10 +12,11 @@ var _ = require("lodash");
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const [data, setdata] = useState<customItem>({
     isEdit: false,
+
+    isAdd: true,
     item: { product },
   });
 
-  const handleCustom = () => {};
 
   return (
     <div className="col mb-4">
@@ -24,7 +25,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         state={{ data: data }}
         style={{ textDecoration: "none" }}
       >
-        <div onClick={handleCustom}>
+
+        <div>
+
           <div
             className="card menupage-productcard p-4"
             style={{ backgroundColor: "#cf152d", borderRadius: "15px" }}
