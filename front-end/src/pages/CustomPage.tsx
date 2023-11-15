@@ -15,11 +15,14 @@ var _ = require("lodash");
 
 const CustomPage = () => {
   const location = useLocation();
+
   const customItem: customItem = location.state && location.state.data;
+
 
   const [cartItems, setcartItems] = useRecoilState<Cart>(cart);
   const sourceProducts = useRecoilValue<listProductToppings>(Products);
   const [selectedIceLevel, setSelectedIceLevel] = useState<string>(
+
     customItem?.item?.ice_level || ""
   );
   const [selectedSugarLevel, setSelectedSugarLevel] = useState<string>(
@@ -32,15 +35,18 @@ const CustomPage = () => {
   const navigate = useNavigate();
 
   const editProductToCart = () => {
+
     if (
       customItem.item.cartId != undefined &&
       customItem.item.toppings?.length != undefined
     ) {
       const newlist: Cart = _.cloneDeep(cartItems);
       newlist.total =
+
         newlist.total -
         customItem.item.toppings?.length * 0.75 +
         listToppings.length * 0.75;
+
       newlist.items[customItem.item.cartId] = {
         product: customItem.item.product,
         toppings: listToppings,
@@ -67,7 +73,9 @@ const CustomPage = () => {
       customItem.item.product.price +
       listToppings.length * 0.75;
     setcartItems(newlist);
+
     navigate("/Menu");
+
   };
 
   const handleIceLevelChange = (event: any) => {
