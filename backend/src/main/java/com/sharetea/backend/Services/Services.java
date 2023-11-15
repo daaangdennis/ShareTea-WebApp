@@ -178,7 +178,10 @@ public class Services {
                     order.setCustomer_id(user.getUser_id());
                 }
                 else{
-                    return(null); // CASHIER ENTERED EMAIL WASN'T FOUND
+                    Users newUser = new Users();
+                    newUser.setEmail(cashierEmail);
+                    usersRepository.save(newUser);
+                    order.setCustomer_id(newUser.getUser_id());
                     // CustomerBody customer = new CustomerBody(null, null, cashierEmail);
                     // Customer newCustomer = addCustomer(customer);
                     // order.setCustomer_id(newCustomer.getUser_id());   
@@ -188,6 +191,7 @@ public class Services {
                 Users newUser = new Users();
                 newUser.setFirst_name(cashierLastName);
                 newUser.setLast_name(cashierLastName);
+                usersRepository.save(newUser);
                 order.setCustomer_id(newUser.getUser_id());
             }
             else{
