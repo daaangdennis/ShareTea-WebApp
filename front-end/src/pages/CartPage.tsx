@@ -12,9 +12,10 @@ function CartPage() {
   const [cartItems, setcartItems] = useRecoilState<Cart>(cart);
   const { user, isAuthenticated, isLoading } = useAuth0();
   const { loginWithRedirect } = useAuth0();
-  const [orderComplete, setOrderComplete] = useState<boolean>(false)
+  const [orderComplete, setOrderComplete] = useState<boolean>(false);
 
   const { getAccessTokenSilently } = useAuth0();
+  console.log("total bug", cartItems);
 
   const clearCart = () => {
     setcartItems({
@@ -24,14 +25,13 @@ function CartPage() {
   };
 
   const handlePlaceOrder = async () => {
-    if(!isAuthenticated){
+    if (!isAuthenticated) {
       loginWithRedirect();
-    }
-    else{
+    } else {
       try {
         const accessToken = await getAccessTokenSilently();
         postOrder(cartItems, accessToken);
-        setOrderComplete(true); 
+        setOrderComplete(true);
         clearCart();
         setTimeout(() => {
           setOrderComplete(false);
@@ -41,9 +41,6 @@ function CartPage() {
       }
     }
   };
-
-
-  console.log(cartItems);
 
   return (
     <div className="container-fluid">
@@ -76,11 +73,15 @@ function CartPage() {
               </div>
             </div>
             <div className="button-container">
-              {isAuthenticated ? 
-                (<button className="order-button" onClick={handlePlaceOrder}>Place Order</button>) 
-                : 
-                (<button className="order-button" onClick={handlePlaceOrder}>Log In To Place Order</button>)
-              }
+              {isAuthenticated ? (
+                <button className="order-button" onClick={handlePlaceOrder}>
+                  Place Order
+                </button>
+              ) : (
+                <button className="order-button" onClick={handlePlaceOrder}>
+                  Log In To Place Order
+                </button>
+              )}
               <button className="order-button" onClick={clearCart}>
                 Cancel Order
               </button>
@@ -88,19 +89,24 @@ function CartPage() {
           </div>
         </div>
         <div className="col-md-8 mt-3 mt-md-0">
-          {orderComplete ? 
-            (
-              <div className="cartpage-order-complete mt-lg-0 mt-4">
-                <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="#15bd12" className="bi bi-check-circle" viewBox="0 0 16 16">
-                  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                  <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
-                </svg>
-                <h1>Order Successfully Placed</h1>
-              </div>
-            )
-            : 
-            (<CartItemsGrid products={[]} />)
-          }
+          {orderComplete ? (
+            <div className="cartpage-order-complete mt-lg-0 mt-4">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="100"
+                height="100"
+                fill="#15bd12"
+                className="bi bi-check-circle"
+                viewBox="0 0 16 16"
+              >
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z" />
+              </svg>
+              <h1>Order Successfully Placed</h1>
+            </div>
+          ) : (
+            <CartItemsGrid products={[]} />
+          )}
         </div>
       </div>
     </div>

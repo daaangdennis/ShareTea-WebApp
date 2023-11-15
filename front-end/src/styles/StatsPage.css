@@ -1,0 +1,43 @@
+.GraphContainer {
+  height: 700px;
+  width: 1000px;
+  background-color: white;
+  border: 1px solid red;
+  left: 240px;
+  top: 250px;
+  position: absolute;
+}
+
+.StatsContainer {
+  position: relative;
+  height: 100vh;
+  width: 1600px;
+}
+
+.StatsButtonContainer {
+  position: absolute;
+  height: 300px;
+  top: 100px;
+  left: 400px;
+  width: 800px;
+}
+
+.StatsButton {
+  font-weight: 700;
+  color: white;
+  padding: 9px 25px;
+  background-color: #cf152d;
+  border: solid #cf152d;
+  border-radius: 10px;
+  transition: all 0.3s ease 0s;
+  text-align: center;
+  text-decoration: none;
+}
+
+.GenerateButton {
+  position: absolute;
+  left: 670px;
+  top: 180px;
+  width: 200px;
+  height: 100px;
+}

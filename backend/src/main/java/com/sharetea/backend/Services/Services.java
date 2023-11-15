@@ -55,6 +55,9 @@ public class Services {
     @Autowired
     private ItemToppingsRepository itemToppingsRepository;
 
+    @Autowired
+    private UserFavoriteRepository userFavoriteRepository;
+
 
 
     public Map<String, String> findUserByAccessToken(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException{
@@ -228,7 +231,21 @@ public class Services {
         return order;
     }
 
-    
+    public String addFavorite(HttpServletRequest request, String productName) throws URISyntaxException, IOException, InterruptedException{
+        Map<String, String> userInfo = findUserByAccessToken(request);
+        String email = userInfo.get("email");
+        Integer user_id = usersRepository.findByEmail(email).getUser_id();
+        Product product = productRepository.findByName(productName);
+        if(product == null){
+            return "Couldn't find product.";
+        }
+        Integer productID = product.getProduct_id();
+        UserFavorite favorite = new UserFavorite();
+        favorite.setProduct_id(productID);
+        favorite.setUser_id(user_id);
+        userFavoriteRepository.save(favorite);
+        return "Added favorite.";
+    }
 
     public Map<String, List<Map<String,Object>>> userOrders(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException{
         Map<String, String> userInfo = findUserByAccessToken(request);

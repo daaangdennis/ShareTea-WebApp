@@ -40,6 +40,11 @@ public class MainController {
         return service.userOrders(request);
     }
 
+    @PostMapping("/user/favorite")
+    public String favorite(HttpServletRequest request, @RequestParam String productName) throws URISyntaxException, IOException, InterruptedException {
+        return service.addFavorite(request, productName);
+    }
+
     @GetMapping("/permissions")
     public String getPermissions() throws URISyntaxException, IOException, InterruptedException {
         return "You are a manager!";
