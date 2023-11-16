@@ -84,40 +84,35 @@ public class Services {
         return null;
     }
 
-    public Object requestUsers(){
-        String url = "https://dev-1jps85kh7htbmqki.us.auth0.com/api/v2/users?search_engine=v3";
-        try {  
-            HttpRequest get = HttpRequest.newBuilder()
-            .uri(new URI(url))
-            .header("Authorization", "Bearer " + requestToken())
-            .GET()
-            .build();
-
-            HttpClient httpClient = HttpClient.newHttpClient();
-            HttpResponse<String> response = httpClient.send(get, HttpResponse.BodyHandlers.ofString());
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode responseBody = objectMapper.readTree(response.body());
-            List<String> userIDs = new ArrayList<>();
-
-            List<Map<String, Object>> infoList = new ArrayList<>();
-
-            for (JsonNode element : responseBody) {
-                Map<String, Object> infoMap = new HashMap<>();
-                String userID = element.get("user_id").asText();
-                String email = element.get("email").asText();
-                infoMap.put("email", email);
-                infoMap.put("user_id", userID);
-                infoList.add(infoMap);  
-            }
-            
-            return infoList;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+    public List<Map<String, Object>> requestUsers(){
+        return usersRepository.getUsers();
     }
 
-    public void changePermissions(String userID, String position) throws UnsupportedEncodingException{
+    public void changePermissions(String email, String position) throws URISyntaxException, IOException, InterruptedException{
+        Users thisUser = usersRepository.findByEmail(email);
+        if(thisUser == null){
+            return;
+        }
+
+        String encodedEmail = URLEncoder.encode(email, "UTF-8");
+        String emailURL = "https://dev-1jps85kh7htbmqki.us.auth0.com/api/v2/users-by-email?fields=user_id&email=" + encodedEmail;
+        String token = requestToken();
+        HttpRequest getID = HttpRequest.newBuilder()
+                .uri(new URI(emailURL))
+                .header("Accept", "application/json")
+                .header("Authorization", "Bearer " + token)
+                .GET()
+                .build();
+
+        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpResponse<String> IDResponse = httpClient.send(getID, HttpResponse.BodyHandlers.ofString());
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode responseBody = objectMapper.readTree(IDResponse.body());
+        String userID = responseBody.get(0).get("user_id").asText();
+        System.out.println(userID);
+
+
         String user = URLEncoder.encode(userID, "UTF-8");
         String url = "https://dev-1jps85kh7htbmqki.us.auth0.com/api/v2/users/" + user +"/permissions";
         try {  
@@ -134,18 +129,16 @@ public class Services {
             listMap.add(manager);
             deleteMap.put("permissions", listMap);
 
-            ObjectMapper objectMapper = new ObjectMapper();
             String deleteMapString = objectMapper.writeValueAsString(deleteMap);
             
             BodyPublisher body = HttpRequest.BodyPublishers.ofString(deleteMapString);
             HttpRequest deletePermissions = HttpRequest.newBuilder()
             .uri(new URI(url))
             .header("Content-Type", "application/json")
-            .header("Authorization", "Bearer " + requestToken())
+            .header("Authorization", "Bearer " + token)
             .method("DELETE", body)
             .build();
 
-            HttpClient httpClient = HttpClient.newHttpClient();
             HttpResponse<String> response = httpClient.send(deletePermissions, HttpResponse.BodyHandlers.ofString());
             System.out.println(response);
 
@@ -154,9 +147,11 @@ public class Services {
                 List<Map<String, String>> addListMap = new ArrayList<>();
                 if(position.equals("cashier")){
                     addListMap.add(cashier);
+                    thisUser.setPosition("cashier");
                 }
                 else{
                     addListMap.add(manager);
+                    thisUser.setPosition("manager");
                 }
                 addMap.put("permissions", addListMap);
 
@@ -165,13 +160,18 @@ public class Services {
                 HttpRequest addPermissions = HttpRequest.newBuilder()
                 .uri(new URI(url))
                 .header("Content-Type", "application/json")
-                .header("Authorization", "Bearer " + requestToken())
+                .header("Authorization", "Bearer " + token)
                 .method("POST", addBody)
                 .build();
 
                 HttpResponse<String> addResponse = httpClient.send(addPermissions, HttpResponse.BodyHandlers.ofString());
+                usersRepository.save(thisUser);
                 System.out.println(addResponse);
 
+            }
+            else{
+                thisUser.setPosition(null);
+                usersRepository.save(thisUser);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -240,23 +240,6 @@ public class Services {
         return mostAndLeast;
     }
 
-    public List<Employee> getAllEmployees() {
-        return employeeRepository.findAll();
-    }
-
-    public Employee addEmployee(EmployeeBody employeeData) {
-        Users user = new Users();
-        user.setFirst_name(employeeData.getFirstName());
-        user.setLast_name(employeeData.getLastName());
-        user.setEmail(employeeData.getEmail());
-        user = usersRepository.save(user);
-
-        Employee employee = new Employee();
-        employee.setUser_id(user.getUser_id());
-        employee.setPosition(employeeData.getPosition());
-        employee = employeeRepository.save(employee);
-        return employee;
-    }
 
     public List<Orders> getAllOrders() {
         return ordersRepository.findAll();

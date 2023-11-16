@@ -20,6 +20,8 @@ public class Users {
 
     private Integer order_count = 1;
 
+    private String position;
+
     public Integer getUser_id() {
         return user_id;
     }
@@ -60,6 +62,15 @@ public class Users {
         this.order_count = order_count;
     }
 
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    
 
 
 }
