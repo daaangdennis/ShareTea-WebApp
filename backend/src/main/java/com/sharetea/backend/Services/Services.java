@@ -1,13 +1,17 @@
 package com.sharetea.backend.Services;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
+import java.net.http.HttpRequest.BodyPublisher;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,6 +59,124 @@ public class Services {
     @Autowired
     private UserFavoriteRepository userFavoriteRepository;
 
+    public String requestToken(){
+        String url = "https://dev-1jps85kh7htbmqki.us.auth0.com/oauth/token";
+        String payload = "{\"client_id\":\"bmpUm9FNggk0QcmUSmu4zL1tFGsKujpi\",\"client_secret\":\"st8DfPIL7XGTOI0nQ6reqP6M44yahE10jtMJtA2f_jcTkL_lPfcxLYTjc_dOG12b\",\"audience\":\"https://dev-1jps85kh7htbmqki.us.auth0.com/api/v2/\",\"grant_type\":\"client_credentials\"}";
+        try {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(new URI(url))
+                    .header("content-type", "application/json")
+                    .method("POST", HttpRequest.BodyPublishers.ofString(payload))
+                    .build();
+
+            HttpClient client = HttpClient.newHttpClient();
+
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode responseBody = objectMapper.readTree(response.body());
+            String accessToken = responseBody.get("access_token").asText();
+
+            return accessToken;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public Object requestUsers(){
+        String url = "https://dev-1jps85kh7htbmqki.us.auth0.com/api/v2/users?search_engine=v3";
+        try {  
+            HttpRequest get = HttpRequest.newBuilder()
+            .uri(new URI(url))
+            .header("Authorization", "Bearer " + requestToken())
+            .GET()
+            .build();
+
+            HttpClient httpClient = HttpClient.newHttpClient();
+            HttpResponse<String> response = httpClient.send(get, HttpResponse.BodyHandlers.ofString());
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode responseBody = objectMapper.readTree(response.body());
+            List<String> userIDs = new ArrayList<>();
+
+            List<Map<String, Object>> infoList = new ArrayList<>();
+
+            for (JsonNode element : responseBody) {
+                Map<String, Object> infoMap = new HashMap<>();
+                String userID = element.get("user_id").asText();
+                String email = element.get("email").asText();
+                infoMap.put("email", email);
+                infoMap.put("user_id", userID);
+                infoList.add(infoMap);  
+            }
+            
+            return infoList;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void changePermissions(String userID, String position) throws UnsupportedEncodingException{
+        String user = URLEncoder.encode(userID, "UTF-8");
+        String url = "https://dev-1jps85kh7htbmqki.us.auth0.com/api/v2/users/" + user +"/permissions";
+        try {  
+            Map<String, Object> deleteMap = new HashMap<>();
+            List<Map<String, String>> listMap = new ArrayList<>();
+
+            Map<String, String> cashier = new HashMap<>();
+            cashier.put("resource_server_identifier", "https://sharetea315/");
+            cashier.put("permission_name", "cashier");
+            Map<String, String> manager = new HashMap<>();
+            manager.put("resource_server_identifier", "https://sharetea315/");
+            manager.put("permission_name", "manager");
+            listMap.add(cashier);
+            listMap.add(manager);
+            deleteMap.put("permissions", listMap);
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            String deleteMapString = objectMapper.writeValueAsString(deleteMap);
+            
+            BodyPublisher body = HttpRequest.BodyPublishers.ofString(deleteMapString);
+            HttpRequest deletePermissions = HttpRequest.newBuilder()
+            .uri(new URI(url))
+            .header("Content-Type", "application/json")
+            .header("Authorization", "Bearer " + requestToken())
+            .method("DELETE", body)
+            .build();
+
+            HttpClient httpClient = HttpClient.newHttpClient();
+            HttpResponse<String> response = httpClient.send(deletePermissions, HttpResponse.BodyHandlers.ofString());
+            System.out.println(response);
+
+            if(position.equals("cashier") || position.equals("manager")){
+                Map<String, Object> addMap = new HashMap<>();
+                List<Map<String, String>> addListMap = new ArrayList<>();
+                if(position.equals("cashier")){
+                    addListMap.add(cashier);
+                }
+                else{
+                    addListMap.add(manager);
+                }
+                addMap.put("permissions", addListMap);
+
+                String addMapString = objectMapper.writeValueAsString(addMap);
+                BodyPublisher addBody = HttpRequest.BodyPublishers.ofString(addMapString);
+                HttpRequest addPermissions = HttpRequest.newBuilder()
+                .uri(new URI(url))
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + requestToken())
+                .method("POST", addBody)
+                .build();
+
+                HttpResponse<String> addResponse = httpClient.send(addPermissions, HttpResponse.BodyHandlers.ofString());
+                System.out.println(addResponse);
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 
     public Map<String, String> findUserByAccessToken(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException{

@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sharetea.backend.Entities.*;
-import com.sharetea.backend.RequestBodies.UserBody;
 import com.sharetea.backend.RequestBodies.EmployeeBody;
 import com.sharetea.backend.Services.*;
 
@@ -35,6 +34,11 @@ public class MainController {
         return "Hello!";
     }
 
+    @GetMapping("/access")
+    public Object access() {
+        return service.requestUsers();
+    }
+
     // @GetMapping("/user/orders")
     // public Map<String, List<Map<String, Object>>> userOrders(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException {
     //     return service.userOrders(request);
@@ -48,6 +52,11 @@ public class MainController {
     @GetMapping("/permissions")
     public String getPermissions() throws URISyntaxException, IOException, InterruptedException {
         return "You are a manager!";
+    }
+
+    @GetMapping("/permissions/change")
+    public void changePermissions(@RequestParam String userID, @RequestParam String position) throws URISyntaxException, IOException, InterruptedException {
+         service.changePermissions(userID, position);
     }
 
     
