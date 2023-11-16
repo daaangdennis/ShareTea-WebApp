@@ -10,7 +10,6 @@ import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.nio.charset.StandardCharsets;
 import java.net.http.HttpRequest.BodyPublisher;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -32,8 +31,6 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 public class Services {
-    @Autowired
-    private EmployeeRepository employeeRepository;
 
     @Autowired
     private OrdersRepository ordersRepository;
