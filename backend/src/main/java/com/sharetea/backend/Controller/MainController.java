@@ -43,10 +43,10 @@ public class MainController {
         return service.requestUsers();
     }
 
-    // @GetMapping("/user/orders")
-    // public Map<String, List<Map<String, Object>>> userOrders(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException {
-    //     return service.userOrders(request);
-    // }
+    @GetMapping("/user/orders")
+    public Map<String, List<Map<String, Object>>> userOrders(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException {
+        return service.userOrders(request);
+    }
 
     @PostMapping("/user/favorite")
     public String favorite(HttpServletRequest request, @RequestParam String productName) throws URISyntaxException, IOException, InterruptedException {
@@ -87,6 +87,11 @@ public class MainController {
             return service.addOrder(null, null, firstName, lastName, orderData);
         }
 
+    }
+
+    @PostMapping("/orders/finish")
+    public void orderFinish(@RequestParam Integer orderID){
+        service.finishOrder(orderID);
     }
 
     @GetMapping("/orders/pending")
