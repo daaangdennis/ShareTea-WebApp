@@ -39,7 +39,7 @@ function App() {
       roles: ["cashier", "manager"],
     },
     {
-      name: "Pending",
+      name: "Pending Orders",
       path: "/Pending",
       element: <PendingPage />,
       roles: ["manager", "cashier"],
