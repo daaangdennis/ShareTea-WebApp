@@ -13,5 +13,5 @@ export const restockInventory = atom({
 
 export const excessInventory = atom({
   key: "excessItems",
-  default: {} as excessProducts[],
+  default: [] as excessProducts[],
 });
