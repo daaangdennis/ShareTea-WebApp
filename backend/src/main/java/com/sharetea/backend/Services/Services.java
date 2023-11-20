@@ -597,6 +597,9 @@ public class Services {
     }
 
     public void addCategory(String categoryName){
+        if(categoryRepository.findByName(categoryName) != null){
+            return;
+        }
         Category newCategory = new Category();
         newCategory.setName(categoryName);
         categoryRepository.save(newCategory);
@@ -610,11 +613,6 @@ public class Services {
         categoryRepository.delete(del);
         return "Deleted " + categoryName;
     }
-
-
-
-
-
 
 
 

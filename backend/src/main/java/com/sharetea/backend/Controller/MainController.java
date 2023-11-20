@@ -191,4 +191,14 @@ public class MainController {
         return service.deleteInventory(inventoryName);
     }
 
+    @PostMapping("/category/add")
+    public void addCategory(@RequestParam String name){
+        service.addCategory(name);
+    }
+
+    @PostMapping("/category/delete")
+    public void deleteCategory(@RequestParam String name){
+        service.deleteCategory(name);
+    }
+
 }

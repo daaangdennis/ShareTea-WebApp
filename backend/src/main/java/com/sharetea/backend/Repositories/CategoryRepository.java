@@ -12,4 +12,7 @@ import com.sharetea.backend.Entities.*;
 public interface CategoryRepository extends JpaRepository<Category, String> {
     @Query(value = "SELECT name from category", nativeQuery = true)
     public List<String> getCategoryNames();
+
+    @Query(value = "select * from category where lower(name) = lower(?1)", nativeQuery = true)
+    Category findByName(String name);
 }
