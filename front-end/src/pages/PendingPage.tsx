@@ -13,21 +13,13 @@ function PendingPage() {
     const [maxOrdersPerPage, setMaxOrders] = useState<number>(5);
     const [selectedItems, setSelectedItems] = useState<OrderItem[]>([]);
     const [selectedOrderTotal, setselectedOrderTotal] = useState<number>(0);
-
+    
 
     useEffect(() => {
         getPendingOrders(setPendingOrder);
     }, []);
     //console.log(pendingOrder);
-    useEffect(() => {
-        // Calculate the total when selectedItems change
-        setselectedOrderTotal(
-          selectedItems.reduce(
-            (total, item) => total + item.price + item.toppings.length * 0.75,
-            0
-          )
-        );
-      }, [selectedItems]);
+    console.log(selectedItems.length > 0);
 
     const handlePrevButton = () => {
         if (pendingOrder.orders && pageNumber != 0) {
@@ -44,6 +36,16 @@ function PendingPage() {
         setSelectedItems(items);
     };
 
+    const handleOrderTotal = (total: number) => {
+        setselectedOrderTotal(total);
+    }
+
+    const handleCompleteOrder = () => {
+        if (selectedItems.length > 0) {
+            //complete order
+        }
+    }
+
     return (
         <div className="d-flex flex-column flex-column-reverse flex-md-row">
             <div className="col-md-8 pendingpage-orders-grid-container">
@@ -53,6 +55,7 @@ function PendingPage() {
                 <PendingOrderGrid 
                     orders={pendingOrder.orders ? (pendingOrder.orders.slice(0 + pageNumber * maxOrdersPerPage, maxOrdersPerPage + pageNumber * maxOrdersPerPage)) : ([])} 
                     onCardClick={handleCardClick}
+                    setOrderTotal={handleOrderTotal}
                 />
             </div>   
             <div className="col-md-4 pendingpage-orders-information-container">

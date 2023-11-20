@@ -19,8 +19,14 @@
 }
 
 .menupage-navbar-link-container a {
+  text-decoration: none;
+  color: white;
   position: relative;
   transition: all 0.1s ease 0s;
+}
+
+.menupage-navbar-link{
+  color: white;
 }
 
 .menupage-navbar-link-container a:hover {
