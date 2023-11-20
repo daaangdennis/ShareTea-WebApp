@@ -56,6 +56,9 @@ public class Services {
     @Autowired
     private UserFavoriteRepository userFavoriteRepository;
 
+    @Autowired
+    private CategoryRepository categoryRepository;
+
     public String requestToken(){
         String url = "https://dev-1jps85kh7htbmqki.us.auth0.com/oauth/token";
         String payload = "{\"client_id\":\"bmpUm9FNggk0QcmUSmu4zL1tFGsKujpi\",\"client_secret\":\"st8DfPIL7XGTOI0nQ6reqP6M44yahE10jtMJtA2f_jcTkL_lPfcxLYTjc_dOG12b\",\"audience\":\"https://dev-1jps85kh7htbmqki.us.auth0.com/api/v2/\",\"grant_type\":\"client_credentials\"}";
@@ -84,6 +87,7 @@ public class Services {
     public List<Map<String, Object>> requestUsers(){
         return usersRepository.getUsers();
     }
+
 
     public void changePermissions(String email, String position) throws URISyntaxException, IOException, InterruptedException{
         Users thisUser = usersRepository.findByEmail(email);
@@ -175,9 +179,54 @@ public class Services {
         }
     }
 
+    public void deleteUser(String email) throws IOException, InterruptedException, URISyntaxException{
+        Integer userID = usersRepository.findByEmail(email).getUser_id();
+        if(userID == null || userID == 27){ //27 is deleted user default, don't delete
+            return;
+        }
+        usersRepository.deleteUserOrder(userID);
+        usersRepository.deleteById(userID);
+
+        String encodedEmail = URLEncoder.encode(email, "UTF-8");
+        String emailURL = "https://dev-1jps85kh7htbmqki.us.auth0.com/api/v2/users-by-email?fields=user_id&email=" + encodedEmail;
+        String token = requestToken();
+        HttpRequest getID = HttpRequest.newBuilder()
+                .uri(new URI(emailURL))
+                .header("Accept", "application/json")
+                .header("Authorization", "Bearer " + token)
+                .GET()
+                .build();
+
+        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpResponse<String> IDResponse = httpClient.send(getID, HttpResponse.BodyHandlers.ofString());
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode responseBody = objectMapper.readTree(IDResponse.body());
+        String strUserID = responseBody.get(0).get("user_id").asText();
+
+        String user = URLEncoder.encode(strUserID, "UTF-8");
+        String url = "https://dev-1jps85kh7htbmqki.us.auth0.com/api/v2/users/" + user;
+        try {  
+            BodyPublisher body = HttpRequest.BodyPublishers.ofString("");
+            HttpRequest delete = HttpRequest.newBuilder()
+            .uri(new URI(url))
+            .header("Content-Type", "application/json")
+            .header("Authorization", "Bearer " + token)
+            .method("DELETE", body)
+            .build();
+
+            HttpResponse<String> response = httpClient.send(delete, HttpResponse.BodyHandlers.ofString());
+            System.out.println(response);
+        } 
+        catch(Exception e){e.printStackTrace();}
+    }
+
 
     public Map<String, String> findUserByAccessToken(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException{
         String auth = request.getHeader("Authorization");
+        if(auth == null){
+            return null;
+        }
         String url = "https://dev-1jps85kh7htbmqki.us.auth0.com/userinfo";
         
         HttpRequest get = HttpRequest.newBuilder()
@@ -390,15 +439,25 @@ public class Services {
         return order;
     }
 
-    public Map<String, List<Map<String,Object>>> userOrders(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException{
-        Map<String, String> userInfo = findUserByAccessToken(request);
-        String email = userInfo.get("email");
+    public Map<String, List<Map<String,Object>>> userOrders(HttpServletRequest request, String paramEmail) throws URISyntaxException, IOException, InterruptedException{
+        String email = "";
+        if(request != null)
+        {
+            Map<String, String> userInfo = findUserByAccessToken(request);
+            if(userInfo == null){
+                return null;
+            }
+            email = userInfo.get("email");
+        }
+        else if(paramEmail != null){
+            email = paramEmail;
+        }
         Integer customer_id = usersRepository.findByEmail(email).getUser_id();
-        
+        if(customer_id == null){
+            return null;
+        }
         List<Map<String,Object>> pendingOrders = ordersRepository.userPendingOrders(customer_id);
         List<Map<String,Object>> completedOrders = ordersRepository.userCompletedOrders(customer_id);
-
-
         List<Map<String,Object>> pendingList = new ArrayList<>();
         List<Map<String,Object>> completedList = new ArrayList<>();
 
@@ -532,6 +591,28 @@ public class Services {
         bestSellingMap.put("toppings", toppings);
         return bestSellingMap;
     }
+
+    public List<String> getCategories(){
+        return categoryRepository.getCategoryNames();
+    }
+
+    public void addCategory(String categoryName){
+        Category newCategory = new Category();
+        newCategory.setName(categoryName);
+        categoryRepository.save(newCategory);
+    }
+
+    public String deleteCategory(String categoryName){
+        Category del = categoryRepository.findById(categoryName).get();
+        if(del == null){
+            return "Error deleting " + categoryName;
+        }
+        categoryRepository.delete(del);
+        return "Deleted " + categoryName;
+    }
+
+
+
 
 
 

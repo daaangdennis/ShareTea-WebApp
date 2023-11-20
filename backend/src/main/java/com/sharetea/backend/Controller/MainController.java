@@ -38,15 +38,27 @@ public class MainController {
     //     return service.requestUsers();
     // }
 
-    @GetMapping("/users/get")
+    @GetMapping("/user/get")
     public List<Map<String, Object>> userGet() {
         return service.requestUsers();
+    }
+    @PostMapping("/user/delete")
+    public void userDelete(@RequestParam String email) {
+        try {
+            service.deleteUser(email);
+        } catch (Exception e) {e.printStackTrace();}
     }
 
     @GetMapping("/user/orders")
     public Map<String, List<Map<String, Object>>> userOrders(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException {
-        return service.userOrders(request);
+        return service.userOrders(request, null);
     }
+
+    @GetMapping("/user/orders/manager")
+    public Map<String, List<Map<String, Object>>> userOrders(@RequestParam String email) throws URISyntaxException, IOException, InterruptedException {
+        return service.userOrders(null, email);
+    }
+
 
     @PostMapping("/user/favorite")
     public String favorite(HttpServletRequest request, @RequestParam String productName) throws URISyntaxException, IOException, InterruptedException {
@@ -116,6 +128,11 @@ public class MainController {
     @GetMapping("/product/get/weather")
     public Map<String, Object> getProductsWeather(@RequestParam Double temperature) {
         return service.weatherProducts(temperature);
+    }
+
+    @GetMapping("/product/categories")
+    public List<String> getCategories() {
+        return service.getCategories();
     }
 
 
