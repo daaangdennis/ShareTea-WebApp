@@ -53,6 +53,11 @@ public class MainController {
         return service.addFavorite(request, productName);
     }
 
+    @GetMapping("user/favorite/get")
+    public Map<String, Object> favorite(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException {
+        return service.getFavorite(request);
+    }
+
     @GetMapping("/permissions")
     public String getPermissions() throws URISyntaxException, IOException, InterruptedException {
         return "You are a manager!";
@@ -106,6 +111,11 @@ public class MainController {
     @GetMapping("/product/get")
     public Map<String, Object> getProducts() {
         return service.getAllProducts();
+    }
+
+    @GetMapping("/product/get/weather")
+    public Map<String, Object> getProductsWeather(@RequestParam Double temperature) {
+        return service.weatherProducts(temperature);
     }
 
 

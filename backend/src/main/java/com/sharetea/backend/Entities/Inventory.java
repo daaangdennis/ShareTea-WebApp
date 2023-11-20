@@ -30,7 +30,7 @@ public class Inventory {
 
     private Boolean is_topping;
 
-    private Boolean active;
+    private Boolean active = true;
 
     public Integer getInventory_id() {
         return inventory_id;

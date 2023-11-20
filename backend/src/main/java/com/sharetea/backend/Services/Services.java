@@ -222,6 +222,44 @@ public class Services {
         return "Added favorite.";
     }
 
+    public Map<String, Object> getFavorite(HttpServletRequest request){
+        Map<String, String> userInfo = null;
+        try {
+            userInfo = findUserByAccessToken(request);
+        } catch(Exception e){e.printStackTrace();}
+
+        String email = userInfo.get("email");
+        Integer user_id = usersRepository.findByEmail(email).getUser_id();
+        List<Map<String, Object>> favorites = userFavoriteRepository.getUserFavorite(user_id);
+        List<Inventory> toppings = inventoryRepository.findToppings();
+
+        Map<String, Object> favoriteMap = new HashMap<>();
+        favoriteMap.put("products", favorites);
+        favoriteMap.put("toppings", toppings);
+        return favoriteMap;
+    }
+
+    public Map<String, Object> weatherProducts(Double temperature){
+        List<Product> products = null;
+        if(temperature <= 17){
+            products = productRepository.findByWeather("cold"); 
+        }
+        else if(temperature <= 30){
+           products = productRepository.findByWeather("mild");  
+        }
+        else{
+            products = productRepository.findByWeather("hot");
+        }
+
+        List<Inventory> toppings = inventoryRepository.findToppings();
+
+        Map<String, Object> weatherMap = new HashMap<>();
+        weatherMap.put("products", products);
+        weatherMap.put("toppings", toppings);
+
+        return weatherMap;
+    }
+
     public List<List<String>> getMostandLeastOrdered(Integer customer_id) {
         List<List<String>> mostAndLeastAll = productRepository.getMostandLeastOrdered(customer_id);
         List<List<String>> mostAndLeast = new ArrayList<>();
@@ -469,7 +507,7 @@ public class Services {
 
     
     public Map<String, Object> getAllProducts() {
-        List<Product> products = productRepository.findAll();
+        List<Product> products = productRepository.findByActive(true);
         List<Inventory> toppings = inventoryRepository.findToppings();
 
         Map<String, Object> productMap = new HashMap<>();
@@ -517,9 +555,13 @@ public class Services {
             newProduct.setName(name);
             newProduct.setCategory(category);
             newProduct.setPrice(price);
+            newProduct.setActive(true);
             productRepository.save(newProduct);
         }
         else{
+            if(product.getActive() == false){
+                product.setActive(true);
+            }
             if(category != null){
                 product.setCategory(category);
             }
@@ -534,11 +576,11 @@ public class Services {
     public String deleteProduct(String productName){
         Product product = productRepository.findByName(productName);
         if(product == null){
-            return ("Could not find " + productName + " in the product list.");
+            return ("Could not find " + productName + " in the inventory list.");
         }
-        String name = product.getName();
-        productRepository.deleteByName(name);
-        return ("Deleted " + name);
+        product.setActive(false);
+        productRepository.save(product);
+        return ("Deleted " + productName);
     }
 
     public List<Inventory> getAllInventory() {
