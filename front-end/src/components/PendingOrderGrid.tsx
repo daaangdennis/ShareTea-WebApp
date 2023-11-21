@@ -2,11 +2,10 @@ import { Order, OrderItem, PendingOrders, PendingOrderGridProp, PendingOrderCard
 import "../styles/PendingPage.css";
 
 
-function PendingOrderCard({ order, onCardClick, setOrderTotal }: PendingOrderCardProp) {
+function PendingOrderCard({ order, onCardClick}: PendingOrderCardProp) {
     //console.log(order);
     const handleCardClick = () => {
-        onCardClick(order.items);
-        setOrderTotal(order.total);
+        onCardClick(order);
     };
 
     return (
@@ -22,11 +21,11 @@ function PendingOrderCard({ order, onCardClick, setOrderTotal }: PendingOrderCar
 }
 
 
-function PendingOrderGrid({ orders = [] , onCardClick, setOrderTotal} : PendingOrderGridProp) {
+function PendingOrderGrid({ orders = [] , onCardClick} : PendingOrderGridProp) {
     return (
         <div>
             {orders.map((order: Order) => (
-                <PendingOrderCard order={order} onCardClick={onCardClick} setOrderTotal={setOrderTotal}/>
+                <PendingOrderCard order={order} onCardClick={onCardClick}/>
             ))}
         </div>
     );

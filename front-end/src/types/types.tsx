@@ -113,14 +113,12 @@ export interface PendingOrders {
 
 export interface PendingOrderGridProp {
   orders: Order[];
-  onCardClick: (items: OrderItem[]) => void;
-  setOrderTotal: (total: number) => void;
+  onCardClick: (order: Order) => void;
 }
 
 export interface PendingOrderCardProp {
   order: Order;
-  onCardClick: (items: OrderItem[]) => void;
-  setOrderTotal: (total: number) => void;
+  onCardClick: (order: Order) => void;
 }
 export interface customItem {
 
