@@ -27,12 +27,12 @@ function PendingPage() {
     //console.log(selectedItems.length > 0);
 
     const handlePrevButton = () => {
-        if (pendingOrder.orders && pageNumber != 0) {
+        if (pendingOrder.pending && pageNumber != 0) {
             setPageNumber(pageNumber - 1);
         }
     };
     const handleNextButton = () => {
-        if (pendingOrder.orders && pageNumber != Math.floor((pendingOrder.orders.length)/maxOrdersPerPage)) {
+        if (pendingOrder.pending && pageNumber != Math.floor((pendingOrder.pending.length)/maxOrdersPerPage)) {
             setPageNumber(pageNumber + 1);
         }
     };
@@ -51,10 +51,10 @@ function PendingPage() {
         <div className="d-flex flex-column flex-column-reverse flex-md-row">
             <div className="col-md-8 pendingpage-orders-grid-container">
                 <button onClick={handlePrevButton}>prev</button>
-                {pageNumber + 1} of {pendingOrder.orders ? (Math.floor((pendingOrder.orders.length)/maxOrdersPerPage) + 1) : (1)}
+                {pageNumber + 1} of {pendingOrder.pending ? (Math.floor((pendingOrder.pending.length)/maxOrdersPerPage) + 1) : (1)}
                 <button onClick={handleNextButton}>next</button>
                 <PendingOrderGrid 
-                    orders={pendingOrder.orders ? (pendingOrder.orders.slice(0 + pageNumber * maxOrdersPerPage, maxOrdersPerPage + pageNumber * maxOrdersPerPage)) : ([])} 
+                    pending={pendingOrder.pending ? (pendingOrder.pending.slice(0 + pageNumber * maxOrdersPerPage, maxOrdersPerPage + pageNumber * maxOrdersPerPage)) : ([])} 
                     onCardClick={handleOrderSelect}
                 />
             </div>   

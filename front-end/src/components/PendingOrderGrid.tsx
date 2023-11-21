@@ -21,10 +21,10 @@ function PendingOrderCard({ order, onCardClick}: PendingOrderCardProp) {
 }
 
 
-function PendingOrderGrid({ orders = [] , onCardClick} : PendingOrderGridProp) {
+function PendingOrderGrid({ pending = [] , onCardClick} : PendingOrderGridProp) {
     return (
         <div>
-            {orders.map((order: Order) => (
+            {pending.map((order: Order) => (
                 <PendingOrderCard order={order} onCardClick={onCardClick}/>
             ))}
         </div>

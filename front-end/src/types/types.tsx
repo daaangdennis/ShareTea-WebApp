@@ -108,11 +108,11 @@ export interface OrderItem {
   ice_level: string;
 }
 export interface PendingOrders {
-  orders: Order[];
+  pending: Order[];
 }
 
 export interface PendingOrderGridProp {
-  orders: Order[];
+  pending: Order[];
   onCardClick: (order: Order) => void;
 }
 

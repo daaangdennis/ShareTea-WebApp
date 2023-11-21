@@ -548,7 +548,7 @@ public class Services {
             finalPendingList.add(orderMap);
         }
         Map<String, List<Map<String, Object>>> result = new HashMap<>();
-        result.put("orders", finalPendingList);
+        result.put("pending", finalPendingList);
 
         return result;
 
