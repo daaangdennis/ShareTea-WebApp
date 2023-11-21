@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sharetea.backend.Entities.*;
-import com.sharetea.backend.RequestBodies.CustomerBody;
-import com.sharetea.backend.RequestBodies.EmployeeBody;
 import com.sharetea.backend.Services.*;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -35,14 +33,41 @@ public class MainController {
         return "Hello!";
     }
 
+    // @GetMapping("/access")
+    // public Object access() {
+    //     return service.requestUsers();
+    // }
+
+    @GetMapping("/user/get")
+    public List<Map<String, Object>> userGet() {
+        return service.requestUsers();
+    }
+    @PostMapping("/user/delete")
+    public void userDelete(@RequestParam String email) {
+        try {
+            service.deleteUser(email);
+        } catch (Exception e) {e.printStackTrace();}
+    }
+
     @GetMapping("/user/orders")
     public Map<String, List<Map<String, Object>>> userOrders(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException {
-        return service.userOrders(request);
+        return service.userOrders(request, null);
     }
+
+    @GetMapping("/user/orders/manager")
+    public Map<String, List<Map<String, Object>>> userOrders(@RequestParam String email) throws URISyntaxException, IOException, InterruptedException {
+        return service.userOrders(null, email);
+    }
+
 
     @PostMapping("/user/favorite")
     public String favorite(HttpServletRequest request, @RequestParam String productName) throws URISyntaxException, IOException, InterruptedException {
         return service.addFavorite(request, productName);
+    }
+
+    @GetMapping("user/favorite/get")
+    public Map<String, Object> favorite(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException {
+        return service.getFavorite(request);
     }
 
     @GetMapping("/permissions")
@@ -50,24 +75,9 @@ public class MainController {
         return "You are a manager!";
     }
 
-    @GetMapping("/customer/get")
-    public Iterable<Customer> getCustomers() {
-        return service.getAllCustomers();
-    }
-
-    @PostMapping("/customer/add")
-    public Customer addCustomer(@RequestBody CustomerBody customer) {
-        return service.addCustomer(customer);
-    }
-
-    @GetMapping("/employee/get")
-    public Iterable<Employee> getEmployees() {
-        return service.getAllEmployees();
-    }
-
-    @PostMapping("/employee/add")
-    public Employee addEmployee(@RequestBody EmployeeBody employee) {
-        return service.addEmployee(employee);
+    @GetMapping("/permissions/change")
+    public void changePermissions(@RequestParam String userEmail, @RequestParam String position) throws URISyntaxException, IOException, InterruptedException {
+         service.changePermissions(userEmail, position);
     }
 
     @GetMapping("/orders/get")
@@ -75,14 +85,30 @@ public class MainController {
         return service.getAllOrders();
     }
 
+    @GetMapping("/orders/next")
+    public Integer getNextOrder(){
+        return service.maxOrder();    
+    }
+
     @PostMapping("/orders/add")
     public Orders addOrder(HttpServletRequest request, @RequestBody Map<String, Object> orderData) throws URISyntaxException, IOException, InterruptedException {
-        return service.addOrder(request, null, orderData);
+        return service.addOrder(request, null, null, null, orderData);
     }
 
     @PostMapping("/orders/cashieradd")
-    public Orders cashierAddOrder(@RequestParam String email, @RequestBody Map<String, Object> orderData) throws URISyntaxException, IOException, InterruptedException {
-        return service.addOrder(null, email, orderData);
+    public Orders cashierAddOrder(@RequestParam(required = false) String email, @RequestParam(required = false) String firstName, @RequestParam(required = false) String lastName, @RequestBody Map<String, Object> orderData) throws URISyntaxException, IOException, InterruptedException {
+        if(firstName == null){
+            return service.addOrder(null, email, null, null, orderData);
+        }
+        else{
+            return service.addOrder(null, null, firstName, lastName, orderData);
+        }
+
+    }
+
+    @PostMapping("/orders/finish")
+    public void orderFinish(@RequestParam Integer orderID){
+        service.finishOrder(orderID);
     }
 
     @GetMapping("/orders/pending")
@@ -97,6 +123,16 @@ public class MainController {
     @GetMapping("/product/get")
     public Map<String, Object> getProducts() {
         return service.getAllProducts();
+    }
+
+    @GetMapping("/product/get/weather")
+    public Map<String, Object> getProductsWeather(@RequestParam Double temperature) {
+        return service.weatherProducts(temperature);
+    }
+
+    @GetMapping("/product/categories")
+    public List<String> getCategories() {
+        return service.getCategories();
     }
 
 
@@ -153,6 +189,16 @@ public class MainController {
     @PostMapping("/inventory/delete")
     public String inventoryDelete(@RequestParam String inventoryName) {
         return service.deleteInventory(inventoryName);
+    }
+
+    @PostMapping("/category/add")
+    public void addCategory(@RequestParam String name){
+        service.addCategory(name);
+    }
+
+    @PostMapping("/category/delete")
+    public void deleteCategory(@RequestParam String name){
+        service.deleteCategory(name);
     }
 
 }
