@@ -13,6 +13,10 @@ import jakarta.transaction.Transactional;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Integer> {
+    List<Product> findByActive(Boolean active);
+
+    List<Product> findByWeather(String weather);
+    
     Product findByName(String name);
 
     @Transactional void deleteByName(String name);
