@@ -36,7 +36,7 @@ const RecommendedContent = () => {
           Based on Today’s Weather 
         </h1>
         {
-            temperature[0] === "" ? <></> : <h1> {temperature[0]} {temperature[1]} </h1>
+            temperature[0] === "" ? <></> : <h1> {temperature[0]} {temperature[1]}°C </h1>
         } 
         <ProductGrid products={weatherProducts.products} />
       </div>
