@@ -35,7 +35,7 @@ const Navbar: React.FC<navbarProps> = ({ routes }) => {
   useEffect(() => {
     getProducts(setProducts, setFilteredProducts);
     setFilteredProducts(SourceProducts);
-  }, [isLoading, getAccessTokenSilently]);
+  }, [isLoading, getAccessTokenSilently, activePage]);
   useEffect(() => {
     if (searchTerm.trim() === "") {
       setFilteredProducts(SourceProducts);
@@ -48,7 +48,7 @@ const Navbar: React.FC<navbarProps> = ({ routes }) => {
       };
       setFilteredProducts(filtered);
     }
-  }, [searchTerm, isLoading, getAccessTokenSilently]);
+  }, [searchTerm, isLoading, getAccessTokenSilently, activePage]);
 
   return (
     <header className="p-3 text-bg">

@@ -32,3 +32,70 @@ export function getBestSelling(
       console.error("There was an error fetching data:", error);
     });
 }
+
+//TODO
+export function getWeatherProducts(
+  setWeatherProducts: React.Dispatch<React.SetStateAction<listProductToppings>>,
+  temp: number
+) {
+  Axios.get(
+    process.env.REACT_APP_BACKEND_URL +
+      `/product/get/weather?temperature=${temp}`
+  )
+    .then((response) => {
+      const WeatherProducts: listProductToppings = response.data;
+      console.log(response.data);
+      setWeatherProducts(WeatherProducts);
+    })
+    .catch((error) => {
+      console.error("There was an error fetching data:", error);
+    });
+}
+
+//TODO
+export async function getFavoriteProducts(
+  setFavoriteProducts: React.Dispatch<
+    React.SetStateAction<listProductToppings>
+  >,
+  getAccessToken: any
+) {
+  const accessToken = await getAccessToken();
+
+  const headers = {
+    Authorization: `Bearer ${accessToken}`,
+  };
+  Axios.get(process.env.REACT_APP_BACKEND_URL + `/user/favorite/get`, {
+    headers,
+  })
+    .then((response) => {
+      const FavoriteProducts: listProductToppings = response.data;
+      console.log(response.data);
+      setFavoriteProducts(FavoriteProducts);
+    })
+    .catch((error) => {
+      console.error("There was an error fetching data:", error);
+    });
+}
+
+//TODO
+export async function addFavoriteProduct(
+  productName: string,
+  getAccessToken: any
+) {
+  const accessToken = await getAccessToken();
+
+  const headers = {
+    Authorization: `Bearer ${accessToken}`,
+  };
+  Axios.post(
+    process.env.REACT_APP_BACKEND_URL +
+      `/user/favorite?productName=${productName}`,
+    { headers }
+  )
+    .then((response) => {
+      console.log(response);
+    })
+    .catch((error) => {
+      console.error("There was an error fetching data:", error);
+    });
+}
