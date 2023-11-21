@@ -32,3 +32,9 @@
 .pendingpage-product-card-right {
     display: inline-block;
 }
+
+.pendingpage-orders-information-header {
+    display: flex;
+    align-items: left;
+    font-weight: 700;
+}

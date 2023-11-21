@@ -1,6 +1,6 @@
 import PendingOrderGrid from "../components/PendingOrderGrid";
 import { useEffect, useState } from "react";
-import { getPendingOrders } from "../apis/Order";
+import { getPendingOrders, finishOrder } from "../apis/Order";
 import { OrderItem, PendingOrders, Order } from "../types/types";
 
 import "../styles/PendingPage.css";
@@ -10,7 +10,7 @@ function PendingPage() {
         {} as PendingOrders
     );
     const [pageNumber, setPageNumber] = useState<number>(0);
-    const [maxOrdersPerPage, setMaxOrders] = useState<number>(5);
+    const [maxOrdersPerPage, setMaxOrders] = useState<number>(10);
     const [selectedOrder, setSelectedOrder] = useState<Order>();
     const tableColumns = [
         "Product Name",
@@ -22,7 +22,7 @@ function PendingPage() {
 
     useEffect(() => {
         getPendingOrders(setPendingOrder);
-    }, []);
+    }, [pendingOrder]);
     //console.log(pendingOrder);
     //console.log(selectedItems.length > 0);
 
@@ -42,8 +42,8 @@ function PendingPage() {
     };
 
     const handleCompleteOrder = () => {
-        if (selectedOrder && selectedOrder.items.length > 0) {
-            //complete order
+        if (selectedOrder) {
+            finishOrder(selectedOrder.order_id);
         }
     }
 
@@ -59,21 +59,23 @@ function PendingPage() {
                 />
             </div>   
             <div className="col-md-4 pendingpage-orders-information-container">
-                {selectedOrder ? 
-                    (
-                        <h3>
-                            Order {selectedOrder.order_id}
-                            <br></br>
-                            Customer Name: {selectedOrder.first_name} {selectedOrder.last_name}
-                        </h3>
-                    )
-                    :
-                    (
-                        <h3>
-                            No Order Selected
-                        </h3>
-                    )
-                }
+                <div className="pendingpage-orders-information-header px-3 py-2">
+                    {selectedOrder ? 
+                        (
+                            <h3>
+                                Order #{selectedOrder.order_id}
+                                <br></br>
+                                Customer Name: {selectedOrder.first_name} {selectedOrder.last_name}
+                            </h3>
+                        )
+                        :
+                        (
+                            <h3>
+                                No Order Selected
+                            </h3>
+                        )
+                    }
+                </div>
 
                 <table className="table" style={{ width: "100%" }}>
                     <thead>
@@ -105,7 +107,7 @@ function PendingPage() {
                 <br></br>
                 Total: ${selectedOrder ? (selectedOrder.total * 1.0825).toFixed(2) : ((0).toFixed(2))}
                 <div>
-                    <button>Complete Order</button>
+                    <button onClick={handleCompleteOrder}>Complete Order</button>
                 </div>
             </div> 
         </div> 

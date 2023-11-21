@@ -34,3 +34,12 @@ export function getPendingOrders(
       console.error("There was an error fetching data:", error);
     });
 }
+
+export async function finishOrder(order_id: number) {
+  try {
+    const response = await Axios.post(process.env.REACT_APP_BACKEND_URL + "/orders/finish?orderID=" + order_id);
+    console.log(response);
+  } catch (error) {
+    console.error("There was an error completing an order: ", error);
+  }
+}
