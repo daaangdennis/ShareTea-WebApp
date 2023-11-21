@@ -3,6 +3,8 @@ import "../styles/LandingPage.css";
 import ProductGrid from "./ProductGrid";
 import { getBestSelling } from "../apis/BestSelling";
 import { listProductToppings } from "../types/types";
+import WeatherProducts from "../apis/Weather";
+
 
 const RecommendedContent = () => {
   const [bestSelling, setBestSelling] = useState<listProductToppings>(
@@ -13,10 +15,15 @@ const RecommendedContent = () => {
     {} as listProductToppings
   );
 
+  const[temperature, setTemperature] = useState(["",0])
+
   useEffect(() => {
     getBestSelling(setBestSelling, (e: any) => {});
     //TODO weather API
+    WeatherProducts(setWeatherProducts, setTemperature)
+    
   }, []);
+  
 
   return (
     <div>
@@ -26,8 +33,11 @@ const RecommendedContent = () => {
       </div>
       <div>
         <h1 className="landingpage-text my-md-4 my-5">
-          Based on Today’s Weather
+          Based on Today’s Weather 
         </h1>
+        {
+            temperature[0] === "" ? <></> : <h1> {temperature[0]} {temperature[1]} </h1>
+        } 
         <ProductGrid products={weatherProducts.products} />
       </div>
     </div>
