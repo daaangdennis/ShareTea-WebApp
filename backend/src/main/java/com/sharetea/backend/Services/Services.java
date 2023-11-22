@@ -629,8 +629,8 @@ public class Services {
         return productRepository.commonPairings(start, end);
     }
 
-    public Product updateProduct(String name, String category, Double price, String weather) {
-        Product product = productRepository.findByName(name);
+    public Product updateProduct(Integer productID, String name, String category, Double price, String weather) {
+        Product product = productRepository.findById(productID).get();
         if(product == null){
             if(name == null && category == null && price == null){
                 return null;
@@ -642,7 +642,6 @@ public class Services {
             if(weather != null){
                 newProduct.setWeather(weather.toLowerCase());
             }
-            newProduct.setActive(true);
             productRepository.save(newProduct);
         }
         else{
@@ -663,13 +662,36 @@ public class Services {
         return null;
     }
 
-    public void updateProductName(Integer productID, String name){
-        Product product = productRepository.findById(productID).get();
-        if(product == null){
-            return;
+    public Product addProduct(String name, String category, Double price, String weather){
+        Product product = productRepository.findByName(name);
+        if(product != null){
+            if(product.getActive() == true){
+                return null;
+            }
+            product.setActive(true);
+            if(category != null){
+                product.setCategory(category);
+            }
+            if(price != null){
+                product.setPrice(price);
+            }
+            if(weather != null){
+                product.setWeather(weather);
+            }
+            productRepository.save(product);
+            return product;
         }
-        product.setName(name);
-        productRepository.save(product);
+        else{
+            Product newProduct = new Product();
+            newProduct.setName(name);
+            newProduct.setCategory(category);
+            newProduct.setPrice(price);
+            if(weather != null){
+                newProduct.setWeather(weather.toLowerCase());
+            }
+            productRepository.save(newProduct);
+            return newProduct;
+        }
     }
 
 
