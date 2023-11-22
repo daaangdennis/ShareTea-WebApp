@@ -229,3 +229,56 @@ export function deleteUser(userId: number) {
       });
   });
 }
+
+export function addCategory(categoryName: string) {
+  return new Promise((resolve, reject) => {
+    const URL = `${process.env.REACT_APP_BACKEND_URL}/categories/add?categoryName=${categoryName}`;
+
+    Axios.post(URL)
+      .then((response) => {
+        console.log(
+          "addCategory: Category name = " + categoryName + " Response: ",
+          response
+        );
+        resolve(true);
+      })
+      .catch((error) => {
+        console.error("There was an error adding the category:", error);
+        reject(error);
+      });
+  });
+}
+
+export function getCategories(
+  setCategories: React.Dispatch<React.SetStateAction<any>>
+) {
+  Axios.get(process.env.REACT_APP_BACKEND_URL + "/categories/get")
+    .then((response) => {
+      const categories = response.data || [];
+      setCategories(categories);
+    })
+    .catch((error) => {
+      console.error("There was an error fetching categories:", error);
+    });
+}
+
+export function deleteCategory(categoryName: string) {
+  return new Promise((resolve, reject) => {
+    const URL = `${process.env.REACT_APP_BACKEND_URL}/categories/delete?categoryName=${categoryName}`;
+
+    Axios.post(URL)
+      .then((response) => {
+        console.log(
+          "deleteCategory: Category name = " +
+            categoryName +
+            " Response: " +
+            response
+        );
+        resolve(true);
+      })
+      .catch((error) => {
+        console.error("There was an error deleting the category:", error);
+        reject(error);
+      });
+  });
+}

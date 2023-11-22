@@ -4,8 +4,11 @@ import { useEffect, useState } from "react";
 import { listProductToppings, product } from "../types/types";
 import SortButtons from "./SortButtons";
 import {
+  addCategory,
   addMenuProduct,
+  deleteCategory,
   deleteMenu,
+  getCategories,
   updateMenuProduct,
 } from "../apis/Dashboard";
 import { getProducts } from "../apis/Product";
@@ -14,6 +17,9 @@ import Table from "./Table";
 const MenuManagement = () => {
   const [products, setProducts] = useRecoilState<listProductToppings>(Products);
 
+  useEffect(() => {
+    getCategories(setCategories);
+  }, []);
   useEffect(() => {
     setSortedProducts(products.products);
   }, [products]);
@@ -288,14 +294,23 @@ const MenuManagement = () => {
   };
 
   const handleAddCategory = () => {
-    //TODO API
-    // if (InputMenuNewCategory) {
-    //   POSTAPIFUNCTION(InputMenuNewCategory)
-    //     .then(() => {
-    //       GETAPIFUNCTION(setCategories);
-    //     })
-    //     .catch(() => {});
-    // }
+    if (InputMenuNewCategory) {
+      addCategory(InputMenuNewCategory)
+        .then(() => {
+          getCategories(setCategories);
+        })
+        .catch(() => {});
+    }
+  };
+
+  const handleDeleteCategory = () => {
+    if (InputMenuCategory) {
+      deleteCategory(InputMenuCategory)
+        .then(() => {
+          getCategories(setCategories);
+        })
+        .catch(() => {});
+    }
   };
   return (
     <div className="container">
@@ -350,7 +365,10 @@ const MenuManagement = () => {
                     </option>
                   ))}
                 </select>
-                <button className="btn btn-danger btn-sm">
+                <button
+                  onClick={handleDeleteCategory}
+                  className="btn btn-danger btn-sm"
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="16"
@@ -369,7 +387,10 @@ const MenuManagement = () => {
                   onChange={(e) => setInputMenuNewCategory(e.target.value)}
                   placeholder="Add new category"
                 />
-                <button className="btn btn-info btn-sm">
+                <button
+                  className="btn btn-info btn-sm"
+                  onChange={handleAddCategory}
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="16"
@@ -418,7 +439,12 @@ const MenuManagement = () => {
                 className="btn"
                 style={{ backgroundColor: "#cf152d", color: "white" }}
                 onClick={() => {
-                  if (InputMenuName && InputMenuCategory && InputMenuPrice) {
+                  if (
+                    InputMenuName &&
+                    InputMenuCategory &&
+                    InputMenuPrice &&
+                    InputMenuCategory !== "Not Selected"
+                  ) {
                     handleAddMenu(
                       InputMenuName,
                       InputMenuCategory,
