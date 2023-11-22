@@ -22,6 +22,7 @@ export interface product {
   has_ice: boolean;
   has_toppings: boolean;
   has_sugar: boolean;
+  weather?:string
 }
 
 export interface topping {

@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { InventoryList } from "../types/types";
 import {
+  addInventory,
   deleteInventory,
   getInventory,
   updateInventory,
-} from "../apis/Inventory";
+} from "../apis/Dashboard";
 import Table from "./Table";
 import SortButtons from "./SortButtons";
 
@@ -26,6 +27,7 @@ const InventoryManagement = () => {
   const [editRow, setEditRow] = useState(NaN);
   const [editedName, setEditedName] = useState("");
   const [editedQuantity, setEditedQuantity] = useState("");
+  const [editedIsTopping, setEditedIsTopping] = useState("");
   const [sortedItems, setSortedItems] = useState(InventoryDataSource.items);
   const [sortDirection, setSortDirection] = useState<any>({
     inventory_id: "",
@@ -77,7 +79,7 @@ const InventoryManagement = () => {
       />
     </div>,
     <div className="d-flex align-items-center">
-      Is Topping
+      Topping
       <SortButtons
         column="is_topping"
         sortedProducts={sortedItems}
@@ -96,8 +98,18 @@ const InventoryManagement = () => {
         setEditRow(i);
         setEditedName(item.name);
         setEditedQuantity(item.quantity?.toString());
+        setEditedIsTopping(item.is_topping ? "true" : "false");
       } else {
-        handleUpdateInventory(editedName, Number(editedQuantity));
+        handleUpdateInventory(
+          item.inventory_id,
+          editedName,
+          Number(editedQuantity),
+          editedIsTopping === ""
+            ? undefined
+            : editedIsTopping === "true"
+            ? true
+            : false
+        );
         setEditRow(NaN);
       }
     };
@@ -108,9 +120,19 @@ const InventoryManagement = () => {
 
     return [
       item.inventory_id,
-      item.name,
       isEditing ? (
         <input
+          className="form-control"
+          type="text"
+          value={editedName}
+          onChange={(e) => setEditedName(e.target.value)}
+        />
+      ) : (
+        item.name
+      ),
+      isEditing ? (
+        <input
+          className="form-control"
           type="number"
           value={editedQuantity}
           onChange={(e) => setEditedQuantity(e.target.value)}
@@ -119,7 +141,55 @@ const InventoryManagement = () => {
         item.quantity
       ),
       item.last_updated,
-      item.is_topping ? "True" : "False",
+      isEditing ? (
+        <div className="form-check form-switch">
+          <input
+            key={i}
+            className="form-check-input"
+            type="checkbox"
+            role="switch"
+            id={`flexSwitchCheckDefault-${i}`}
+            onChange={(e) =>
+              setEditedIsTopping(e.target.checked ? "true" : "false")
+            }
+            checked={editedIsTopping === "true"}
+          />
+          <label className="form-check-label" htmlFor="flexSwitchCheckDefault">
+            {editedIsTopping === "true" ? "Topping" : "Not a Topping"}
+          </label>
+        </div>
+      ) : item.is_topping ? (
+        <div className="form-check form-switch">
+          <input
+            key={i}
+            className="form-check-input"
+            type="checkbox"
+            role="switch"
+            id={`flexSwitchCheckCheckedDisabled-${i}`}
+            checked
+            disabled
+          />
+          <label
+            className="form-check-label"
+            htmlFor="flexSwitchCheckCheckedDisabled"
+          >
+            Topping
+          </label>
+        </div>
+      ) : (
+        <div className="form-check form-switch">
+          <input
+            className="form-check-input"
+            type="checkbox"
+            role="switch"
+            id={`flexSwitchCheckDisabled-${i}`}
+            disabled
+          />
+          <label className="form-check-label" htmlFor="flexSwitchCheckDisabled">
+            Not a Topping
+          </label>
+        </div>
+      ),
       isEditing ? (
         <div className="d-flex justify-content-around">
           <button onClick={handleEditClick} className="btn btn-success btn-sm">
@@ -136,7 +206,7 @@ const InventoryManagement = () => {
             </svg>
           </button>
           <button
-            onClick={() => setEditRow(NaN)}
+            onClick={handleCancelClick}
             className="btn btn-warning btn-sm"
           >
             <svg
@@ -185,21 +255,30 @@ const InventoryManagement = () => {
     ];
   });
 
-  const handleUpdateInventory = (Name: string, newQuantity?: number) => {
-    if (newQuantity && Name) {
-      updateInventory(Name, newQuantity)
+  const handleUpdateInventory = (
+    itemId: number,
+    newName?: string,
+    newQuantity?: number,
+    newIsTopping?: boolean
+  ) => {
+    if (newQuantity || newName || newIsTopping) {
+      updateInventory(itemId, newName, newQuantity, newIsTopping)
         .then(() => {
           getInventory(setInventoryDataSource);
         })
         .catch();
-    } else if (InputInventoryName) {
-      updateInventory(InputInventoryName)
-        .then(() => {
-          getInventory(setInventoryDataSource);
-        })
-        .catch(() => {});
     }
   };
+
+  const handleAddInventory = (name: string, quantity?: number) => {
+    addInventory(name, quantity)
+      .then(() => {
+        getInventory(setInventoryDataSource);
+        handleClearInventory();
+      })
+      .catch();
+  };
+
   const handleClearInventory = () => {
     setInputInventoryName("");
     setInputInventoryQuantity("");
@@ -215,17 +294,13 @@ const InventoryManagement = () => {
   };
   return (
     <div className="container">
-      <Table className="m-4" columns={InventoryColumns} data={InventoryData} />
-
       <div className="container">
         <div className="row my-4 justify-content-center">
           <div className="col-md-6 col-sm-12">
-            <div
-              className="d-flex mb-3 align-items-center"
-              style={{ gap: "10px" }}
-            >
-              <h4>Item Name:</h4>
+            <div className="form-group">
+              <label htmlFor="itemName">Item Name:</label>
               <input
+                id="itemName"
                 className="form-control"
                 value={InputInventoryName}
                 onChange={(e) => setInputInventoryName(e.target.value)}
@@ -236,12 +311,10 @@ const InventoryManagement = () => {
           </div>
 
           <div className="col-md-6 col-sm-12">
-            <div
-              className="d-flex mb-3 align-items-center"
-              style={{ gap: "10px" }}
-            >
-              <h4>Stock Quantity:</h4>
+            <div className="form-group">
+              <label htmlFor="stockQuantity">Stock Quantity:</label>
               <input
+                id="stockQuantity"
                 className="form-control"
                 value={InputInventoryQuantity}
                 onChange={(e) => setInputInventoryQuantity(e.target.value)}
@@ -261,12 +334,14 @@ const InventoryManagement = () => {
               <button
                 className="btn"
                 style={{ backgroundColor: "#cf152d", color: "white" }}
-                onClick={() =>
-                  handleUpdateInventory(
-                    InputInventoryName || "",
-                    Number(InputInventoryQuantity)
-                  )
-                }
+                onClick={() => {
+                  if (InputInventoryName) {
+                    handleAddInventory(
+                      InputInventoryName,
+                      Number(InputInventoryQuantity)
+                    );
+                  }
+                }}
               >
                 Add
               </button>
@@ -280,6 +355,7 @@ const InventoryManagement = () => {
           </div>
         </div>
       </div>
+      <Table className="m-4" columns={InventoryColumns} data={InventoryData} />
     </div>
   );
 };
