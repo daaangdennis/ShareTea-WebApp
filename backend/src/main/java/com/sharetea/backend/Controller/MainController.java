@@ -181,8 +181,8 @@ public class MainController {
     }
 
     @PostMapping("/inventory/update")
-    public Inventory updateInventory(@RequestParam String inventoryName, @RequestParam(required = false) Integer quantity) {
-        return service.updateInventory(inventoryName, quantity);
+    public Inventory updateInventory(@RequestParam String inventoryName, @RequestParam(required = false) Integer quantity, @RequestParam(required = false) Boolean topping) {
+        return service.updateInventory(inventoryName, quantity, topping);
     }
 
     @PostMapping("/inventory/update/name")

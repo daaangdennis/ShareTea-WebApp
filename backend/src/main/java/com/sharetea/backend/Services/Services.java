@@ -687,7 +687,7 @@ public class Services {
         return inventoryRepository.findByActive(true);
     }
 
-    public Inventory updateInventory(String name, Integer quantity) {
+    public Inventory updateInventory(String name, Integer quantity, Boolean topping) {
         Inventory inventory = inventoryRepository.findByName(name);
         if(inventory == null){
             Inventory newInventory = new Inventory();
@@ -695,6 +695,9 @@ public class Services {
             newInventory.setActive(true);
             if(quantity != null){
                 newInventory.setQuantity(quantity);
+            }
+            if(topping != null){
+                newInventory.setIs_topping(topping);
             }
             inventoryRepository.save(newInventory);
         }
@@ -705,6 +708,9 @@ public class Services {
             if(quantity != null){
                 inventory.setQuantity(quantity);
                 inventory.setLast_updated(LocalDate.now());
+            }
+            if(topping != null){
+                inventory.setIs_topping(topping);
             }
             return inventoryRepository.save(inventory);
         }
