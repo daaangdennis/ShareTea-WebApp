@@ -135,14 +135,14 @@ public class MainController {
         return service.getBestSelling();  
     }
 
-    @PostMapping("/product/update")
-    public Product updateProduct(@RequestParam String productName, @RequestParam(required = false) String category, @RequestParam(required = false) Double price, @RequestParam(required = false) String weather) {
-        return service.updateProduct(productName, category, price, weather);
+    @PostMapping("/menu/update")
+    public Product updateProduct(@RequestParam Integer productID, @RequestParam(required = false) String newName,  @RequestParam(required = false) String category, @RequestParam(required = false) Double price, @RequestParam(required = false) String weather) {
+        return service.updateProduct(productID, newName, category, price, weather);
     }
 
-    @PostMapping("/product/update/name")
-    public void updateProductName(@RequestParam Integer productID, @RequestParam String name){
-        service.updateProductName(productID, name);
+    @PostMapping("/menu/add")
+    public Product addProduct(@RequestParam String name, @RequestParam String category, @RequestParam Double price, @RequestParam(required = false) String weather){
+        return service.addProduct(name, category, price, weather);
     }
 
     @PostMapping("/product/delete")
