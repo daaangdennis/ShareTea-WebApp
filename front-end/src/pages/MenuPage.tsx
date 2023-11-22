@@ -38,14 +38,18 @@ function MenuPage() {
     <div className="col">
       <SubNav>
         <Nav
-          variant="tabs"
           activeKey={selectedNavItem}
           onSelect={(key) => setSelectedNavItem(key || "")}
         >
           {navItems.map((item, i) => (
-            <Nav.Item key={i}>
-              <Nav.Link eventKey={item.name}>{item.name}</Nav.Link>
-            </Nav.Item>
+            <div key={i}>
+              <Nav.Link 
+                eventKey={item.name} 
+                style={selectedNavItem === item.name ? ({textDecoration: "none", color: "white", fontWeight: "700"}) : ({textDecoration: "none", color: "white"})}
+              >
+                {item.name}
+              </Nav.Link>
+            </div>
           ))}
         </Nav>
       </SubNav>

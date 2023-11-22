@@ -90,6 +90,36 @@ export interface InfoBarProps {
   imageUrl: string;
 }
 
+export interface Order {
+  first_name: string;
+  items: OrderItem[];
+  last_name: string;
+  order_date: string;
+  order_id: number;
+  total: number;
+}
+
+export interface OrderItem {
+  note?: string;
+  price: number;
+  product: string;
+  toppings: string[];
+  sugar_level: string;
+  ice_level: string;
+}
+export interface PendingOrders {
+  pending: Order[];
+}
+
+export interface PendingOrderGridProp {
+  pending: Order[];
+  onCardClick: (order: Order) => void;
+}
+
+export interface PendingOrderCardProp {
+  order: Order;
+  onCardClick: (order: Order) => void;
+}
 export interface customItem {
 
   isAdd: boolean;

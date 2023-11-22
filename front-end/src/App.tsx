@@ -9,6 +9,7 @@ import LoginPage from "./pages/LoginPage";
 import CartPage from "./pages/CartPage";
 import MenuPage from "./pages/MenuPage";
 import CustomPage from "./pages/CustomPage";
+import PendingPage from "./pages/PendingPage";
 import CashierOrderPage from "./pages/CashierOrderPage";
 import StatsPage from "./pages/StatsPage";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -38,9 +39,9 @@ function App() {
       roles: ["cashier", "manager"],
     },
     {
-      name: "Pending",
+      name: "Pending Orders",
       path: "/Pending",
-      element: <></>,
+      element: <PendingPage />,
       roles: ["manager", "cashier"],
     },
   ];
@@ -58,11 +59,13 @@ function App() {
           <Route element={<ProtectedRoute roles={["cashier", "manager"]} />}>
             {/* Add routes accessible by cashier and manager here */}
             <Route path="/CashierOrder" element={<CashierOrderPage />} />
+            <Route path="/Pending" element={<PendingPage />} />
           </Route>
           <Route element={<ProtectedRoute roles={["manager"]} />}>
             {/* Add routes accessible by manager only here */}
             <Route path="/stats" element={<StatsPage />} />
             <Route path="/Inventory" element={<InventoryPage />} />
+            <Route path="/Pending" element={<PendingPage />} />
           </Route>
         </Routes>
         <Footer />
