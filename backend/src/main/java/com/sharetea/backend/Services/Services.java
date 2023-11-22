@@ -264,6 +264,10 @@ public class Services {
             return "Couldn't find product.";
         }
         Integer productID = product.getProduct_id();
+        UserFavorite check = userFavoriteRepository.checkFavorite(user_id, productID);
+        if(check != null){
+            return "Already a favorite.";
+        }
         UserFavorite favorite = new UserFavorite();
         favorite.setProduct_id(productID);
         favorite.setUser_id(user_id);
@@ -457,10 +461,8 @@ public class Services {
             return null;
         }
         List<Map<String,Object>> pendingOrders = ordersRepository.userPendingOrders(customer_id);
-        List<Map<String,Object>> completedOrders = ordersRepository.userCompletedOrders(customer_id);
         List<Map<String,Object>> pendingList = new ArrayList<>();
-        List<Map<String,Object>> completedList = new ArrayList<>();
-
+        
         Map<String, List<Map<String,Object>>> finalList = new HashMap<>();
 
         for(Map<String,Object> order : pendingOrders){
@@ -486,34 +488,37 @@ public class Services {
             orderMap.put("items", itemList);
             pendingList.add(orderMap);
         }
+        if(paramEmail == null){
+            List<Map<String,Object>> completedOrders = ordersRepository.userCompletedOrders(customer_id);
+            List<Map<String,Object>> completedList = new ArrayList<>();
+            for(Map<String,Object> order : completedOrders){
+                Map<String,Object> orderMap = new HashMap<>(order);
+                Integer orderID = (Integer) order.get("order_id");
 
-        for(Map<String,Object> order : completedOrders){
-            Map<String,Object> orderMap = new HashMap<>(order);
-            Integer orderID = (Integer) order.get("order_id");
+                List<Map<String,Object>> productList = orderProductRepository.getProductsbyOrderID(orderID);
+                List<Map<String,Object>> itemList = new ArrayList<>();
 
-            List<Map<String,Object>> productList = orderProductRepository.getProductsbyOrderID(orderID);
-            List<Map<String,Object>> itemList = new ArrayList<>();
+                for(Map<String, Object> product : productList){
+                    Map<String,Object> itemMap = new HashMap<>();
+                    Map<String, Object> productNamePrice = productRepository.findProductNamePrice((Integer) product.get("product_id"));
+                    itemMap.put("product", productNamePrice.get("name"));
+                    itemMap.put("price", productNamePrice.get("price"));
 
-            for(Map<String, Object> product : productList){
-                Map<String,Object> itemMap = new HashMap<>();
-                Map<String, Object> productNamePrice = productRepository.findProductNamePrice((Integer) product.get("product_id"));
-                itemMap.put("product", productNamePrice.get("name"));
-                itemMap.put("price", productNamePrice.get("price"));
-
-                Integer order_product_id = (Integer) product.get("order_product_id");
-                List<String> toppings = itemToppingsRepository.getToppingsByopID(order_product_id);
-                itemMap.put("toppings", toppings);
+                    Integer order_product_id = (Integer) product.get("order_product_id");
+                    List<String> toppings = itemToppingsRepository.getToppingsByopID(order_product_id);
+                    itemMap.put("toppings", toppings);
 
 
-                itemList.add(itemMap);
-            }   
+                    itemList.add(itemMap);
+                }   
 
-            orderMap.put("items", itemList);
-            completedList.add(orderMap);
+                orderMap.put("items", itemList);
+                completedList.add(orderMap);
+            }
+            finalList.put("completed", completedList);
         }
 
         finalList.put("pending", pendingList);
-        finalList.put("completed", completedList);
         return finalList;
 
     }
@@ -624,7 +629,7 @@ public class Services {
         return productRepository.commonPairings(start, end);
     }
 
-    public Product updateProduct(String name, String category, Double price) {
+    public Product updateProduct(String name, String category, Double price, String weather) {
         Product product = productRepository.findByName(name);
         if(product == null){
             if(name == null && category == null && price == null){
@@ -634,6 +639,9 @@ public class Services {
             newProduct.setName(name);
             newProduct.setCategory(category);
             newProduct.setPrice(price);
+            if(weather != null){
+                newProduct.setWeather(weather.toLowerCase());
+            }
             newProduct.setActive(true);
             productRepository.save(newProduct);
         }
@@ -647,10 +655,23 @@ public class Services {
             if(price != null){
                 product.setPrice(price);
             }
+            if(weather != null){
+                product.setWeather(weather.toLowerCase());
+            }
             return productRepository.save(product);
         }
         return null;
     }
+
+    public void updateProductName(Integer productID, String name){
+        Product product = productRepository.findById(productID).get();
+        if(product == null){
+            return;
+        }
+        product.setName(name);
+        productRepository.save(product);
+    }
+
 
     public String deleteProduct(String productName){
         Product product = productRepository.findByName(productName);
@@ -688,6 +709,15 @@ public class Services {
             return inventoryRepository.save(inventory);
         }
         return null;
+    }
+
+    public void updateInventoryName(Integer inventoryID, String name){
+        Inventory inventory = inventoryRepository.findById(inventoryID).get();
+        if(inventory == null){
+            return;
+        }
+        inventory.setName(name);
+        inventoryRepository.save(inventory);
     }
 
     public String deleteInventory(String name){

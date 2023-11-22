@@ -75,7 +75,7 @@ public class MainController {
         return "You are a manager!";
     }
 
-    @GetMapping("/permissions/change")
+    @PostMapping("/permissions/change")
     public void changePermissions(@RequestParam String userEmail, @RequestParam String position) throws URISyntaxException, IOException, InterruptedException {
          service.changePermissions(userEmail, position);
     }
@@ -130,20 +130,19 @@ public class MainController {
         return service.weatherProducts(temperature);
     }
 
-    @GetMapping("/product/categories")
-    public List<String> getCategories() {
-        return service.getCategories();
-    }
-
-
     @GetMapping("/product/getbestselling")
     public Map<String, Object> getBestSelling() {
         return service.getBestSelling();  
     }
 
     @PostMapping("/product/update")
-    public Product updateProduct(@RequestParam String productName, @RequestParam(required = false) String category, @RequestParam(required = false) Double price) {
-        return service.updateProduct(productName, category, price);
+    public Product updateProduct(@RequestParam String productName, @RequestParam(required = false) String category, @RequestParam(required = false) Double price, @RequestParam(required = false) String weather) {
+        return service.updateProduct(productName, category, price, weather);
+    }
+
+    @PostMapping("/product/update/name")
+    public void updateProductName(@RequestParam Integer productID, @RequestParam String name){
+        service.updateProductName(productID, name);
     }
 
     @PostMapping("/product/delete")
@@ -186,9 +185,19 @@ public class MainController {
         return service.updateInventory(inventoryName, quantity);
     }
 
+    @PostMapping("/inventory/update/name")
+    public void updateInventoryName(@RequestParam Integer inventoryID, @RequestParam String name){
+        service.updateInventoryName(inventoryID, name);
+    }
+
     @PostMapping("/inventory/delete")
     public String inventoryDelete(@RequestParam String inventoryName) {
         return service.deleteInventory(inventoryName);
+    }
+
+    @GetMapping("/category/get")
+    public List<String> getCategories() {
+        return service.getCategories();
     }
 
     @PostMapping("/category/add")
