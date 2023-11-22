@@ -144,14 +144,14 @@ public class Services {
             HttpResponse<String> response = httpClient.send(deletePermissions, HttpResponse.BodyHandlers.ofString());
             System.out.println(response);
 
-            if(position.equals("cashier") || position.equals("manager")){
+            if(position.toLowerCase().equals("cashier") || position.toLowerCase().equals("manager")){
                 Map<String, Object> addMap = new HashMap<>();
                 List<Map<String, String>> addListMap = new ArrayList<>();
-                if(position.equals("cashier")){
+                if(position.toLowerCase().equals("cashier")){
                     addListMap.add(cashier);
                     thisUser.setPosition("cashier");
                 }
-                else{
+                else if(position.toLowerCase().equals("manager")){
                     addListMap.add(manager);
                     thisUser.setPosition("manager");
                 }
@@ -172,7 +172,7 @@ public class Services {
 
             }
             else{
-                thisUser.setPosition(null);
+                thisUser.setPosition("customer");
                 usersRepository.save(thisUser);
             }
         } catch (Exception e) {

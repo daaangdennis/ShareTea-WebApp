@@ -38,7 +38,7 @@ public class MainController {
     //     return service.requestUsers();
     // }
 
-    @GetMapping("/user/get")
+    @GetMapping("/users/get")
     public List<Map<String, Object>> userGet() {
         return service.requestUsers();
     }
