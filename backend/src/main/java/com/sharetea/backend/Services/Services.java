@@ -687,43 +687,46 @@ public class Services {
         return inventoryRepository.findByActive(true);
     }
 
-    public Inventory updateInventory(String name, Integer quantity, Boolean topping) {
-        Inventory inventory = inventoryRepository.findByName(name);
+    public Inventory updateInventory(Integer inventoryId, String newName, Integer quantity, Boolean isTopping) {
+        Inventory inventory = inventoryRepository.findById(inventoryId).get();
         if(inventory == null){
-            Inventory newInventory = new Inventory();
-            newInventory.setName(name);
-            newInventory.setActive(true);
-            if(quantity != null){
-                newInventory.setQuantity(quantity);
-            }
-            if(topping != null){
-                newInventory.setIs_topping(topping);
-            }
-            inventoryRepository.save(newInventory);
+            return null;
         }
         else{
-            if(inventory.getActive() == false){
-                inventory.setActive(true);
-            }
             if(quantity != null){
                 inventory.setQuantity(quantity);
                 inventory.setLast_updated(LocalDate.now());
             }
-            if(topping != null){
-                inventory.setIs_topping(topping);
+            if(isTopping != null){
+                inventory.setIs_topping(isTopping);
+            }
+            if(newName != null){
+                inventory.setName(newName);
             }
             return inventoryRepository.save(inventory);
         }
-        return null;
     }
 
-    public void updateInventoryName(Integer inventoryID, String name){
-        Inventory inventory = inventoryRepository.findById(inventoryID).get();
-        if(inventory == null){
-            return;
+    public Inventory addInventory(String newName, Integer quantity){
+        Inventory inventory = inventoryRepository.findByName(newName);
+        if(inventory != null){
+            inventory.setActive(true);
+            if(quantity != null){
+                inventory.setQuantity(quantity);
+                inventory.setLast_updated(LocalDate.now());
+            }
+            inventoryRepository.save(inventory);
+            return inventory;
         }
-        inventory.setName(name);
-        inventoryRepository.save(inventory);
+        else{
+            Inventory newInv = new Inventory();
+            newInv.setName(newName);
+            if(quantity != null){
+                newInv.setQuantity(quantity);
+            }
+            inventoryRepository.save(newInv);
+            return newInv;
+        }
     }
 
     public String deleteInventory(String name){
