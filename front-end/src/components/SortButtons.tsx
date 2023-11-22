@@ -13,13 +13,25 @@ const SortButtons = ({
   sortDirection: any;
   setSortDirection: React.Dispatch<any>;
 }) => {
+  function normalizeData(value: any) {
+    if (value === null) {
+      return "";
+    }
+    if (typeof value === "string") {
+      return value.toLowerCase().replace(/[\s*!@$]+/g, "");
+    }
+    return value;
+  }
   const sortData = (column: string) => {
     const newDirection = sortDirection[column] === "asc" ? "desc" : "asc";
     const sortedData = [...sortedProducts].sort((a: any, b: any) => {
+      const valA = normalizeData(a[column]);
+      const valB = normalizeData(b[column]);
+
       if (newDirection === "asc") {
-        return a[column] > b[column] ? 1 : -1;
+        return valA > valB ? 1 : -1;
       }
-      return a[column] < b[column] ? 1 : -1;
+      return valA < valB ? 1 : -1;
     });
 
     setSortedProducts(sortedData);

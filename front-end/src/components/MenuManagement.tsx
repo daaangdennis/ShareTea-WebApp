@@ -12,7 +12,7 @@ import {
   updateMenuProduct,
 } from "../apis/Dashboard";
 import { getProducts } from "../apis/Product";
-import Table from "./Table";
+import Table, { LazyLoadingTable } from "./Table";
 
 const MenuManagement = () => {
   const [products, setProducts] = useRecoilState<listProductToppings>(Products);
@@ -514,7 +514,7 @@ const MenuManagement = () => {
           </div>
         </div>
       </div>
-      <Table className="m-4" columns={MenuColumns} data={MenuData} />
+      <LazyLoadingTable className="m-4" columns={MenuColumns} data={MenuData} />
     </div>
   );
 };
