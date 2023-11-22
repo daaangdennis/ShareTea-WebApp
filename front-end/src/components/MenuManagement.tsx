@@ -210,11 +210,22 @@ const MenuManagement = () => {
         <div
           style={{
             maxWidth: "250px",
-            overflowX: "auto",
-            whiteSpace: "nowrap",
+            maxHeight: "350px",
+            overflow: "hidden",
+            position: "relative",
           }}
         >
-          {product.url || "No Picture"}
+          <img
+            src={product.url}
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              borderRadius: "0.25rem",
+              border: "1px solid #dee2e6",
+            }}
+            alt="missing picture"
+          />
         </div>
       ),
       isEditing ? (
