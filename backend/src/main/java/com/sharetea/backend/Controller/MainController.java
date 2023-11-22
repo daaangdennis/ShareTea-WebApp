@@ -42,10 +42,10 @@ public class MainController {
     public List<Map<String, Object>> userGet() {
         return service.requestUsers();
     }
-    @PostMapping("/user/delete")
-    public void userDelete(@RequestParam String email) {
+    @PostMapping("/users/delete")
+    public void userDelete(@RequestParam Integer userId) {
         try {
-            service.deleteUser(email);
+            service.deleteUser(userId);
         } catch (Exception e) {e.printStackTrace();}
     }
 
@@ -75,9 +75,9 @@ public class MainController {
         return "You are a manager!";
     }
 
-    @PostMapping("/permissions/change")
-    public void changePermissions(@RequestParam String userEmail, @RequestParam String position) throws URISyntaxException, IOException, InterruptedException {
-         service.changePermissions(userEmail, position);
+    @PostMapping("/users/update")
+    public void changePermissions(@RequestParam Integer userId, @RequestParam String role) throws URISyntaxException, IOException, InterruptedException {
+         service.changePermissions(userId, role);
     }
 
     @GetMapping("/orders/get")
@@ -195,19 +195,19 @@ public class MainController {
         return service.deleteInventory(inventoryName);
     }
 
-    @GetMapping("/category/get")
+    @GetMapping("/categories/get")
     public List<String> getCategories() {
         return service.getCategories();
     }
 
-    @PostMapping("/category/add")
-    public void addCategory(@RequestParam String name){
-        service.addCategory(name);
+    @PostMapping("/categories/add")
+    public void addCategory(@RequestParam String categoryName){
+        service.addCategory(categoryName);
     }
 
-    @PostMapping("/category/delete")
-    public void deleteCategory(@RequestParam String name){
-        service.deleteCategory(name);
+    @PostMapping("/categories/delete")
+    public void deleteCategory(@RequestParam String categoryName){
+        service.deleteCategory(categoryName);
     }
 
 }

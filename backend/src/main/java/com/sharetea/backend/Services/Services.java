@@ -89,11 +89,12 @@ public class Services {
     }
 
 
-    public void changePermissions(String email, String position) throws URISyntaxException, IOException, InterruptedException{
-        Users thisUser = usersRepository.findByEmail(email);
+    public void changePermissions(Integer id, String position) throws URISyntaxException, IOException, InterruptedException{
+        Users thisUser = usersRepository.findById(id).get();
         if(thisUser == null){
             return;
         }
+        String email = thisUser.getEmail();
 
         String encodedEmail = URLEncoder.encode(email, "UTF-8");
         String emailURL = "https://dev-1jps85kh7htbmqki.us.auth0.com/api/v2/users-by-email?fields=user_id&email=" + encodedEmail;
@@ -179,13 +180,13 @@ public class Services {
         }
     }
 
-    public void deleteUser(String email) throws IOException, InterruptedException, URISyntaxException{
-        Integer userID = usersRepository.findByEmail(email).getUser_id();
-        if(userID == null || userID == 27){ //27 is deleted user default, don't delete
+    public void deleteUser(Integer id) throws IOException, InterruptedException, URISyntaxException{
+        String email = usersRepository.findById(id).get().getEmail();
+        if(id == null || id == 27){ //27 is deleted user default, don't delete
             return;
         }
-        usersRepository.deleteUserOrder(userID);
-        usersRepository.deleteById(userID);
+        usersRepository.deleteUserOrder(id);
+        usersRepository.deleteById(id);
 
         String encodedEmail = URLEncoder.encode(email, "UTF-8");
         String emailURL = "https://dev-1jps85kh7htbmqki.us.auth0.com/api/v2/users-by-email?fields=user_id&email=" + encodedEmail;
