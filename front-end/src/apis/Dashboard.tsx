@@ -99,7 +99,8 @@ export function updateMenuProduct(
   name?: string,
   category?: string,
   price?: number,
-  weather?: string
+  weather?: string,
+  picture?: string
 ) {
   return new Promise((resolve, reject) => {
     let URL =
@@ -116,6 +117,9 @@ export function updateMenuProduct(
     }
     if (weather !== undefined) {
       URL += `&weather=${weather}`;
+    }
+    if (picture !== undefined) {
+      URL += `&url=${picture}`;
     }
 
     Axios.post(URL)

@@ -34,6 +34,7 @@ const MenuManagement = () => {
   const [editedPrice, setEditedPrice] = useState("");
   const [editedCategory, setEditedCategory] = useState("");
   const [editedWeather, setEditedWeather] = useState("");
+  const [editedPicture, setEditedPicture] = useState("");
 
   const [sortedProducts, setSortedProducts] = useState(products.products);
   const [sortDirection, setSortDirection] = useState<any>({
@@ -42,6 +43,7 @@ const MenuManagement = () => {
     category: "",
     price: "",
     weather: "",
+    url: "",
   });
 
   const [categories, setCategories] = useState([
@@ -110,6 +112,16 @@ const MenuManagement = () => {
         setSortDirection={setSortDirection}
       />
     </div>,
+    <div className="d-flex align-items-center">
+      Picture
+      <SortButtons
+        column="url"
+        sortedProducts={sortedProducts}
+        setSortedProducts={setSortedProducts}
+        sortDirection={sortDirection}
+        setSortDirection={setSortDirection}
+      />
+    </div>,
     <></>,
   ];
   const MenuData = sortedProducts.map((product: product, i: number) => {
@@ -122,13 +134,15 @@ const MenuManagement = () => {
         setEditedPrice(product.price?.toString());
         setEditedCategory(product.category);
         setEditedWeather(product.weather || "");
+        setEditedPicture(product.url);
       } else {
         handleUpdateMenu(
           product.product_id,
           editedName,
           editedCategory,
           Number(editedPrice),
-          editedWeather
+          editedWeather,
+          editedPicture
         );
         setEditRow(NaN);
       }
@@ -184,6 +198,24 @@ const MenuManagement = () => {
         </select>
       ) : (
         product.weather || "Not Selected"
+      ),
+      isEditing ? (
+        <input
+          className="form-control"
+          value={editedPicture}
+          onChange={(e) => setEditedPicture(e.target.value)}
+          type="url"
+        />
+      ) : (
+        <div
+          style={{
+            maxWidth: "250px",
+            overflowX: "auto",
+            whiteSpace: "nowrap",
+          }}
+        >
+          {product.url || "No Picture"}
+        </div>
       ),
       isEditing ? (
         <div className="d-flex justify-content-around">
@@ -254,10 +286,18 @@ const MenuManagement = () => {
     newName?: string,
     newCategory?: string,
     newPrice?: number,
-    newWeather?: string
+    newWeather?: string,
+    newPicture?: string
   ) => {
-    if (newName || newCategory || newPrice || newWeather) {
-      updateMenuProduct(productId, newName, newCategory, newPrice, newWeather)
+    if (newName || newCategory || newPrice || newWeather || newPicture) {
+      updateMenuProduct(
+        productId,
+        newName,
+        newCategory,
+        newPrice,
+        newWeather,
+        newPicture
+      )
         .then(() => {
           getProducts(setProducts, (e: any) => {});
         })
