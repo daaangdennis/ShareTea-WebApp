@@ -91,7 +91,6 @@ export interface InfoBarProps {
 }
 
 export interface customItem {
-
   isAdd: boolean;
   isEdit: boolean;
   item: ICartItem;
@@ -123,6 +122,11 @@ export interface productSales {
   count: number;
 }
 
+export interface restockItems {
+  name: string;
+  quantity: number;
+}
+
 export interface excessProducts {
   used: number;
   quantity: number;
@@ -130,3 +134,8 @@ export interface excessProducts {
   inventory_id: number;
 }
 
+export interface popularPairsItems {
+  combination_count: number;
+  product1: string;
+  product2: string;
+}

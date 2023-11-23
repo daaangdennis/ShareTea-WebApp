@@ -1,6 +1,6 @@
 .GraphContainer {
   height: 700px;
-  width: 1000px;
+  width: 500px;
   background-color: white;
   border: 1px solid red;
   left: 240px;
@@ -40,4 +40,24 @@
   top: 180px;
   width: 200px;
   height: 100px;
+}
+
+.TableContainer {
+  height: 700px;
+  width: 500px;
+  background-color: white;
+  border: 1px solid red;
+  left: 740px;
+  top: 250px;
+  position: absolute;
+}
+
+.startDate {
+  position: absolute;
+  left: 850px;
+}
+
+.endDate {
+  position: absolute;
+  left: 400px;
 }
