@@ -13,12 +13,15 @@ import {
 } from "../apis/Dashboard";
 import { getProducts } from "../apis/Product";
 import Table, { LazyLoadingTable } from "./Table";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const MenuManagement = () => {
+  const { getAccessTokenSilently } = useAuth0();
+
   const [products, setProducts] = useRecoilState<listProductToppings>(Products);
 
   useEffect(() => {
-    getCategories(setCategories);
+    getCategories(setCategories, getAccessTokenSilently);
   }, []);
   useEffect(() => {
     setSortedProducts(products.products);
@@ -291,6 +294,7 @@ const MenuManagement = () => {
   ) => {
     if (newName || newCategory || newPrice || newWeather || newPicture) {
       updateMenuProduct(
+        getAccessTokenSilently,
         productId,
         newName,
         newCategory,
@@ -311,7 +315,7 @@ const MenuManagement = () => {
     price: number,
     weather?: string
   ) => {
-    addMenuProduct(name, category, price, weather)
+    addMenuProduct(getAccessTokenSilently, name, category, price, weather)
       .then(() => {
         getProducts(setProducts, (e: any) => {});
         handleClearMenu();
@@ -326,7 +330,7 @@ const MenuManagement = () => {
   };
   const handleDeleteMenu = (name: string) => {
     if (name) {
-      deleteMenu(name)
+      deleteMenu(getAccessTokenSilently, name)
         .then(() => {
           getProducts(setProducts, (e: any) => {});
         })
@@ -336,9 +340,9 @@ const MenuManagement = () => {
 
   const handleAddCategory = () => {
     if (InputMenuNewCategory) {
-      addCategory(InputMenuNewCategory)
+      addCategory(getAccessTokenSilently, InputMenuNewCategory)
         .then(() => {
-          getCategories(setCategories);
+          getCategories(setCategories, getAccessTokenSilently);
         })
         .catch(() => {});
     }
@@ -346,9 +350,9 @@ const MenuManagement = () => {
 
   const handleDeleteCategory = () => {
     if (InputMenuCategory) {
-      deleteCategory(InputMenuCategory)
+      deleteCategory(getAccessTokenSilently, InputMenuCategory)
         .then(() => {
-          getCategories(setCategories);
+          getCategories(setCategories, getAccessTokenSilently);
         })
         .catch(() => {});
     }

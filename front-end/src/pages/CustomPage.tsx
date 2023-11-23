@@ -11,18 +11,19 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { cart } from "../atoms/cart";
 import "../styles/CustomPage.css";
 import { Products } from "../atoms/product";
+import { useAuth0 } from "@auth0/auth0-react";
+import { saveFavorite } from "../apis/Order";
 var _ = require("lodash");
 
 const CustomPage = () => {
   const location = useLocation();
+  const { getAccessTokenSilently } = useAuth0();
 
   const customItem: customItem = location.state && location.state.data;
-
 
   const [cartItems, setcartItems] = useRecoilState<Cart>(cart);
   const sourceProducts = useRecoilValue<listProductToppings>(Products);
   const [selectedIceLevel, setSelectedIceLevel] = useState<string>(
-
     customItem?.item?.ice_level || ""
   );
   const [selectedSugarLevel, setSelectedSugarLevel] = useState<string>(
@@ -35,14 +36,12 @@ const CustomPage = () => {
   const navigate = useNavigate();
 
   const editProductToCart = () => {
-
     if (
       customItem.item.cartId != undefined &&
       customItem.item.toppings?.length != undefined
     ) {
       const newlist: Cart = _.cloneDeep(cartItems);
       newlist.total =
-
         newlist.total -
         customItem.item.toppings?.length * 0.75 +
         listToppings.length * 0.75;
@@ -75,7 +74,25 @@ const CustomPage = () => {
     setcartItems(newlist);
 
     navigate("/Menu");
+  };
 
+  const handleSaveFavorite = () => {
+    saveFavorite(
+      {
+        productID: customItem.item.product.product_id,
+        toppings: listToppings.map((item: topping) => item.inventory_id),
+        notes: note,
+        ice_level: selectedIceLevel,
+        sugar_level: selectedSugarLevel,
+      },
+      getAccessTokenSilently
+    )
+      .finally(() => {
+        console.log("added to favorite");
+      })
+      .catch(() => {
+        console.log("ERROR: add to favorite");
+      });
   };
 
   const handleIceLevelChange = (event: any) => {
@@ -202,7 +219,9 @@ const CustomPage = () => {
         </div>
 
         <div className="custompage-button-container flex-column flex-sm-row">
-          <button className="custompage-button">Save to Favorites</button>
+          <button onClick={handleSaveFavorite} className="custompage-button">
+            Save to Favorites
+          </button>
           {customItem.isEdit ? (
             <button onClick={editProductToCart} className="custompage-button">
               Save Changes

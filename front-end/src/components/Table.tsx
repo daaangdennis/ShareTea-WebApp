@@ -68,7 +68,7 @@ export const LazyLoadingTable = ({
             <tr>
               {columns?.map((name: string, i: number) => {
                 return (
-                  <th key={i} scope="col">
+                  <th key={`${name}-${i}`} scope="col">
                     {name}
                   </th>
                 );
@@ -80,9 +80,12 @@ export const LazyLoadingTable = ({
               <tr key={index}>
                 {row.map((item: any, i: number) =>
                   i === 0 ? (
-                    <th scope="row">{item}</th>
+                    // Add a unique key here
+                    <th scope="row" key={`row-header-${index}-${i}`}>
+                      {item}
+                    </th>
                   ) : (
-                    <td key={i}>{item}</td>
+                    <td key={`row-data-${index}-${i}`}>{item}</td>
                   )
                 )}
               </tr>

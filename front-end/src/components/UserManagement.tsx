@@ -2,8 +2,10 @@ import { useEffect, useState } from "react";
 import SortButtons from "./SortButtons";
 import Table, { LazyLoadingTable } from "./Table";
 import { deleteUser, getUsers, updateUser } from "../apis/Dashboard";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const UserManagement = () => {
+  const { getAccessTokenSilently } = useAuth0();
   const [usersSourceData, setUsersSourceData] = useState([
     {
       user_id: 1,
@@ -38,7 +40,7 @@ const UserManagement = () => {
   ]);
 
   useEffect(() => {
-    getUsers(setUsersSourceData);
+    getUsers(setUsersSourceData, getAccessTokenSilently);
   }, []);
   useEffect(() => {
     setSortedUsers(usersSourceData);
@@ -200,16 +202,16 @@ const UserManagement = () => {
   });
 
   const handleUpdateUser = (userId: number, newRole: string) => {
-    updateUser(userId, newRole)
+    updateUser(getAccessTokenSilently, userId, newRole)
       .then(() => {
-        getUsers(setUsersSourceData);
+        getUsers(setUsersSourceData, getAccessTokenSilently);
       })
       .catch(() => {});
   };
   const handleDeleteUser = (userId: number) => {
-    deleteUser(userId)
+    deleteUser(getAccessTokenSilently, userId)
       .then(() => {
-        getUsers(setUsersSourceData);
+        getUsers(setUsersSourceData, getAccessTokenSilently);
       })
       .catch(() => {});
   };
