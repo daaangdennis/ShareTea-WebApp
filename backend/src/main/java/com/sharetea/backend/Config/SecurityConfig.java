@@ -25,6 +25,7 @@ public class SecurityConfig {
                     // .requestMatchers(new AntPathRequestMatcher("/**")).permitAll()
                     // .requestMatchers(new AntPathRequestMatcher("/product/**")).permitAll()
                     // .requestMatchers(new AntPathRequestMatcher("/orders/pending")).permitAll()
+                    .requestMatchers(new AntPathRequestMatcher("/product/**")).permitAll()
                     .requestMatchers(new AntPathRequestMatcher("/**")).hasAnyAuthority("manager")
                     .anyRequest().authenticated()
                     //.requestMatchers("/api/private-scoped").hasAuthority("SCOPE_read:messages")
