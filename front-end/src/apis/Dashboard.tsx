@@ -258,7 +258,8 @@ export function getCategories(
 ) {
   Axios.get(process.env.REACT_APP_BACKEND_URL + "/categories/get")
     .then((response) => {
-      const categories = response.data || [];
+      const categories: any[] = response.data || [];
+      categories.push("Not selected");
       setCategories(categories);
     })
     .catch((error) => {

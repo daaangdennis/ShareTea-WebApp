@@ -46,18 +46,7 @@ const MenuManagement = () => {
     url: "",
   });
 
-  const [categories, setCategories] = useState([
-    "Super Mini Beer",
-    "Fruit Tea",
-    "Random Tea",
-    "Christmas Beer",
-    "Milk Tea",
-    "Creama",
-    "Brewed Tea",
-    "Tea Mojito",
-    "Ice Blended",
-    "Not selected",
-  ]);
+  const [categories, setCategories] = useState(["Not selected"]);
 
   const [weatherCons, setWeatherCons] = useState(["cold", "mild", "hot", ""]);
 
@@ -325,6 +314,7 @@ const MenuManagement = () => {
     addMenuProduct(name, category, price, weather)
       .then(() => {
         getProducts(setProducts, (e: any) => {});
+        handleClearMenu();
       })
       .catch(() => {});
   };
@@ -440,7 +430,7 @@ const MenuManagement = () => {
                 />
                 <button
                   className="btn btn-info btn-sm"
-                  onChange={handleAddCategory}
+                  onClick={handleAddCategory}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

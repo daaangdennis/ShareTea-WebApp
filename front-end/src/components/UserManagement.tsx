@@ -51,7 +51,7 @@ const UserManagement = () => {
     email: "",
     role: "",
   });
-  const [roles, setRoles] = useState(["Manager", "Cashier", "Customer"]);
+  const [roles, setRoles] = useState(["manager", "cashier", "customer"]);
   const [editRow, setEditRow] = useState(NaN);
   const [editedRole, setEditedRole] = useState("");
   const usersColumns = [
