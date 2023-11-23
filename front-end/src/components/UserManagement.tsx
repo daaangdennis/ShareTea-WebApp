@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import SortButtons from "./SortButtons";
-import Table from "./Table";
+import Table, { LazyLoadingTable } from "./Table";
 import { deleteUser, getUsers, updateUser } from "../apis/Dashboard";
 
 const UserManagement = () => {
@@ -216,7 +216,12 @@ const UserManagement = () => {
 
   return (
     <div className="container">
-      <Table className="m-4" columns={usersColumns} data={usersData} />
+      <LazyLoadingTable
+        className="m-4"
+        columns={usersColumns}
+        data={usersData}
+        rowLoad={[10, 20, 30, 50, 100]}
+      />
     </div>
   );
 };

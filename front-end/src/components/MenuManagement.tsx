@@ -504,7 +504,12 @@ const MenuManagement = () => {
           </div>
         </div>
       </div>
-      <LazyLoadingTable className="m-4" columns={MenuColumns} data={MenuData} />
+      <LazyLoadingTable
+        className="m-4"
+        columns={MenuColumns}
+        data={MenuData}
+        rowLoad={[5, 10, 15, 20, 30, 50, 100]}
+      />
     </div>
   );
 };

@@ -35,9 +35,15 @@ const Table = ({ columns, data, className, style }: any) => {
   );
 };
 
-export const LazyLoadingTable = ({ columns, data, className, style }: any) => {
+export const LazyLoadingTable = ({
+  columns,
+  data,
+  className,
+  style,
+  rowLoad,
+}: any) => {
   const [visibleData, setVisibleData] = useState<any>([]);
-  const [rowCount, setRowCount] = useState(5);
+  const [rowCount, setRowCount] = useState(rowLoad[0]);
   const [currentPage, setCurrentPage] = useState(0);
 
   useEffect(() => {
@@ -92,11 +98,11 @@ export const LazyLoadingTable = ({ columns, data, className, style }: any) => {
                   value={rowCount}
                   onChange={(e) => setRowCount(Number(e.target.value))}
                 >
-                  <option value="5">5</option>
-                  <option value="10">10</option>
-                  <option value="15">15</option>
-                  <option value="25">25</option>
-                  <option value="50">50</option>
+                  {rowLoad.map((value: number, i: number) => (
+                    <option key={i} value={`${value}`}>
+                      {value}
+                    </option>
+                  ))}
                 </select>
               </td>
               <td>

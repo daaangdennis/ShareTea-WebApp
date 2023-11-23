@@ -6,7 +6,7 @@ import {
   getInventory,
   updateInventory,
 } from "../apis/Dashboard";
-import Table from "./Table";
+import Table, { LazyLoadingTable } from "./Table";
 import SortButtons from "./SortButtons";
 
 const InventoryManagement = () => {
@@ -355,7 +355,12 @@ const InventoryManagement = () => {
           </div>
         </div>
       </div>
-      <Table className="m-4" columns={InventoryColumns} data={InventoryData} />
+      <LazyLoadingTable
+        className="m-4"
+        columns={InventoryColumns}
+        data={InventoryData}
+        rowLoad={[10, 20, 30, 50, 100]}
+      />
     </div>
   );
 };
