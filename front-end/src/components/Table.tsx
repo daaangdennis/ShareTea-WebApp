@@ -19,7 +19,7 @@ const Table = ({ columns, data, className, style }: any) => {
           {data?.map((array: any, i: number) => {
             return (
               <tr key={i}>
-                {array.map((item: any, i: number) =>
+                {array?.map((item: any, i: number) =>
                   i === 0 ? (
                     <th scope="row">{item}</th>
                   ) : (
@@ -49,7 +49,7 @@ export const LazyLoadingTable = ({
   useEffect(() => {
     const start = currentPage * rowCount;
     const end = start + rowCount;
-    setVisibleData(data.slice(start, end));
+    setVisibleData(data?.slice(start, end));
   }, [rowCount, currentPage, data]);
 
   const handleNext = () => {
@@ -76,9 +76,9 @@ export const LazyLoadingTable = ({
             </tr>
           </thead>
           <tbody>
-            {visibleData.map((row: any, index: number) => (
+            {visibleData?.map((row: any, index: number) => (
               <tr key={index}>
-                {row.map((item: any, i: number) =>
+                {row?.map((item: any, i: number) =>
                   i === 0 ? (
                     // Add a unique key here
                     <th scope="row" key={`row-header-${index}-${i}`}>
@@ -91,7 +91,7 @@ export const LazyLoadingTable = ({
               </tr>
             ))}
             <tr>
-              <td colSpan={columns.length - 1}>
+              <td colSpan={columns?.length - 1}>
                 <label htmlFor="row-count" className="me-2">
                   Rows per load:
                 </label>
@@ -101,7 +101,7 @@ export const LazyLoadingTable = ({
                   value={rowCount}
                   onChange={(e) => setRowCount(Number(e.target.value))}
                 >
-                  {rowLoad.map((value: number, i: number) => (
+                  {rowLoad?.map((value: number, i: number) => (
                     <option key={i} value={`${value}`}>
                       {value}
                     </option>
@@ -121,7 +121,7 @@ export const LazyLoadingTable = ({
                     className="btn btn-light ms-2"
                     onClick={handleNext}
                     disabled={
-                      currentPage >= Math.ceil(data.length / rowCount) - 1
+                      currentPage >= Math.ceil(data?.length / rowCount) - 1
                     }
                   >
                     Next

@@ -116,7 +116,7 @@ const MenuManagement = () => {
     </div>,
     <></>,
   ];
-  const MenuData = sortedProducts.map((product: product, i: number) => {
+  const MenuData = sortedProducts?.map((product: product, i: number) => {
     const isEditing = editingRow === i;
 
     const handleEditClick = () => {
@@ -157,7 +157,7 @@ const MenuManagement = () => {
           value={editedCategory}
           onChange={(e) => setEditedCategory(e.target.value)}
         >
-          {categories.map((category: string, i: number) => (
+          {categories?.map((category: string, i: number) => (
             <option key={i} value={category}>
               {category}
             </option>
@@ -182,7 +182,7 @@ const MenuManagement = () => {
           value={editedWeather}
           onChange={(e) => setEditedWeather(e.target.value)}
         >
-          {weatherCons.map((weather: string, i: number) => (
+          {weatherCons?.map((weather: string, i: number) => (
             <option key={i} value={weather}>
               {weather}
             </option>
@@ -404,7 +404,7 @@ const MenuManagement = () => {
                   value={InputMenuCategory || "Not selected"}
                   onChange={(e) => setInputMenuCategory(e.target.value)}
                 >
-                  {categories.map((category, i) => (
+                  {categories?.map((category, i) => (
                     <option key={i} value={category}>
                       {category}
                     </option>
@@ -464,7 +464,7 @@ const MenuManagement = () => {
                 value={InputMenuWeather || ""}
                 onChange={(e) => setInputMenuWeather(e.target.value)}
               >
-                {weatherCons.map((weather, i) => (
+                {weatherCons?.map((weather, i) => (
                   <option key={i} value={weather}>
                     {weather}
                   </option>
