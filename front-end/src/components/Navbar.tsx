@@ -18,7 +18,7 @@ import UserInfo from "./UserInfo";
 import useUserRole from "../hooks/useUserRole";
 
 const Navbar: React.FC<navbarProps> = ({ routes }) => {
-  const { isAuthenticated } = useAuth0();
+  const { isAuthenticated, isLoading, getAccessTokenSilently } = useAuth0();
 
   const [activePage, setActivePage] = useState("Home");
   const [searchTerm, setSearchTerm] = useState("");
@@ -35,7 +35,7 @@ const Navbar: React.FC<navbarProps> = ({ routes }) => {
   useEffect(() => {
     getProducts(setProducts, setFilteredProducts);
     setFilteredProducts(SourceProducts);
-  }, []);
+  }, [isLoading, getAccessTokenSilently, activePage]);
   useEffect(() => {
     if (searchTerm.trim() === "") {
       setFilteredProducts(SourceProducts);
@@ -48,7 +48,7 @@ const Navbar: React.FC<navbarProps> = ({ routes }) => {
       };
       setFilteredProducts(filtered);
     }
-  }, [searchTerm]);
+  }, [searchTerm, isLoading, getAccessTokenSilently, activePage]);
 
   return (
     <header className="p-3 text-bg">

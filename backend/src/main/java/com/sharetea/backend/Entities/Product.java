@@ -22,9 +22,11 @@ public class Product {
     @NotEmpty private String category;
 
     private String url;
-    private Boolean has_ice;
-    private Boolean has_toppings;
-    private Boolean has_sugar;
+    private Boolean has_ice = true;
+    private Boolean has_toppings = true;
+    private Boolean has_sugar = true;
+    private Boolean active = true;
+    private String weather;
 
     public Integer getProduct_id() {
         return product_id;
@@ -73,6 +75,18 @@ public class Product {
     }
     public void setHas_toppings(Boolean has_toppings) {
         this.has_toppings = has_toppings;
+    }
+    public Boolean getActive() {
+        return active;
+    }
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+    public String getWeather() {
+        return weather;
+    }
+    public void setWeather(String weather) {
+        this.weather = weather;
     }
 
     
