@@ -7,11 +7,15 @@ import { useGetRestockReport } from "../apis/RestockReport";
 import ProductUsage from "../components/ProductUsage";
 import RestockInventory from "../components/RestockInventory";
 import ExcessItemsTable from "../components/ExcessItemsTable";
+import DatePicker from "react-datepicker";
+
+import "react-datepicker/dist/react-datepicker.css";
 
 function StatsPage() {
   const [showProductUsage, setShowProductUsage] = useState(false);
   const [showRestockUsage, setShowRestockUsage] = useState(false);
   const [showExcessUsage, setShowExcessUsage] = useState(false);
+  const [startDate, setStartDate] = useState(new Date());
 
   const handleProductUsageButton = () => {
     setShowProductUsage((prevValue) => !prevValue);
@@ -33,6 +37,10 @@ function StatsPage() {
 
   return (
     <div className="StatsContainer">
+      <DatePicker
+        selected={startDate}
+        onChange={(date: Date) => setStartDate(date)}
+      />
       <div className="StatsButtonContainer">
         <button className="btn StatsButton">Sales Report</button>
         <button onClick={handleProductUsageButton} className="btn StatsButton">
