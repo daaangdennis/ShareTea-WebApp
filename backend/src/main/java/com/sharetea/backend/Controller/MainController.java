@@ -60,10 +60,10 @@ public class MainController {
     }
 
 
-    @PostMapping("/user/favorite")
-    public String favorite(HttpServletRequest request, @RequestParam String productName) throws URISyntaxException, IOException, InterruptedException {
-        return service.addFavorite(request, productName);
-    }
+    // @PostMapping("/user/favorite")
+    // public String favorite(HttpServletRequest request, @RequestParam String productName) throws URISyntaxException, IOException, InterruptedException {
+    //     return service.addFavorite(request, productName);
+    // }
 
     @GetMapping("user/favorite/get")
     public Map<String, Object> favorite(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException {
@@ -136,8 +136,8 @@ public class MainController {
     }
 
     @PostMapping("/menu/update")
-    public Product updateProduct(@RequestParam Integer productID, @RequestParam(required = false) String newName,  @RequestParam(required = false) String category, @RequestParam(required = false) Double price, @RequestParam(required = false) String weather) {
-        return service.updateProduct(productID, newName, category, price, weather);
+    public Product updateProduct(@RequestParam Integer productID, @RequestParam(required = false) String newName,  @RequestParam(required = false) String category, @RequestParam(required = false) Double price, @RequestParam(required = false) String weather, @RequestParam(required = false) String url) {
+        return service.updateProduct(productID, newName, category, price, weather, url);
     }
 
     @PostMapping("/menu/add")

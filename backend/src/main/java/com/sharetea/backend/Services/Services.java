@@ -256,25 +256,30 @@ public class Services {
         return answerMap;
     }
 
-    public String addFavorite(HttpServletRequest request, String productName) throws URISyntaxException, IOException, InterruptedException{
-        Map<String, String> userInfo = findUserByAccessToken(request);
-        String email = userInfo.get("email");
-        Integer user_id = usersRepository.findByEmail(email).getUser_id();
-        Product product = productRepository.findByName(productName);
-        if(product == null){
-            return "Couldn't find product.";
-        }
-        Integer productID = product.getProduct_id();
-        UserFavorite check = userFavoriteRepository.checkFavorite(user_id, productID);
-        if(check != null){
-            return "Already a favorite.";
-        }
-        UserFavorite favorite = new UserFavorite();
-        favorite.setProduct_id(productID);
-        favorite.setUser_id(user_id);
-        userFavoriteRepository.save(favorite);
-        return "Added favorite.";
-    }
+    // public String addFavorite(HttpServletRequest request, Map<String, Object> favoriteData) throws URISyntaxException, IOException, InterruptedException{
+    //     Map<String, String> userInfo = findUserByAccessToken(request);
+    //     String email = userInfo.get("email");
+    //     Integer user_id = usersRepository.findByEmail(email).getUser_id();
+        
+    //     Integer productID = (Integer) favoriteData.get("productID");
+    //     List<Integer> toppingIDs = (List<Integer>) favoriteData.get("toppings");
+    //     String note = (String) favoriteData.get("notes");
+    //     String ice = (String) favoriteData.get("ice_level");
+    //     String sugar = (String) favoriteData.get("sugar_level");
+
+    //     OrderProduct favOP = new OrderProduct();
+
+    //     Integer productID = product.getProduct_id();
+    //     UserFavorite check = userFavoriteRepository.checkFavorite(user_id, productID);
+    //     if(check != null){
+    //         return "Already a favorite.";
+    //     }
+    //     UserFavorite favorite = new UserFavorite();
+    //     favorite.setProduct_id(productID);
+    //     favorite.setUser_id(user_id);
+    //     userFavoriteRepository.save(favorite);
+    //     return "Added favorite.";
+    // }
 
     public Map<String, Object> getFavorite(HttpServletRequest request){
         Map<String, String> userInfo = null;
@@ -633,24 +638,33 @@ public class Services {
         return productRepository.commonPairings(start, end);
     }
 
-    public Product updateProduct(Integer productID, String name, String category, Double price, String weather) {
+    public Product updateProduct(Integer productID, String name, String category, Double price, String weather, String url) {
         Product product = productRepository.findById(productID).get();
         if(product == null){
-            if(name == null && category == null && price == null){
-                return null;
-            }
-            Product newProduct = new Product();
-            newProduct.setName(name);
-            newProduct.setCategory(category);
-            newProduct.setPrice(price);
-            if(weather != null){
-                newProduct.setWeather(weather.toLowerCase());
-            }
-            productRepository.save(newProduct);
+            return null;
         }
         else{
-            if(product.getActive() == false){
-                product.setActive(true);
+            if(name != null){
+                if(productRepository.findByName(name) == null){
+                    product.setName(name);
+                }
+                else{
+                    String activeCategory = product.getCategory();
+                    if(category != null){
+                        activeCategory = category;
+                    }
+                    Double activePrice = product.getPrice();
+                    if(price != null){
+                        activePrice = price;
+                    }
+                    String activeWeather = product.getWeather();
+                    if(weather != null){
+                        activeWeather = weather;
+                    }
+                    product.setActive(false);
+                    productRepository.save(product);
+                    addProduct(name, activeCategory, activePrice, activeWeather);
+                }
             }
             if(category != null){
                 product.setCategory(category);
@@ -661,9 +675,11 @@ public class Services {
             if(weather != null){
                 product.setWeather(weather.toLowerCase());
             }
+            if(url != null){
+                product.setUrl(url);
+            }
             return productRepository.save(product);
         }
-        return null;
     }
 
     public Product addProduct(String name, String category, Double price, String weather){
