@@ -13,12 +13,15 @@ import {
 } from "../apis/Dashboard";
 import { getProducts } from "../apis/Product";
 import Table, { LazyLoadingTable } from "./Table";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const MenuManagement = () => {
+  const { getAccessTokenSilently } = useAuth0();
+
   const [products, setProducts] = useRecoilState<listProductToppings>(Products);
 
   useEffect(() => {
-    getCategories(setCategories);
+    getCategories(setCategories, getAccessTokenSilently);
   }, []);
   useEffect(() => {
     setSortedProducts(products.products);
@@ -46,18 +49,7 @@ const MenuManagement = () => {
     url: "",
   });
 
-  const [categories, setCategories] = useState([
-    "Super Mini Beer",
-    "Fruit Tea",
-    "Random Tea",
-    "Christmas Beer",
-    "Milk Tea",
-    "Creama",
-    "Brewed Tea",
-    "Tea Mojito",
-    "Ice Blended",
-    "Not selected",
-  ]);
+  const [categories, setCategories] = useState(["Not selected"]);
 
   const [weatherCons, setWeatherCons] = useState(["cold", "mild", "hot", ""]);
 
@@ -124,7 +116,7 @@ const MenuManagement = () => {
     </div>,
     <></>,
   ];
-  const MenuData = sortedProducts.map((product: product, i: number) => {
+  const MenuData = sortedProducts?.map((product: product, i: number) => {
     const isEditing = editingRow === i;
 
     const handleEditClick = () => {
@@ -165,7 +157,7 @@ const MenuManagement = () => {
           value={editedCategory}
           onChange={(e) => setEditedCategory(e.target.value)}
         >
-          {categories.map((category: string, i: number) => (
+          {categories?.map((category: string, i: number) => (
             <option key={i} value={category}>
               {category}
             </option>
@@ -190,7 +182,7 @@ const MenuManagement = () => {
           value={editedWeather}
           onChange={(e) => setEditedWeather(e.target.value)}
         >
-          {weatherCons.map((weather: string, i: number) => (
+          {weatherCons?.map((weather: string, i: number) => (
             <option key={i} value={weather}>
               {weather}
             </option>
@@ -302,6 +294,7 @@ const MenuManagement = () => {
   ) => {
     if (newName || newCategory || newPrice || newWeather || newPicture) {
       updateMenuProduct(
+        getAccessTokenSilently,
         productId,
         newName,
         newCategory,
@@ -322,9 +315,10 @@ const MenuManagement = () => {
     price: number,
     weather?: string
   ) => {
-    addMenuProduct(name, category, price, weather)
+    addMenuProduct(getAccessTokenSilently, name, category, price, weather)
       .then(() => {
         getProducts(setProducts, (e: any) => {});
+        handleClearMenu();
       })
       .catch(() => {});
   };
@@ -336,7 +330,7 @@ const MenuManagement = () => {
   };
   const handleDeleteMenu = (name: string) => {
     if (name) {
-      deleteMenu(name)
+      deleteMenu(getAccessTokenSilently, name)
         .then(() => {
           getProducts(setProducts, (e: any) => {});
         })
@@ -346,9 +340,9 @@ const MenuManagement = () => {
 
   const handleAddCategory = () => {
     if (InputMenuNewCategory) {
-      addCategory(InputMenuNewCategory)
+      addCategory(getAccessTokenSilently, InputMenuNewCategory)
         .then(() => {
-          getCategories(setCategories);
+          getCategories(setCategories, getAccessTokenSilently);
         })
         .catch(() => {});
     }
@@ -356,9 +350,9 @@ const MenuManagement = () => {
 
   const handleDeleteCategory = () => {
     if (InputMenuCategory) {
-      deleteCategory(InputMenuCategory)
+      deleteCategory(getAccessTokenSilently, InputMenuCategory)
         .then(() => {
-          getCategories(setCategories);
+          getCategories(setCategories, getAccessTokenSilently);
         })
         .catch(() => {});
     }
@@ -410,7 +404,7 @@ const MenuManagement = () => {
                   value={InputMenuCategory || "Not selected"}
                   onChange={(e) => setInputMenuCategory(e.target.value)}
                 >
-                  {categories.map((category, i) => (
+                  {categories?.map((category, i) => (
                     <option key={i} value={category}>
                       {category}
                     </option>
@@ -440,7 +434,7 @@ const MenuManagement = () => {
                 />
                 <button
                   className="btn btn-info btn-sm"
-                  onChange={handleAddCategory}
+                  onClick={handleAddCategory}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -470,7 +464,7 @@ const MenuManagement = () => {
                 value={InputMenuWeather || ""}
                 onChange={(e) => setInputMenuWeather(e.target.value)}
               >
-                {weatherCons.map((weather, i) => (
+                {weatherCons?.map((weather, i) => (
                   <option key={i} value={weather}>
                     {weather}
                   </option>
@@ -514,7 +508,12 @@ const MenuManagement = () => {
           </div>
         </div>
       </div>
-      <LazyLoadingTable className="m-4" columns={MenuColumns} data={MenuData} />
+      <LazyLoadingTable
+        className="m-4"
+        columns={MenuColumns}
+        data={MenuData}
+        rowLoad={[5, 10, 15, 20, 30, 50, 100]}
+      />
     </div>
   );
 };

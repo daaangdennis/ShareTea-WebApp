@@ -60,15 +60,15 @@ public class MainController {
     }
 
 
-    // @PostMapping("/user/favorite")
-    // public String favorite(HttpServletRequest request, @RequestParam String productName) throws URISyntaxException, IOException, InterruptedException {
-    //     return service.addFavorite(request, productName);
-    // }
-
-    @GetMapping("user/favorite/get")
-    public Map<String, Object> favorite(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException {
-        return service.getFavorite(request);
+    @PostMapping("/favorites/save")
+    public String favorite(HttpServletRequest request, @RequestBody Map<String, Object> favoriteData) throws URISyntaxException, IOException, InterruptedException {
+        return service.addFavorite(request, favoriteData);
     }
+
+    // @GetMapping("user/favorite/get")
+    // public Map<String, Object> favorite(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException {
+    //     return service.getFavorite(request);
+    // }
 
     @GetMapping("/permissions")
     public String getPermissions() throws URISyntaxException, IOException, InterruptedException {
@@ -178,6 +178,11 @@ public class MainController {
     @GetMapping("/inventory/excess")
     public List<Map<String, Object>> getLowStock(@RequestParam String date) {
         return service.excessStock(LocalDate.parse(date));
+    }
+
+    @GetMapping("/inventory/usage")
+    public List<Map<String,Object>> inventoryUsage(@RequestParam String startDate, @RequestParam String endDate) {
+        return service.inventoryUsage(LocalDate.parse(startDate), LocalDate.parse(endDate));
     }
 
     @PostMapping("/inventory/update")

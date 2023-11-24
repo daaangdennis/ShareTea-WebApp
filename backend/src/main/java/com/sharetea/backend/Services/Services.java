@@ -256,47 +256,54 @@ public class Services {
         return answerMap;
     }
 
-    // public String addFavorite(HttpServletRequest request, Map<String, Object> favoriteData) throws URISyntaxException, IOException, InterruptedException{
-    //     Map<String, String> userInfo = findUserByAccessToken(request);
-    //     String email = userInfo.get("email");
-    //     Integer user_id = usersRepository.findByEmail(email).getUser_id();
-        
-    //     Integer productID = (Integer) favoriteData.get("productID");
-    //     List<Integer> toppingIDs = (List<Integer>) favoriteData.get("toppings");
-    //     String note = (String) favoriteData.get("notes");
-    //     String ice = (String) favoriteData.get("ice_level");
-    //     String sugar = (String) favoriteData.get("sugar_level");
-
-    //     OrderProduct favOP = new OrderProduct();
-
-    //     Integer productID = product.getProduct_id();
-    //     UserFavorite check = userFavoriteRepository.checkFavorite(user_id, productID);
-    //     if(check != null){
-    //         return "Already a favorite.";
-    //     }
-    //     UserFavorite favorite = new UserFavorite();
-    //     favorite.setProduct_id(productID);
-    //     favorite.setUser_id(user_id);
-    //     userFavoriteRepository.save(favorite);
-    //     return "Added favorite.";
-    // }
-
-    public Map<String, Object> getFavorite(HttpServletRequest request){
-        Map<String, String> userInfo = null;
-        try {
-            userInfo = findUserByAccessToken(request);
-        } catch(Exception e){e.printStackTrace();}
-
+    public String addFavorite(HttpServletRequest request, Map<String, Object> favoriteData) throws URISyntaxException, IOException, InterruptedException{
+        Map<String, String> userInfo = findUserByAccessToken(request);
         String email = userInfo.get("email");
         Integer user_id = usersRepository.findByEmail(email).getUser_id();
-        List<Map<String, Object>> favorites = userFavoriteRepository.getUserFavorite(user_id);
-        List<Inventory> toppings = inventoryRepository.findToppings();
+        
+        Integer productID = (Integer) favoriteData.get("productID");
+        List<Integer> toppingIDs = (List<Integer>) favoriteData.get("toppings");
+        String note = (String) favoriteData.get("notes");
+        String ice = (String) favoriteData.get("ice_level");
+        String sugar = (String) favoriteData.get("sugar_level");
 
-        Map<String, Object> favoriteMap = new HashMap<>();
-        favoriteMap.put("products", favorites);
-        favoriteMap.put("toppings", toppings);
-        return favoriteMap;
+        OrderProduct favOP = new OrderProduct();
+        favOP.setProduct_id(productID);
+        favOP.setNote(note);
+        favOP.setIce_level(ice);
+        favOP.setSugar_level(sugar);
+        favOP.setQuantity(1);
+        orderProductRepository.save(favOP);
+    
+        for(Integer t : toppingIDs){
+            ItemToppings i = new ItemToppings();
+            i.setInventory_id(t);
+            i.setOrder_product_id(favOP.getOrder_product_id());
+        }
+
+        UserFavorite favorite = new UserFavorite();
+        favorite.setOrder_product_id(favOP.getOrder_product_id());
+        favorite.setUser_id(user_id);
+        userFavoriteRepository.save(favorite);
+        return "Added favorite.";
     }
+
+    // public Map<String, Object> getFavorite(HttpServletRequest request){
+    //     Map<String, String> userInfo = null;
+    //     try {
+    //         userInfo = findUserByAccessToken(request);
+    //     } catch(Exception e){e.printStackTrace();}
+
+    //     String email = userInfo.get("email");
+    //     Integer user_id = usersRepository.findByEmail(email).getUser_id();
+    //     List<Map<String, Object>> favorites = userFavoriteRepository.getUserFavorite(user_id);
+    //     List<Inventory> toppings = inventoryRepository.findToppings();
+
+    //     Map<String, Object> favoriteMap = new HashMap<>();
+    //     favoriteMap.put("products", favorites);
+    //     favoriteMap.put("toppings", toppings);
+    //     return favoriteMap;
+    // }
 
     public Map<String, Object> weatherProducts(Double temperature){
         List<Product> products = null;
@@ -339,8 +346,6 @@ public class Services {
         return ordersRepository.findAll();
     }
 
-
-
     public Orders addOrder(HttpServletRequest request, String cashierEmail, String cashierFirstName, String cashierLastName, Map<String, Object> orderData) throws URISyntaxException, IOException, InterruptedException {
         Orders order = new Orders();
 
@@ -361,12 +366,7 @@ public class Services {
                 order.setCustomer_id(user.getUser_id());
             }
             else{
-                Users newUser = new Users();
-                newUser.setEmail(email);
-                newUser.setFirst_name(firstName);
-                newUser.setLast_name(lastName);
-                usersRepository.save(newUser);
-                order.setCustomer_id(newUser.getUser_id());
+                return null;
             }
         }
         else{
@@ -409,6 +409,7 @@ public class Services {
             String note = (String) item.get("notes");
             String sugar = (String) item.get("sugar_level");
             String ice = (String) item.get("ice_level");
+
 
             OrderProduct orderProduct = new OrderProduct();
             orderProduct.setOrder_id(order.getOrder_id());
@@ -638,6 +639,10 @@ public class Services {
         return productRepository.commonPairings(start, end);
     }
 
+    public List<Map<String,Object>> inventoryUsage(LocalDate start, LocalDate end){
+        return inventoryProductRepository.inventoryUsage(start, end);
+    }
+
     public Product updateProduct(Integer productID, String name, String category, Double price, String weather, String url) {
         Product product = productRepository.findById(productID).get();
         if(product == null){
@@ -665,6 +670,9 @@ public class Services {
                     productRepository.save(product);
                     addProduct(name, activeCategory, activePrice, activeWeather);
                 }
+            }
+            if(name != null){
+                product.setName(name);
             }
             if(category != null){
                 product.setCategory(category);

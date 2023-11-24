@@ -19,7 +19,7 @@ const Table = ({ columns, data, className, style }: any) => {
           {data?.map((array: any, i: number) => {
             return (
               <tr key={i}>
-                {array.map((item: any, i: number) =>
+                {array?.map((item: any, i: number) =>
                   i === 0 ? (
                     <th scope="row">{item}</th>
                   ) : (
@@ -35,15 +35,21 @@ const Table = ({ columns, data, className, style }: any) => {
   );
 };
 
-export const LazyLoadingTable = ({ columns, data, className, style }: any) => {
+export const LazyLoadingTable = ({
+  columns,
+  data,
+  className,
+  style,
+  rowLoad,
+}: any) => {
   const [visibleData, setVisibleData] = useState<any>([]);
-  const [rowCount, setRowCount] = useState(5);
+  const [rowCount, setRowCount] = useState(rowLoad[0]);
   const [currentPage, setCurrentPage] = useState(0);
 
   useEffect(() => {
     const start = currentPage * rowCount;
     const end = start + rowCount;
-    setVisibleData(data.slice(start, end));
+    setVisibleData(data?.slice(start, end));
   }, [rowCount, currentPage, data]);
 
   const handleNext = () => {
@@ -62,7 +68,7 @@ export const LazyLoadingTable = ({ columns, data, className, style }: any) => {
             <tr>
               {columns?.map((name: string, i: number) => {
                 return (
-                  <th key={i} scope="col">
+                  <th key={`${name}-${i}`} scope="col">
                     {name}
                   </th>
                 );
@@ -70,19 +76,22 @@ export const LazyLoadingTable = ({ columns, data, className, style }: any) => {
             </tr>
           </thead>
           <tbody>
-            {visibleData.map((row: any, index: number) => (
+            {visibleData?.map((row: any, index: number) => (
               <tr key={index}>
-                {row.map((item: any, i: number) =>
+                {row?.map((item: any, i: number) =>
                   i === 0 ? (
-                    <th scope="row">{item}</th>
+                    // Add a unique key here
+                    <th scope="row" key={`row-header-${index}-${i}`}>
+                      {item}
+                    </th>
                   ) : (
-                    <td key={i}>{item}</td>
+                    <td key={`row-data-${index}-${i}`}>{item}</td>
                   )
                 )}
               </tr>
             ))}
             <tr>
-              <td colSpan={columns.length - 1}>
+              <td colSpan={columns?.length - 1}>
                 <label htmlFor="row-count" className="me-2">
                   Rows per load:
                 </label>
@@ -92,11 +101,11 @@ export const LazyLoadingTable = ({ columns, data, className, style }: any) => {
                   value={rowCount}
                   onChange={(e) => setRowCount(Number(e.target.value))}
                 >
-                  <option value="5">5</option>
-                  <option value="10">10</option>
-                  <option value="15">15</option>
-                  <option value="25">25</option>
-                  <option value="50">50</option>
+                  {rowLoad?.map((value: number, i: number) => (
+                    <option key={i} value={`${value}`}>
+                      {value}
+                    </option>
+                  ))}
                 </select>
               </td>
               <td>
@@ -112,7 +121,7 @@ export const LazyLoadingTable = ({ columns, data, className, style }: any) => {
                     className="btn btn-light ms-2"
                     onClick={handleNext}
                     disabled={
-                      currentPage >= Math.ceil(data.length / rowCount) - 1
+                      currentPage >= Math.ceil(data?.length / rowCount) - 1
                     }
                   >
                     Next

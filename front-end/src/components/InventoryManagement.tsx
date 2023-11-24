@@ -6,16 +6,18 @@ import {
   getInventory,
   updateInventory,
 } from "../apis/Dashboard";
-import Table from "./Table";
+import Table, { LazyLoadingTable } from "./Table";
 import SortButtons from "./SortButtons";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const InventoryManagement = () => {
+  const { getAccessTokenSilently } = useAuth0();
   const [InventoryDataSource, setInventoryDataSource] = useState<InventoryList>(
     { items: [] }
   );
 
   useEffect(() => {
-    getInventory(setInventoryDataSource);
+    getInventory(setInventoryDataSource, getAccessTokenSilently);
   }, []);
   useEffect(() => {
     setSortedItems(InventoryDataSource.items);
@@ -262,18 +264,24 @@ const InventoryManagement = () => {
     newIsTopping?: boolean
   ) => {
     if (newQuantity || newName || newIsTopping) {
-      updateInventory(itemId, newName, newQuantity, newIsTopping)
+      updateInventory(
+        getAccessTokenSilently,
+        itemId,
+        newName,
+        newQuantity,
+        newIsTopping
+      )
         .then(() => {
-          getInventory(setInventoryDataSource);
+          getInventory(setInventoryDataSource, getAccessTokenSilently);
         })
         .catch();
     }
   };
 
   const handleAddInventory = (name: string, quantity?: number) => {
-    addInventory(name, quantity)
+    addInventory(getAccessTokenSilently, name, quantity)
       .then(() => {
-        getInventory(setInventoryDataSource);
+        getInventory(setInventoryDataSource, getAccessTokenSilently);
         handleClearInventory();
       })
       .catch();
@@ -285,9 +293,9 @@ const InventoryManagement = () => {
   };
   const handleDeleteInventory = (name: string) => {
     if (name) {
-      deleteInventory(name)
+      deleteInventory(getAccessTokenSilently, name)
         .then(() => {
-          getInventory(setInventoryDataSource);
+          getInventory(setInventoryDataSource, getAccessTokenSilently);
         })
         .catch(() => {});
     }
@@ -355,7 +363,12 @@ const InventoryManagement = () => {
           </div>
         </div>
       </div>
-      <Table className="m-4" columns={InventoryColumns} data={InventoryData} />
+      <LazyLoadingTable
+        className="m-4"
+        columns={InventoryColumns}
+        data={InventoryData}
+        rowLoad={[10, 20, 30, 50, 100]}
+      />
     </div>
   );
 };
