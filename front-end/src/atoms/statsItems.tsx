@@ -8,12 +8,12 @@ import {
 
 export const SalesProduct = atom({
   key: "salesItems",
-  default: {} as productSales[],
+  default: [] as productSales[],
 });
 
 export const restockInventory = atom({
   key: "restockItems",
-  default: {} as restockItems[],
+  default: [] as restockItems[],
 });
 
 export const excessInventory = atom({
