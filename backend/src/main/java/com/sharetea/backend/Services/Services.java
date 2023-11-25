@@ -127,8 +127,12 @@ public class Services {
             Map<String, String> manager = new HashMap<>();
             manager.put("resource_server_identifier", "https://sharetea315/");
             manager.put("permission_name", "manager");
+             Map<String, String> customer = new HashMap<>();
+            manager.put("resource_server_identifier", "https://sharetea315/");
+            manager.put("permission_name", "customer");
             listMap.add(cashier);
             listMap.add(manager);
+            listMap.add(customer);
             deleteMap.put("permissions", listMap);
 
             String deleteMapString = objectMapper.writeValueAsString(deleteMap);
@@ -144,7 +148,7 @@ public class Services {
             HttpResponse<String> response = httpClient.send(deletePermissions, HttpResponse.BodyHandlers.ofString());
             System.out.println(response);
 
-            if(position.toLowerCase().equals("cashier") || position.toLowerCase().equals("manager")){
+            if(position.toLowerCase().equals("cashier") || position.toLowerCase().equals("manager") || position.toLowerCase().equals("customer")){
                 Map<String, Object> addMap = new HashMap<>();
                 List<Map<String, String>> addListMap = new ArrayList<>();
                 if(position.toLowerCase().equals("cashier")){
@@ -154,6 +158,10 @@ public class Services {
                 else if(position.toLowerCase().equals("manager")){
                     addListMap.add(manager);
                     thisUser.setPosition("manager");
+                }
+                else if(position.toLowerCase().equals("customer")){
+                    addListMap.add(customer);
+                    thisUser.setPosition("customer");
                 }
                 addMap.put("permissions", addListMap);
 
