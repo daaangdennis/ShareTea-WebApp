@@ -9,7 +9,7 @@ function PendingPage() {
     const [pendingOrder, setPendingOrder] = useState<PendingOrders>(
         {} as PendingOrders
     );
-    const [pageNumber, setPageNumber] = useState<number>(0);
+    const [pageNumber, setPageNumber] = useState<number>(1);
     const [maxOrdersPerPage, setMaxOrders] = useState<number>(10);
     const [selectedOrder, setSelectedOrder] = useState<Order>();
     const tableColumns = [
@@ -27,12 +27,12 @@ function PendingPage() {
     //console.log(selectedItems.length > 0);
 
     const handlePrevButton = () => {
-        if (pendingOrder.pending && pageNumber != 0) {
+        if (pendingOrder.pending && pageNumber > 1) {
             setPageNumber(pageNumber - 1);
         }
     };
     const handleNextButton = () => {
-        if (pendingOrder.pending && pageNumber != Math.floor((pendingOrder.pending.length)/maxOrdersPerPage)) {
+        if (pendingOrder.pending && pageNumber < Math.ceil((pendingOrder.pending.length)/maxOrdersPerPage)) {
             setPageNumber(pageNumber + 1);
         }
     };
@@ -51,10 +51,10 @@ function PendingPage() {
         <div className="d-flex flex-column flex-column-reverse flex-md-row">
             <div className="col-md-8 pendingpage-orders-grid-container">
                 <button onClick={handlePrevButton}>prev</button>
-                {pageNumber + 1} of {pendingOrder.pending ? (Math.floor((pendingOrder.pending.length)/maxOrdersPerPage) + 1) : (1)}
+                {pageNumber} of {pendingOrder.pending ? (Math.ceil((pendingOrder.pending.length)/maxOrdersPerPage)) : (1)}
                 <button onClick={handleNextButton}>next</button>
                 <PendingOrderGrid 
-                    pending={pendingOrder.pending ? (pendingOrder.pending.slice(0 + pageNumber * maxOrdersPerPage, maxOrdersPerPage + pageNumber * maxOrdersPerPage)) : ([])} 
+                    pending={pendingOrder.pending ? (pendingOrder.pending.slice((pageNumber-1) * maxOrdersPerPage, maxOrdersPerPage + (pageNumber-1) * maxOrdersPerPage)) : ([])} 
                     onCardClick={handleOrderSelect}
                 />
             </div>   
