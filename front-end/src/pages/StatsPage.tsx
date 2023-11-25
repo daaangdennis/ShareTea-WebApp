@@ -57,11 +57,13 @@ function StatsPage() {
         className="startDate"
         selected={startDate}
         onChange={(date: Date) => setStartDate(date)}
+        dateFormat="yyyy-MM-dd"
       />
       <DatePicker
         className="endDate"
         selected={endDate}
         onChange={(date: Date) => setEndDate(date)}
+        dateFormat="yyyy-MM-dd"
       />
       <div className="StatsButtonContainer">
         <button className="btn StatsButton">Sales Report</button>
@@ -95,8 +97,12 @@ function StatsPage() {
       <div className="TableContainer">
         {showProductUsage && <ProductUsageTable />}
         {showRestockUsage && <RestockReportTable />}
-        {showExcessUsage && <ExcessItemsTable />}
-        {showPopularPairs && <PopularPairsTable />}
+        {showExcessUsage && (
+          <ExcessItemsTable startDate={startDate} endDate={endDate} />
+        )}
+        {showPopularPairs && (
+          <PopularPairsTable startDate={startDate} endDate={endDate} />
+        )}
       </div>
     </div>
   );

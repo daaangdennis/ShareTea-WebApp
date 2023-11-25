@@ -22,7 +22,7 @@ export interface product {
   has_ice: boolean;
   has_toppings: boolean;
   has_sugar: boolean;
-  weather?:string
+  weather?: string;
 }
 
 export interface topping {
@@ -169,4 +169,9 @@ export interface popularPairsItems {
   combination_count: number;
   product1: string;
   product2: string;
+}
+
+export interface dateProps {
+  startDate: Date;
+  endDate: Date;
 }

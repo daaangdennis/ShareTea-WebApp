@@ -54,10 +54,10 @@
 
 .startDate {
   position: absolute;
-  left: 850px;
+  left: 400px;
 }
 
 .endDate {
   position: absolute;
-  left: 400px;
+  left: 850px;
 }

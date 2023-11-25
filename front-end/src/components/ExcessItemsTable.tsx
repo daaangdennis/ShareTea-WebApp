@@ -2,11 +2,12 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { excessInventory } from "../atoms/statsItems";
 import { useGetExcessReport } from "../apis/ExcessReport";
 import { useEffect, useState } from "react";
-import { excessProducts } from "../types/types";
+import { dateProps } from "../types/types";
 
-function ExcessItemsTable() {
+function ExcessItemsTable({ startDate, endDate }: dateProps) {
   const data = useRecoilValue(excessInventory);
-  useGetExcessReport();
+
+  useGetExcessReport(startDate);
 
   return (
     <div>

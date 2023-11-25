@@ -2,12 +2,13 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { excessInventory, popularPairsInventory } from "../atoms/statsItems";
 import { useGetExcessReport } from "../apis/ExcessReport";
 import { useEffect, useState } from "react";
-import { excessProducts } from "../types/types";
+import { dateProps, excessProducts } from "../types/types";
 import { useGetPopularPairs } from "../apis/PopularPairs";
 
-function PopularPairsTable() {
+function PopularPairsTable({ startDate, endDate }: dateProps) {
   const data = useRecoilValue(popularPairsInventory);
-  useGetPopularPairs();
+
+  useGetPopularPairs(startDate, endDate);
 
   const itemsPerPage = 20;
   const [currentPage, setCurrentPage] = useState(1);

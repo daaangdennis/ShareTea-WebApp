@@ -6,17 +6,20 @@ import { productSales } from "../types/types";
 import { popularPairsInventory } from "../atoms/statsItems";
 import { useRecoilState } from "recoil";
 
-export function useGetPopularPairs() {
+export function useGetPopularPairs(startDate: Date, endDate: Date) {
   const [popularItems, setPopularItems] = useRecoilState(popularPairsInventory);
+  const start = startDate.toISOString().split("T")[0];
+  const end = endDate.toISOString().split("T")[0];
+  const route =
+    "/product/commonpairings?startDate=" + start + "&endDate=" + end;
 
   useEffect(() => {
-    Axios.get(
-      process.env.REACT_APP_BACKEND_URL +
-        "/product/commonpairings?startDate=2023-01-01&endDate=2023-11-10"
-    )
+    Axios.get(process.env.REACT_APP_BACKEND_URL + route)
       .then((response) => {
         const data: popularPairsItems[] = response.data;
         setPopularItems(data);
+        // console.log(start);
+        // console.log(end);
         console.log(data);
       })
       .catch((error) => {
