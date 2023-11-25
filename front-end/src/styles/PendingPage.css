@@ -21,8 +21,30 @@
     background-color: #cf152d;
     border-radius: 15px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.7);
+    border: solid 2px #cf152d;
     display: flex;
     justify-content: space-between;
+    cursor: pointer;
+    
+}
+
+.pendingpage-product-card-selected {
+    padding: 10px;
+    font-family: 'Poppins', 'sans-serif';
+    margin: 20px;
+    color: #cf152d;
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.7);
+    border: solid 2px #cf152d;
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
+}
+
+.pendingpage-product-card:hover{
+    color: #cf152d;
+    background-color: white;
 }
 
 .pendingpage-product-card-left {
@@ -31,6 +53,7 @@
 
 .pendingpage-product-card-right {
     display: inline-block;
+    font-weight: 700;
 }
 
 .pendingpage-orders-information-header {

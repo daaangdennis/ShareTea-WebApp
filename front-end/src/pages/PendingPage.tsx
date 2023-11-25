@@ -21,10 +21,12 @@ function PendingPage() {
     ];
 
     useEffect(() => {
-        getPendingOrders(setPendingOrder);
-    }, [pendingOrder]);
+        getPendingOrders(setPendingOrder); 
+    }, []);
+
     //console.log(pendingOrder);
     //console.log(selectedItems.length > 0);
+    //console.log(selectedOrder);
 
     const handlePrevButton = () => {
         if (pendingOrder.pending && pageNumber > 1) {
@@ -41,9 +43,11 @@ function PendingPage() {
         setSelectedOrder(order);
     };
 
-    const handleCompleteOrder = () => {
+    const handleCompleteOrder = async () => {
         if (selectedOrder) {
-            finishOrder(selectedOrder.order_id);
+            await finishOrder(selectedOrder.order_id);
+            await getPendingOrders(setPendingOrder);
+            setSelectedOrder(undefined);
         }
     }
 
@@ -56,6 +60,7 @@ function PendingPage() {
                 <PendingOrderGrid 
                     pending={pendingOrder.pending ? (pendingOrder.pending.slice((pageNumber-1) * maxOrdersPerPage, maxOrdersPerPage + (pageNumber-1) * maxOrdersPerPage)) : ([])} 
                     onCardClick={handleOrderSelect}
+                    selectedOrder={selectedOrder}
                 />
             </div>   
             <div className="col-md-4 pendingpage-orders-information-container">

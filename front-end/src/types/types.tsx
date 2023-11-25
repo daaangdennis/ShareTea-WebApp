@@ -114,11 +114,13 @@ export interface PendingOrders {
 export interface PendingOrderGridProp {
   pending: Order[];
   onCardClick: (order: Order) => void;
+  selectedOrder?: Order;
 }
 
 export interface PendingOrderCardProp {
   order: Order;
   onCardClick: (order: Order) => void;
+  selectedOrder?: Order;
 }
 export interface customItem {
 
