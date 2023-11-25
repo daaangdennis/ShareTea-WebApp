@@ -1,6 +1,6 @@
 import { useRecoilValue } from "recoil";
 import { SalesProduct } from "../atoms/statsItems";
-import { productSales } from "../types/types";
+import { dateProps, productSales } from "../types/types";
 import { useGetSalesReport } from "../apis/SalesReport";
 import {
   BarChart,
@@ -13,9 +13,9 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-function ProductUsage() {
+function ProductUsage({ startDate, endDate }: dateProps) {
   const data = useRecoilValue(SalesProduct);
-  useGetSalesReport();
+  useGetSalesReport(startDate, endDate);
   return (
     <ResponsiveContainer width="100%" height="100%">
       <BarChart

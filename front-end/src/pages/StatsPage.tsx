@@ -90,7 +90,9 @@ function StatsPage() {
       </div>
 
       <div className="GraphContainer">
-        {showProductUsage && <ProductUsage />}
+        {showProductUsage && (
+          <ProductUsage startDate={startDate} endDate={endDate} />
+        )}
         {showExcessUsage && <ExcessItemsGraph />}
         {showRestockUsage && <RestockInventory />}
       </div>
