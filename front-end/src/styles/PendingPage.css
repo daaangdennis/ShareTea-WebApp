@@ -25,7 +25,7 @@
     display: flex;
     justify-content: space-between;
     cursor: pointer;
-    
+    transition: all 0.2s ease 0s; 
 }
 
 .pendingpage-product-card-selected {
@@ -54,6 +54,58 @@
 .pendingpage-product-card-right {
     display: inline-block;
     font-weight: 700;
+}
+
+.pendingpage-orders-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Poppins', 'sans-serif';
+    margin-bottom: 20px;
+}
+.pendingpage-orders-header h2{
+    font-weight: 700;
+    margin: 0;
+    color: #cf152d;
+}
+
+.pendingpage-orders-grid-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.pendingpage-controls-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    font-family: 'Poppins', 'sans-serif';
+    color: #cf152d;
+}
+
+.pendingpage-controls-container h5{
+    margin: 0;
+    font-weight: 600;
+}
+
+.pendingpage-control-button-disabled{
+    font-weight: 600;
+    color: #cf152d;
+    padding: 9px 25px;
+    background-color: white;
+    border: solid #cf152d;
+    border-radius: 15px;
+    text-align: center;
+}
+
+.pendingpage-control-button {
+    color: white;
+    background-color: #cf152d;
+    font-weight: 600;
+    padding: 9px 25px;
+    border: solid #cf152d;
+    border-radius: 15px;
+    text-align: center;
 }
 
 .pendingpage-orders-information-header {

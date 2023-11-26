@@ -53,10 +53,25 @@ function PendingPage() {
 
     return (
         <div className="d-flex flex-column flex-column-reverse flex-md-row">
-            <div className="col-md-8 pendingpage-orders-grid-container">
-                <button onClick={handlePrevButton}>prev</button>
-                {pageNumber} of {pendingOrder.pending ? (Math.ceil((pendingOrder.pending.length)/maxOrdersPerPage)) : (1)}
-                <button onClick={handleNextButton}>next</button>
+            <div className="col-md-8 pendingpage-orders-container">
+                <div className="pendingpage-orders-header">
+                    <h2>Pending Orders ({pendingOrder.pending ? (pendingOrder.pending.length) : (0)})</h2>
+                </div>
+                <div className="pendingpage-controls-container">
+                    <button 
+                        className={pageNumber == 1 ? ("pendingpage-control-button-disabled") : ("pendingpage-control-button")} 
+                        onClick={handlePrevButton}
+                    >
+                        Prev
+                    </button>
+                    <h5>{pageNumber} of {pendingOrder.pending ? (Math.ceil((pendingOrder.pending.length)/maxOrdersPerPage)) : (1)}</h5>
+                    <button 
+                        className={pendingOrder.pending && pageNumber >= Math.ceil((pendingOrder.pending.length)/maxOrdersPerPage) ? ("pendingpage-control-button-disabled") : ("pendingpage-control-button")} 
+                        onClick={handleNextButton}
+                    >
+                        Next
+                    </button>
+                </div>
                 <PendingOrderGrid 
                     pending={pendingOrder.pending ? (pendingOrder.pending.slice((pageNumber-1) * maxOrdersPerPage, maxOrdersPerPage + (pageNumber-1) * maxOrdersPerPage)) : ([])} 
                     onCardClick={handleOrderSelect}
