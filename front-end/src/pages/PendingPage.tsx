@@ -4,6 +4,7 @@ import { getPendingOrders, finishOrder } from "../apis/Order";
 import { OrderItem, PendingOrders, Order } from "../types/types";
 
 import "../styles/PendingPage.css";
+import SubNav from "../components/SubNav";
 
 function PendingPage() {
     const [pendingOrder, setPendingOrder] = useState<PendingOrders>(
@@ -54,7 +55,7 @@ function PendingPage() {
     return (
         <div className="d-flex flex-column flex-column-reverse flex-md-row">
             <div className="col-md-8 pendingpage-orders-container">
-                <div className="pendingpage-orders-header">
+                <div className="pendingpage-orders-header m-4">
                     <h2>Pending Orders ({pendingOrder.pending ? (pendingOrder.pending.length) : (0)})</h2>
                 </div>
                 <div className="pendingpage-controls-container">
@@ -78,58 +79,72 @@ function PendingPage() {
                     selectedOrder={selectedOrder}
                 />
             </div>   
-            <div className="col-md-4 pendingpage-orders-information-container">
-                <div className="pendingpage-orders-information-header px-3 py-2">
-                    {selectedOrder ? 
-                        (
-                            <h3>
-                                Order #{selectedOrder.order_id}
-                                <br></br>
-                                Customer Name: {selectedOrder.first_name} {selectedOrder.last_name}
-                            </h3>
-                        )
-                        :
-                        (
-                            <h3>
-                                No Order Selected
-                            </h3>
-                        )
-                    }
-                </div>
+            {selectedOrder ? 
+            (
+                <div className="col-md-4 pendingpage-orders-information-container">
+                    <div className="pendingpage-orders-information-header px-3 py-4">
+                        <h3>
+                            Order #{selectedOrder.order_id}
+                            <br></br>
+                            Customer Name: {selectedOrder.first_name} {selectedOrder.last_name}
+                        </h3>
+                    </div>
 
-                <table className="table" style={{ width: "100%" }}>
-                    <thead>
-                        <tr>
-                            {tableColumns.map((name: string, i: number) => {
-                                return (
-                                    <th key={i} scope="col" style={{ width: `${100 / tableColumns.length}%` }}>
-                                        {name}
-                                    </th>
-                                );
-                            })}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {selectedOrder?.items.map((item: OrderItem, i: number) => (
-                            <tr key={i}>
-                                <td style={{ width: `${100 / tableColumns.length}%` }}>{item.product ? (item.product) : ("None")}</td>
-                                <td style={{ width: `${100 / tableColumns.length}%` }}>{item.ice_level ? (item.ice_level) : ("No Ice")}</td>
-                                <td style={{ width: `${100 / tableColumns.length}%` }}>{item.sugar_level ? (item.sugar_level) : ("No Sugar")}</td>
-                                <td style={{ width: `${100 / tableColumns.length}%` }}>{item.toppings.length > 0 ? (item.toppings.join(', ')) : ("No Toppings")}</td>
-                                <td style={{ width: `${100 / tableColumns.length}%` }}>${(item.price + item.toppings.length * 0.75).toFixed(2)}</td>
+                    <table className="pendingpage-table mb-5">
+                        <thead className="pendingpage-table-header">
+                            <tr>
+                                {tableColumns.map((name: string, i: number) => {
+                                    return (
+                                        <th key={i} scope="col" className="pendingpage-table-column px-3 py-2" style={{ width: `${100 / tableColumns.length}%`}}>
+                                            {name}
+                                        </th>
+                                    );
+                                })}
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
-                Subtotal: ${selectedOrder ? (selectedOrder.total).toFixed(2) : ((0).toFixed(2))}
-                <br></br>
-                Tax: ${selectedOrder ? (selectedOrder.total * .0825).toFixed(2) : ((0).toFixed(2))}
-                <br></br>
-                Total: ${selectedOrder ? (selectedOrder.total * 1.0825).toFixed(2) : ((0).toFixed(2))}
-                <div>
-                    <button onClick={handleCompleteOrder}>Complete Order</button>
+                        </thead>
+                        <tbody>
+                            {selectedOrder?.items.map((item: OrderItem, i: number) => (
+                                <tr key={i}>
+                                    <td className="pendingpage-table-column px-3 py-2" style={{ width: `${100 / tableColumns.length}%` }}>{item.product ? (item.product) : ("None")}</td>
+                                    <td className="pendingpage-table-column px-3 py-2" style={{ width: `${100 / tableColumns.length}%` }}>{item.ice_level ? (item.ice_level) : ("No Ice")}</td>
+                                    <td className="pendingpage-table-column px-3 py-2" style={{ width: `${100 / tableColumns.length}%` }}>{item.sugar_level ? (item.sugar_level) : ("No Sugar")}</td>
+                                    <td className="pendingpage-table-column px-3 py-2" style={{ width: `${100 / tableColumns.length}%` }}>{item.toppings.length > 0 ? (item.toppings.join(', ')) : ("No Toppings")}</td>
+                                    <td className="pendingpage-table-column px-3 py-2" style={{ width: `${100 / tableColumns.length}%` }}>${(item.price + item.toppings.length * 0.75).toFixed(2)}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+
+                    <div className="pendingpage-subtotal-information-container">
+                        <div className="col-md-6 px-3 py-2">
+                            <h5>Subtotal:</h5>
+                            <h5>Tax:</h5>
+                        </div>
+                        <div className="col-md-6 px-3 py-2">
+                            <h5>${(selectedOrder.total).toFixed(2)}</h5>
+                            <h5>${(selectedOrder.total * .0825).toFixed(2)}</h5>
+                        </div>
+                    </div>
+                    <div className="pendingpage-total-information-container">
+                        <div className="col-md-6 px-3 py-2">
+                            <h5>Total:</h5>
+                        </div>
+                        <div className="col-md-6 px-3 py-2">
+                            <h5>${(selectedOrder.total * 1.0825).toFixed(2)}</h5>
+                        </div>
+                    </div>
+                    <div className="px-3 py-2 mb-3">
+                        <button className="pendingpage-complete-button" onClick={handleCompleteOrder}>Complete Order</button>
+                    </div>
                 </div>
-            </div> 
+            )
+            :
+            (
+                <div className="col-md-4 pendingpage-orders-information-container d-flex justify-content-center align-items-center py-4">
+                    <h1 className="m-0">No Order Selected</h1>
+                </div>
+            )
+            }
         </div> 
     );
 };

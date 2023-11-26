@@ -111,5 +111,77 @@
 .pendingpage-orders-information-header {
     display: flex;
     align-items: left;
+}
+
+.pendingpage-orders-information-header h3{
+    font-weight: 600;
+}
+
+.pendingpage-subtotal-information-container{
+   border-bottom: solid 2px white;
+   border-bottom-style: dashed;
+   display: flex;
+   flex-direction: row;
+   font-weight: 600;
+}
+
+.pendingpage-subtotal-information-container h5{
+    margin-top: 2px;
+    font-weight: 600;
+ }
+
+.pendingpage-subtotal-information-container .col-md-6 {
+    flex: 1;
+}
+
+.pendingpage-subtotal-information-container .col-md-6:last-child {
+    text-align: right;
+}
+
+.pendingpage-total-information-container{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    font-weight: 600;
+ }
+ 
+.pendingpage-total-information-container h5{
+    margin-top: 2px;
+    font-weight: 600;
+}
+
+.pendingpage-total-information-container .col-md-6 {
+    flex: 1;
+}
+
+.pendingpage-total-information-container .col-md-6:last-child {
+    text-align: right;
+}
+
+.pendingpage-complete-button {
     font-weight: 700;
+    color: white;
+    padding: 9px 25px;
+    background-color: #cf152d;
+    border: solid white;
+    border-radius: 15px;
+    transition: all 0.3s ease 0s;
+    text-align: center;
+    width: 100%;
+}
+
+.pendingpage-complete-button:hover {
+    color: #cf152d;
+    background-color: white;
+}
+
+
+.pendingpage-table-header {
+    border-top: 2px solid white;
+    border-bottom: 2px solid white;
+}
+
+.pendingpage-table-column {
+    text-align: left;
+    vertical-align: top;
 }
