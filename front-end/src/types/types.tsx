@@ -175,3 +175,9 @@ export interface dateProps {
   startDate: Date;
   endDate: Date;
 }
+
+export interface inventoryUsageProps {
+  inventory_name: string;
+  inventory_id: number;
+  quantity_used: number;
+}

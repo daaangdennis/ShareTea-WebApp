@@ -1,13 +1,9 @@
 import { useRecoilValue } from "recoil";
-import {
-  SalesProduct,
-  inventoryUsage,
-  restockInventory,
-} from "../atoms/statsItems";
+import { SalesProduct, restockInventory } from "../atoms/statsItems";
 import { useState } from "react";
 
 function ProductUsageTable() {
-  const data = useRecoilValue(inventoryUsage);
+  const data = useRecoilValue(SalesProduct);
 
   const itemsPerPage = 20;
   const [currentPage, setCurrentPage] = useState(1);
@@ -27,17 +23,15 @@ function ProductUsageTable() {
       <table>
         <thead>
           <tr>
-            <th>ID</th>
             <th>Name</th>
-            <th>Used</th>
+            <th>Quantity</th>
           </tr>
         </thead>
         <tbody>
           {currentItems.map((item, index) => (
             <tr key={index}>
-              <td>{item.inventory_id}</td>
-              <td>{item.inventory_name}</td>
-              <td>{item.quantity_used}</td>
+              <td>{item.name}</td>
+              <td>{item.count}</td>
             </tr>
           ))}
         </tbody>

@@ -4,6 +4,7 @@ import {
   excessProducts,
   popularPairsItems,
   restockItems,
+  inventoryUsageProps,
 } from "../types/types";
 
 export const SalesProduct = atom({
@@ -24,4 +25,9 @@ export const excessInventory = atom({
 export const popularPairsInventory = atom({
   key: "popularItems",
   default: [] as popularPairsItems[],
+});
+
+export const inventoryUsage = atom({
+  key: "useInventory",
+  default: [] as inventoryUsageProps[],
 });

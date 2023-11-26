@@ -14,12 +14,15 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import ProductUsageTable from "../components/ProductUsageTable";
 import ExcessItemsGraph from "../components/ExcessItemsGraph";
+import SalesReportTable from "../components/SalesReportTable";
+import SalesReportGraph from "../components/SalesReportGraph";
 
 function StatsPage() {
   const [showProductUsage, setShowProductUsage] = useState(false);
   const [showRestockUsage, setShowRestockUsage] = useState(false);
   const [showExcessUsage, setShowExcessUsage] = useState(false);
   const [showPopularPairs, setShowPopularPairs] = useState(false);
+  const [showSales, setShowSales] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
 
@@ -28,6 +31,7 @@ function StatsPage() {
     setShowPopularPairs(false);
     setShowRestockUsage(false);
     setShowExcessUsage(false);
+    setShowSales(false);
   };
 
   const handleRestockButton = () => {
@@ -35,6 +39,7 @@ function StatsPage() {
     setShowPopularPairs(false);
     setShowProductUsage(false);
     setShowExcessUsage(false);
+    setShowSales(false);
   };
 
   const handleExcessButton = () => {
@@ -42,6 +47,7 @@ function StatsPage() {
     setShowPopularPairs(false);
     setShowProductUsage(false);
     setShowRestockUsage(false);
+    setShowSales(false);
   };
 
   const handlePopularPairsButton = () => {
@@ -49,6 +55,15 @@ function StatsPage() {
     setShowExcessUsage(false);
     setShowProductUsage(false);
     setShowRestockUsage(false);
+    setShowSales(false);
+  };
+
+  const handleProductSalesButton = () => {
+    setShowSales((prevValue) => !prevValue);
+    setShowExcessUsage(false);
+    setShowProductUsage(false);
+    setShowRestockUsage(false);
+    setShowPopularPairs(false);
   };
 
   return (
@@ -66,7 +81,9 @@ function StatsPage() {
         dateFormat="yyyy-MM-dd"
       />
       <div className="StatsButtonContainer">
-        <button className="btn StatsButton">Sales Report</button>
+        <button onClick={handleProductSalesButton} className="btn StatsButton">
+          Sales Report
+        </button>
         <button onClick={handleProductUsageButton} className="btn StatsButton">
           Product Usage
         </button>
@@ -90,6 +107,9 @@ function StatsPage() {
       </div>
 
       <div className="GraphContainer">
+        {showSales && (
+          <SalesReportGraph startDate={startDate} endDate={endDate} />
+        )}
         {showProductUsage && (
           <ProductUsage startDate={startDate} endDate={endDate} />
         )}
@@ -97,6 +117,7 @@ function StatsPage() {
         {showRestockUsage && <RestockInventory />}
       </div>
       <div className="TableContainer">
+        {showSales && <SalesReportTable />}
         {showProductUsage && <ProductUsageTable />}
         {showRestockUsage && <RestockReportTable />}
         {showExcessUsage && (

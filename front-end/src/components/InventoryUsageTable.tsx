@@ -6,7 +6,7 @@ import {
 } from "../atoms/statsItems";
 import { useState } from "react";
 
-function ProductUsageTable() {
+function InventoryUsageTable() {
   const data = useRecoilValue(inventoryUsage);
 
   const itemsPerPage = 20;
@@ -64,4 +64,4 @@ function ProductUsageTable() {
   );
 }
 
-export default ProductUsageTable;
+export default InventoryUsageTable;
