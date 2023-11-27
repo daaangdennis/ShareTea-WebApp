@@ -55,6 +55,26 @@ export async function finishOrder(order_id: number) {
   }
 }
 
+export async function getUserOrders(
+  setPendingOrder: React.Dispatch<React.SetStateAction<PendingOrders>>, 
+  accessTokenPromise: String
+) {
+  try {
+    const accessToken = accessTokenPromise;
+    const headers = {
+      Authorization: `Bearer ${accessToken}`,
+    };
+
+    Axios.get(process.env.REACT_APP_BACKEND_URL + "/user/orders", { headers })
+    .then((response) => {
+      const pending: PendingOrders = response.data;
+      setPendingOrder(pending);
+    })
+  } catch (error) {
+    console.error("There was an error fetching data: ", error);
+  }
+}
+
 export const saveFavorite = (
   favorite: {
     productID: number;
