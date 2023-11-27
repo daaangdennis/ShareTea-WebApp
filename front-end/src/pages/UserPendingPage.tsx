@@ -63,7 +63,7 @@ function UserPendingPage() {
         const minutes = date.getMinutes();
         const seconds = date.getSeconds();
 
-        const regularTime = `${month < 10 ? '0' + month : month}/${day < 10 ? '0' + day : day}/${year} ${hours}:${minutes}:${seconds}`;
+        const regularTime = `${month < 10 ? '0' + month : month}/${day < 10 ? '0' + day : day}/${year} ${hours < 10 ? '0' + hours : hours}:${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
         setOrderTime(regularTime);
     };
 
@@ -110,7 +110,7 @@ function UserPendingPage() {
                         <h3>
                             Order #{selectedOrder.order_id}
                             <br></br>
-                            {orderTime}
+                            ({orderTime})
                         </h3>
                     </div>
 
