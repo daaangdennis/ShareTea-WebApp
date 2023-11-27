@@ -163,8 +163,8 @@ function StatsPage() {
           </div>
         </div>
 
-        <div className="col-md-6 d-flex container-fluid justify-content-center align-items-center mt-2">
-          <div className="TableContainer mx-4 mb-4 d-flex justify-content-center">
+        <div className="col-md-9 d-flex container-fluid justify-content-center align-items-center mt-2">
+          <div className="TableContainer mx-4 mb-4 d-flex justify-content-center overflow-auto">
             {generate && showSales && <SalesReportTable />}
             {generate && showProductUsage && <ProductUsageTable />}
             {generate && showRestockUsage && <RestockReportTable />}

@@ -30,7 +30,7 @@ function PopularPairsTable({ startDate, endDate }: dateProps) {
 
   return (
     <LazyLoadingTable
-      className="m-4"
+      className="m-4 table-responsive"
       columns={["Product 1", "Product 2", "Quantity"]}
       data={newData}
       rowLoad={[10, 20, 30, 50, 100]}
