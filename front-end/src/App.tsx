@@ -13,7 +13,7 @@ import PendingPage from "./pages/PendingPage";
 import CashierOrderPage from "./pages/CashierOrderPage";
 import StatsPage from "./pages/StatsPage";
 import ProtectedRoute from "./components/ProtectedRoute";
-import InventoryPage from "./pages/InventoryPage";
+import DashboardPage from "./pages/DashboardPage";
 
 function App() {
   const routes: route[] = [
@@ -27,15 +27,9 @@ function App() {
       roles: ["cashier", "manager"],
     },
     {
-      name: "Statistics",
-      path: "/stats",
-      element: <StatsPage />,
-      roles: ["cashier", "manager"],
-    },
-    {
-      name: "Inventory",
-      path: "/Inventory",
-      element: <InventoryPage />,
+      name: "Dashboard",
+      path: "/Dashboard",
+      element: <DashboardPage />,
       roles: ["cashier", "manager"],
     },
     {
@@ -63,9 +57,8 @@ function App() {
           </Route>
           <Route element={<ProtectedRoute roles={["manager"]} />}>
             {/* Add routes accessible by manager only here */}
-            <Route path="/stats" element={<StatsPage />} />
-            <Route path="/Inventory" element={<InventoryPage />} />
             <Route path="/Pending" element={<PendingPage />} />
+            <Route path="/Dashboard" element={<DashboardPage />} />
           </Route>
         </Routes>
         <Footer />

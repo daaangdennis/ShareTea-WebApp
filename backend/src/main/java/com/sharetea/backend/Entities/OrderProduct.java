@@ -16,7 +16,7 @@ public class OrderProduct {
 
     @NotNull private Integer product_id;
 
-    @NotNull private Integer order_id;
+    private Integer order_id;
     
     @NotNull private Integer quantity;
 

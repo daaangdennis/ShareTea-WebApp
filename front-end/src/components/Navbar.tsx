@@ -18,7 +18,7 @@ import UserInfo from "./UserInfo";
 import useUserRole from "../hooks/useUserRole";
 
 const Navbar: React.FC<navbarProps> = ({ routes }) => {
-  const { isAuthenticated } = useAuth0();
+  const { isAuthenticated, isLoading, getAccessTokenSilently } = useAuth0();
 
   const [activePage, setActivePage] = useState("Home");
   const [searchTerm, setSearchTerm] = useState("");
@@ -35,7 +35,7 @@ const Navbar: React.FC<navbarProps> = ({ routes }) => {
   useEffect(() => {
     getProducts(setProducts, setFilteredProducts);
     setFilteredProducts(SourceProducts);
-  }, []);
+  }, [isLoading, getAccessTokenSilently, activePage]);
   useEffect(() => {
     if (searchTerm.trim() === "") {
       setFilteredProducts(SourceProducts);
@@ -48,7 +48,7 @@ const Navbar: React.FC<navbarProps> = ({ routes }) => {
       };
       setFilteredProducts(filtered);
     }
-  }, [searchTerm]);
+  }, [searchTerm, isLoading, getAccessTokenSilently, activePage]);
 
   return (
     <header className="p-3 text-bg">
@@ -67,10 +67,11 @@ const Navbar: React.FC<navbarProps> = ({ routes }) => {
           </Link>
 
           <ul className="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-            {routes.map((item: route, i: number) =>
-              (!item.roles && !userRole) || !item.roles ? (
-                item.name == "Cart" ? (
-                  <li key={i}>
+            {routes.map((item, i) => {
+              const key = `nav-item-${item.name}-${i}`;
+              return (!item.roles && !userRole) || !item.roles ? (
+                item.name === "Cart" ? (
+                  <li key={key}>
                     <Link
                       className="nav-link px-2 text-dark"
                       to={item.path}
@@ -79,7 +80,7 @@ const Navbar: React.FC<navbarProps> = ({ routes }) => {
                       <p
                         className="navbar-link m-0"
                         style={
-                          location.pathname == item.path
+                          location.pathname === item.path
                             ? {
                                 textDecoration: "underline",
                                 textDecorationColor: "#cf152d",
@@ -97,12 +98,12 @@ const Navbar: React.FC<navbarProps> = ({ routes }) => {
                     </Link>
                   </li>
                 ) : (
-                  <li key={i}>
+                  <li key={key}>
                     <Link
                       className="nav-link text-dark"
                       to={item.path}
                       style={
-                        location.pathname == item.path
+                        location.pathname === item.path
                           ? {
                               textDecoration: "underline",
                               textDecorationColor: "#cf152d",
@@ -118,12 +119,12 @@ const Navbar: React.FC<navbarProps> = ({ routes }) => {
                   </li>
                 )
               ) : item.roles.includes(userRole) ? (
-                <li key={i}>
+                <li key={key}>
                   <Link
                     className="nav-link text-dark"
                     to={item.path}
                     style={
-                      location.pathname == item.path
+                      location.pathname === item.path
                         ? {
                             textDecoration: "underline",
                             textDecorationColor: "#cf152d",
@@ -137,10 +138,8 @@ const Navbar: React.FC<navbarProps> = ({ routes }) => {
                     <p className="navbar-link m-0">{item.name}</p>
                   </Link>
                 </li>
-              ) : (
-                <></>
-              )
-            )}
+              ) : null;
+            })}
           </ul>
 
           <div className="text-end">

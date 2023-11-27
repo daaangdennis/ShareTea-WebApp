@@ -89,11 +89,12 @@ public class Services {
     }
 
 
-    public void changePermissions(String email, String position) throws URISyntaxException, IOException, InterruptedException{
-        Users thisUser = usersRepository.findByEmail(email);
+    public void changePermissions(Integer id, String position) throws URISyntaxException, IOException, InterruptedException{
+        Users thisUser = usersRepository.findById(id).get();
         if(thisUser == null){
             return;
         }
+        String email = thisUser.getEmail();
 
         String encodedEmail = URLEncoder.encode(email, "UTF-8");
         String emailURL = "https://dev-1jps85kh7htbmqki.us.auth0.com/api/v2/users-by-email?fields=user_id&email=" + encodedEmail;
@@ -126,8 +127,12 @@ public class Services {
             Map<String, String> manager = new HashMap<>();
             manager.put("resource_server_identifier", "https://sharetea315/");
             manager.put("permission_name", "manager");
+             Map<String, String> customer = new HashMap<>();
+            customer.put("resource_server_identifier", "https://sharetea315/");
+            customer.put("permission_name", "customer");
             listMap.add(cashier);
             listMap.add(manager);
+            listMap.add(customer);
             deleteMap.put("permissions", listMap);
 
             String deleteMapString = objectMapper.writeValueAsString(deleteMap);
@@ -143,16 +148,20 @@ public class Services {
             HttpResponse<String> response = httpClient.send(deletePermissions, HttpResponse.BodyHandlers.ofString());
             System.out.println(response);
 
-            if(position.equals("cashier") || position.equals("manager")){
+            if(position.toLowerCase().equals("cashier") || position.toLowerCase().equals("manager") || position.toLowerCase().equals("customer")){
                 Map<String, Object> addMap = new HashMap<>();
                 List<Map<String, String>> addListMap = new ArrayList<>();
-                if(position.equals("cashier")){
+                if(position.toLowerCase().equals("cashier")){
                     addListMap.add(cashier);
                     thisUser.setPosition("cashier");
                 }
-                else{
+                else if(position.toLowerCase().equals("manager")){
                     addListMap.add(manager);
                     thisUser.setPosition("manager");
+                }
+                else if(position.toLowerCase().equals("customer")){
+                    addListMap.add(customer);
+                    thisUser.setPosition("customer");
                 }
                 addMap.put("permissions", addListMap);
 
@@ -171,7 +180,7 @@ public class Services {
 
             }
             else{
-                thisUser.setPosition(null);
+                thisUser.setPosition("customer");
                 usersRepository.save(thisUser);
             }
         } catch (Exception e) {
@@ -179,13 +188,13 @@ public class Services {
         }
     }
 
-    public void deleteUser(String email) throws IOException, InterruptedException, URISyntaxException{
-        Integer userID = usersRepository.findByEmail(email).getUser_id();
-        if(userID == null || userID == 27){ //27 is deleted user default, don't delete
+    public void deleteUser(Integer id) throws IOException, InterruptedException, URISyntaxException{
+        String email = usersRepository.findById(id).get().getEmail();
+        if(id == null || id == 27){ //27 is deleted user default, don't delete
             return;
         }
-        usersRepository.deleteUserOrder(userID);
-        usersRepository.deleteById(userID);
+        usersRepository.deleteUserOrder(id);
+        usersRepository.deleteById(id);
 
         String encodedEmail = URLEncoder.encode(email, "UTF-8");
         String emailURL = "https://dev-1jps85kh7htbmqki.us.auth0.com/api/v2/users-by-email?fields=user_id&email=" + encodedEmail;
@@ -255,38 +264,54 @@ public class Services {
         return answerMap;
     }
 
-    public String addFavorite(HttpServletRequest request, String productName) throws URISyntaxException, IOException, InterruptedException{
+    public String addFavorite(HttpServletRequest request, Map<String, Object> favoriteData) throws URISyntaxException, IOException, InterruptedException{
         Map<String, String> userInfo = findUserByAccessToken(request);
         String email = userInfo.get("email");
         Integer user_id = usersRepository.findByEmail(email).getUser_id();
-        Product product = productRepository.findByName(productName);
-        if(product == null){
-            return "Couldn't find product.";
+        
+        Integer productID = (Integer) favoriteData.get("productID");
+        List<Integer> toppingIDs = (List<Integer>) favoriteData.get("toppings");
+        String note = (String) favoriteData.get("notes");
+        String ice = (String) favoriteData.get("ice_level");
+        String sugar = (String) favoriteData.get("sugar_level");
+
+        OrderProduct favOP = new OrderProduct();
+        favOP.setProduct_id(productID);
+        favOP.setNote(note);
+        favOP.setIce_level(ice);
+        favOP.setSugar_level(sugar);
+        favOP.setQuantity(1);
+        orderProductRepository.save(favOP);
+    
+        for(Integer t : toppingIDs){
+            ItemToppings i = new ItemToppings();
+            i.setInventory_id(t);
+            i.setOrder_product_id(favOP.getOrder_product_id());
         }
-        Integer productID = product.getProduct_id();
+
         UserFavorite favorite = new UserFavorite();
-        favorite.setProduct_id(productID);
+        favorite.setOrder_product_id(favOP.getOrder_product_id());
         favorite.setUser_id(user_id);
         userFavoriteRepository.save(favorite);
         return "Added favorite.";
     }
 
-    public Map<String, Object> getFavorite(HttpServletRequest request){
-        Map<String, String> userInfo = null;
-        try {
-            userInfo = findUserByAccessToken(request);
-        } catch(Exception e){e.printStackTrace();}
+    // public Map<String, Object> getFavorite(HttpServletRequest request){
+    //     Map<String, String> userInfo = null;
+    //     try {
+    //         userInfo = findUserByAccessToken(request);
+    //     } catch(Exception e){e.printStackTrace();}
 
-        String email = userInfo.get("email");
-        Integer user_id = usersRepository.findByEmail(email).getUser_id();
-        List<Map<String, Object>> favorites = userFavoriteRepository.getUserFavorite(user_id);
-        List<Inventory> toppings = inventoryRepository.findToppings();
+    //     String email = userInfo.get("email");
+    //     Integer user_id = usersRepository.findByEmail(email).getUser_id();
+    //     List<Map<String, Object>> favorites = userFavoriteRepository.getUserFavorite(user_id);
+    //     List<Inventory> toppings = inventoryRepository.findToppings();
 
-        Map<String, Object> favoriteMap = new HashMap<>();
-        favoriteMap.put("products", favorites);
-        favoriteMap.put("toppings", toppings);
-        return favoriteMap;
-    }
+    //     Map<String, Object> favoriteMap = new HashMap<>();
+    //     favoriteMap.put("products", favorites);
+    //     favoriteMap.put("toppings", toppings);
+    //     return favoriteMap;
+    // }
 
     public Map<String, Object> weatherProducts(Double temperature){
         List<Product> products = null;
@@ -329,8 +354,6 @@ public class Services {
         return ordersRepository.findAll();
     }
 
-
-
     public Orders addOrder(HttpServletRequest request, String cashierEmail, String cashierFirstName, String cashierLastName, Map<String, Object> orderData) throws URISyntaxException, IOException, InterruptedException {
         Orders order = new Orders();
 
@@ -351,12 +374,7 @@ public class Services {
                 order.setCustomer_id(user.getUser_id());
             }
             else{
-                Users newUser = new Users();
-                newUser.setEmail(email);
-                newUser.setFirst_name(firstName);
-                newUser.setLast_name(lastName);
-                usersRepository.save(newUser);
-                order.setCustomer_id(newUser.getUser_id());
+                return null;
             }
         }
         else{
@@ -399,6 +417,7 @@ public class Services {
             String note = (String) item.get("notes");
             String sugar = (String) item.get("sugar_level");
             String ice = (String) item.get("ice_level");
+
 
             OrderProduct orderProduct = new OrderProduct();
             orderProduct.setOrder_id(order.getOrder_id());
@@ -457,10 +476,8 @@ public class Services {
             return null;
         }
         List<Map<String,Object>> pendingOrders = ordersRepository.userPendingOrders(customer_id);
-        List<Map<String,Object>> completedOrders = ordersRepository.userCompletedOrders(customer_id);
         List<Map<String,Object>> pendingList = new ArrayList<>();
-        List<Map<String,Object>> completedList = new ArrayList<>();
-
+        
         Map<String, List<Map<String,Object>>> finalList = new HashMap<>();
 
         for(Map<String,Object> order : pendingOrders){
@@ -486,34 +503,37 @@ public class Services {
             orderMap.put("items", itemList);
             pendingList.add(orderMap);
         }
+        if(paramEmail == null){
+            List<Map<String,Object>> completedOrders = ordersRepository.userCompletedOrders(customer_id);
+            List<Map<String,Object>> completedList = new ArrayList<>();
+            for(Map<String,Object> order : completedOrders){
+                Map<String,Object> orderMap = new HashMap<>(order);
+                Integer orderID = (Integer) order.get("order_id");
 
-        for(Map<String,Object> order : completedOrders){
-            Map<String,Object> orderMap = new HashMap<>(order);
-            Integer orderID = (Integer) order.get("order_id");
+                List<Map<String,Object>> productList = orderProductRepository.getProductsbyOrderID(orderID);
+                List<Map<String,Object>> itemList = new ArrayList<>();
 
-            List<Map<String,Object>> productList = orderProductRepository.getProductsbyOrderID(orderID);
-            List<Map<String,Object>> itemList = new ArrayList<>();
+                for(Map<String, Object> product : productList){
+                    Map<String,Object> itemMap = new HashMap<>();
+                    Map<String, Object> productNamePrice = productRepository.findProductNamePrice((Integer) product.get("product_id"));
+                    itemMap.put("product", productNamePrice.get("name"));
+                    itemMap.put("price", productNamePrice.get("price"));
 
-            for(Map<String, Object> product : productList){
-                Map<String,Object> itemMap = new HashMap<>();
-                Map<String, Object> productNamePrice = productRepository.findProductNamePrice((Integer) product.get("product_id"));
-                itemMap.put("product", productNamePrice.get("name"));
-                itemMap.put("price", productNamePrice.get("price"));
-
-                Integer order_product_id = (Integer) product.get("order_product_id");
-                List<String> toppings = itemToppingsRepository.getToppingsByopID(order_product_id);
-                itemMap.put("toppings", toppings);
+                    Integer order_product_id = (Integer) product.get("order_product_id");
+                    List<String> toppings = itemToppingsRepository.getToppingsByopID(order_product_id);
+                    itemMap.put("toppings", toppings);
 
 
-                itemList.add(itemMap);
-            }   
+                    itemList.add(itemMap);
+                }   
 
-            orderMap.put("items", itemList);
-            completedList.add(orderMap);
+                orderMap.put("items", itemList);
+                completedList.add(orderMap);
+            }
+            finalList.put("completed", completedList);
         }
 
         finalList.put("pending", pendingList);
-        finalList.put("completed", completedList);
         return finalList;
 
     }
@@ -627,22 +647,40 @@ public class Services {
         return productRepository.commonPairings(start, end);
     }
 
-    public Product updateProduct(String name, String category, Double price) {
-        Product product = productRepository.findByName(name);
+    public List<Map<String,Object>> inventoryUsage(LocalDate start, LocalDate end){
+        return inventoryProductRepository.inventoryUsage(start, end);
+    }
+
+    public Product updateProduct(Integer productID, String name, String category, Double price, String weather, String url) {
+        Product product = productRepository.findById(productID).get();
         if(product == null){
-            if(name == null && category == null && price == null){
-                return null;
-            }
-            Product newProduct = new Product();
-            newProduct.setName(name);
-            newProduct.setCategory(category);
-            newProduct.setPrice(price);
-            newProduct.setActive(true);
-            productRepository.save(newProduct);
+            return null;
         }
         else{
-            if(product.getActive() == false){
-                product.setActive(true);
+            if(name != null){
+                if(productRepository.findByName(name) == null){
+                    product.setName(name);
+                }
+                else{
+                    String activeCategory = product.getCategory();
+                    if(category != null){
+                        activeCategory = category;
+                    }
+                    Double activePrice = product.getPrice();
+                    if(price != null){
+                        activePrice = price;
+                    }
+                    String activeWeather = product.getWeather();
+                    if(weather != null){
+                        activeWeather = weather;
+                    }
+                    product.setActive(false);
+                    productRepository.save(product);
+                    addProduct(name, activeCategory, activePrice, activeWeather);
+                }
+            }
+            if(name != null){
+                product.setName(name);
             }
             if(category != null){
                 product.setCategory(category);
@@ -650,10 +688,48 @@ public class Services {
             if(price != null){
                 product.setPrice(price);
             }
+            if(weather != null){
+                product.setWeather(weather.toLowerCase());
+            }
+            if(url != null){
+                product.setUrl(url);
+            }
             return productRepository.save(product);
         }
-        return null;
     }
+
+    public Product addProduct(String name, String category, Double price, String weather){
+        Product product = productRepository.findByName(name);
+        if(product != null){
+            if(product.getActive() == true){
+                return null;
+            }
+            product.setActive(true);
+            if(category != null){
+                product.setCategory(category);
+            }
+            if(price != null){
+                product.setPrice(price);
+            }
+            if(weather != null){
+                product.setWeather(weather);
+            }
+            productRepository.save(product);
+            return product;
+        }
+        else{
+            Product newProduct = new Product();
+            newProduct.setName(name);
+            newProduct.setCategory(category);
+            newProduct.setPrice(price);
+            if(weather != null){
+                newProduct.setWeather(weather.toLowerCase());
+            }
+            productRepository.save(newProduct);
+            return newProduct;
+        }
+    }
+
 
     public String deleteProduct(String productName){
         Product product = productRepository.findByName(productName);
@@ -669,28 +745,46 @@ public class Services {
         return inventoryRepository.findByActive(true);
     }
 
-    public Inventory updateInventory(String name, Integer quantity) {
-        Inventory inventory = inventoryRepository.findByName(name);
+    public Inventory updateInventory(Integer inventoryId, String newName, Integer quantity, Boolean isTopping) {
+        Inventory inventory = inventoryRepository.findById(inventoryId).get();
         if(inventory == null){
-            Inventory newInventory = new Inventory();
-            newInventory.setName(name);
-            newInventory.setActive(true);
-            if(quantity != null){
-                newInventory.setQuantity(quantity);
-            }
-            inventoryRepository.save(newInventory);
+            return null;
         }
         else{
-            if(inventory.getActive() == false){
-                inventory.setActive(true);
-            }
             if(quantity != null){
                 inventory.setQuantity(quantity);
                 inventory.setLast_updated(LocalDate.now());
             }
+            if(isTopping != null){
+                inventory.setIs_topping(isTopping);
+            }
+            if(newName != null){
+                inventory.setName(newName);
+            }
             return inventoryRepository.save(inventory);
         }
-        return null;
+    }
+
+    public Inventory addInventory(String newName, Integer quantity){
+        Inventory inventory = inventoryRepository.findByName(newName);
+        if(inventory != null){
+            inventory.setActive(true);
+            if(quantity != null){
+                inventory.setQuantity(quantity);
+                inventory.setLast_updated(LocalDate.now());
+            }
+            inventoryRepository.save(inventory);
+            return inventory;
+        }
+        else{
+            Inventory newInv = new Inventory();
+            newInv.setName(newName);
+            if(quantity != null){
+                newInv.setQuantity(quantity);
+            }
+            inventoryRepository.save(newInv);
+            return newInv;
+        }
     }
 
     public String deleteInventory(String name){

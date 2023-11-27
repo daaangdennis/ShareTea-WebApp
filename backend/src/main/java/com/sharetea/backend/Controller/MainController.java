@@ -38,14 +38,14 @@ public class MainController {
     //     return service.requestUsers();
     // }
 
-    @GetMapping("/user/get")
+    @GetMapping("/users/get")
     public List<Map<String, Object>> userGet() {
         return service.requestUsers();
     }
-    @PostMapping("/user/delete")
-    public void userDelete(@RequestParam String email) {
+    @PostMapping("/users/delete")
+    public void userDelete(@RequestParam Integer userId) {
         try {
-            service.deleteUser(email);
+            service.deleteUser(userId);
         } catch (Exception e) {e.printStackTrace();}
     }
 
@@ -60,24 +60,24 @@ public class MainController {
     }
 
 
-    @PostMapping("/user/favorite")
-    public String favorite(HttpServletRequest request, @RequestParam String productName) throws URISyntaxException, IOException, InterruptedException {
-        return service.addFavorite(request, productName);
+    @PostMapping("/favorites/save")
+    public String favorite(HttpServletRequest request, @RequestBody Map<String, Object> favoriteData) throws URISyntaxException, IOException, InterruptedException {
+        return service.addFavorite(request, favoriteData);
     }
 
-    @GetMapping("user/favorite/get")
-    public Map<String, Object> favorite(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException {
-        return service.getFavorite(request);
-    }
+    // @GetMapping("user/favorite/get")
+    // public Map<String, Object> favorite(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException {
+    //     return service.getFavorite(request);
+    // }
 
     @GetMapping("/permissions")
     public String getPermissions() throws URISyntaxException, IOException, InterruptedException {
         return "You are a manager!";
     }
 
-    @GetMapping("/permissions/change")
-    public void changePermissions(@RequestParam String userEmail, @RequestParam String position) throws URISyntaxException, IOException, InterruptedException {
-         service.changePermissions(userEmail, position);
+    @PostMapping("/users/update")
+    public void changePermissions(@RequestParam Integer userId, @RequestParam String role) throws URISyntaxException, IOException, InterruptedException {
+         service.changePermissions(userId, role);
     }
 
     @GetMapping("/orders/get")
@@ -130,20 +130,19 @@ public class MainController {
         return service.weatherProducts(temperature);
     }
 
-    @GetMapping("/product/categories")
-    public List<String> getCategories() {
-        return service.getCategories();
-    }
-
-
     @GetMapping("/product/getbestselling")
     public Map<String, Object> getBestSelling() {
         return service.getBestSelling();  
     }
 
-    @PostMapping("/product/update")
-    public Product updateProduct(@RequestParam String productName, @RequestParam(required = false) String category, @RequestParam(required = false) Double price) {
-        return service.updateProduct(productName, category, price);
+    @PostMapping("/menu/update")
+    public Product updateProduct(@RequestParam Integer productID, @RequestParam(required = false) String newName,  @RequestParam(required = false) String category, @RequestParam(required = false) Double price, @RequestParam(required = false) String weather, @RequestParam(required = false) String url) {
+        return service.updateProduct(productID, newName, category, price, weather, url);
+    }
+
+    @PostMapping("/menu/add")
+    public Product addProduct(@RequestParam String name, @RequestParam String category, @RequestParam Double price, @RequestParam(required = false) String weather){
+        return service.addProduct(name, category, price, weather);
     }
 
     @PostMapping("/product/delete")
@@ -181,9 +180,19 @@ public class MainController {
         return service.excessStock(LocalDate.parse(date));
     }
 
+    @GetMapping("/inventory/usage")
+    public List<Map<String,Object>> inventoryUsage(@RequestParam String startDate, @RequestParam String endDate) {
+        return service.inventoryUsage(LocalDate.parse(startDate), LocalDate.parse(endDate));
+    }
+
     @PostMapping("/inventory/update")
-    public Inventory updateInventory(@RequestParam String inventoryName, @RequestParam(required = false) Integer quantity) {
-        return service.updateInventory(inventoryName, quantity);
+    public Inventory updateInventory(@RequestParam Integer inventoryId, @RequestParam(required = false) String newName, @RequestParam(required = false) Integer quantity, @RequestParam(required = false) Boolean isTopping) {
+        return service.updateInventory(inventoryId, newName, quantity, isTopping);
+    }
+
+    @PostMapping("/inventory/add")
+    public Inventory addInventory(@RequestParam String inventoryName, @RequestParam(required = false) Integer quantity){
+        return service.addInventory(inventoryName, quantity);
     }
 
     @PostMapping("/inventory/delete")
@@ -191,14 +200,19 @@ public class MainController {
         return service.deleteInventory(inventoryName);
     }
 
-    @PostMapping("/category/add")
-    public void addCategory(@RequestParam String name){
-        service.addCategory(name);
+    @GetMapping("/categories/get")
+    public List<String> getCategories() {
+        return service.getCategories();
     }
 
-    @PostMapping("/category/delete")
-    public void deleteCategory(@RequestParam String name){
-        service.deleteCategory(name);
+    @PostMapping("/categories/add")
+    public void addCategory(@RequestParam String categoryName){
+        service.addCategory(categoryName);
+    }
+
+    @PostMapping("/categories/delete")
+    public void deleteCategory(@RequestParam String categoryName){
+        service.deleteCategory(categoryName);
     }
 
 }
