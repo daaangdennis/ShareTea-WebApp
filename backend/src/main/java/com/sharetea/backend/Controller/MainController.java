@@ -54,6 +54,11 @@ public class MainController {
         return service.userOrders(request, null);
     }
 
+    @GetMapping("/user/completed")
+    public Map<String, List<Map<String, Object>>> userCompletedOrders(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException {
+        return service.userCompletedOrders(request);
+    }
+
     @GetMapping("/user/orders/manager")
     public Map<String, List<Map<String, Object>>> userOrders(@RequestParam String email) throws URISyntaxException, IOException, InterruptedException {
         return service.userOrders(null, email);
@@ -68,6 +73,11 @@ public class MainController {
     @GetMapping("/favorites/get")
     public Map<String, Object> favorite(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException {
         return service.getFavorite(request);
+    }
+
+    @PostMapping("/favorites/delete")
+    public List<Integer> deleteFavorite(HttpServletRequest request, @RequestParam Integer orderProductID) throws URISyntaxException, IOException, InterruptedException{
+        return service.deleteFavorite(request, orderProductID);
     }
 
     @GetMapping("/permissions")
@@ -125,6 +135,8 @@ public class MainController {
     public  Map<String, List<Map<String, Object>>> CompletedOrders() {
         return service.completedOrders();
     }
+
+    
 
 
     //PARAM: HttpServletRequest request
