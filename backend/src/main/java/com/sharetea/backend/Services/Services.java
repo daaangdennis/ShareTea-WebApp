@@ -538,7 +538,7 @@ public class Services {
                 List<Map<String,Object>> itemList = new ArrayList<>();
 
                 for(Map<String, Object> product : productList){
-                    Map<String,Object> itemMap = new HashMap<>();
+                    Map<String,Object> itemMap = new HashMap<>(product);
                     Map<String, Object> productNamePrice = productRepository.findProductNamePrice((Integer) product.get("product_id"));
                     itemMap.put("product", productNamePrice.get("name"));
                     itemMap.put("price", productNamePrice.get("price"));
