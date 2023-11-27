@@ -16,6 +16,8 @@ const FavoriteContent = () => {
 
 
 
+
+
   return isAuthenticated ? (
     <div>
       <div>

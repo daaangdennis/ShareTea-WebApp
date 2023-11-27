@@ -573,18 +573,52 @@ public class Services {
                 Integer order_product_id = (Integer) product.get("order_product_id");
                 List<String> toppings = itemToppingsRepository.getToppingsByopID(order_product_id);
                 itemMap.put("toppings", toppings);
-
+                
                 itemList.add(itemMap);
             }   
 
             orderMap.put("items", itemList);
+            orderMap.put("status", "Pending");
             finalPendingList.add(orderMap);
         }
         Map<String, List<Map<String, Object>>> result = new HashMap<>();
         result.put("pending", finalPendingList);
 
         return result;
+    }
 
+    public  Map<String, List<Map<String, Object>>> completedOrders(){
+        List<Map<String,Object>> completedOrders = ordersRepository.completedOrders();
+
+        List<Map<String,Object>> finalCompletedList = new ArrayList<>();
+
+        for(Map<String,Object> order : completedOrders){
+            Map<String,Object> orderMap = new HashMap<>(order);
+            Integer orderID = (Integer) order.get("order_id");
+
+            List<Map<String,Object>> productList = orderProductRepository.getProductsbyOrderID(orderID);
+            List<Map<String,Object>> itemList = new ArrayList<>();
+
+            for(Map<String, Object> product : productList){
+                Map<String,Object> itemMap = new HashMap<>(product);
+                Map<String, Object> productNamePrice = productRepository.findProductNamePrice((Integer) product.get("product_id"));
+                itemMap.put("product", productNamePrice.get("name"));
+                itemMap.put("price", productNamePrice.get("price"));
+
+                Integer order_product_id = (Integer) product.get("order_product_id");
+                List<String> toppings = itemToppingsRepository.getToppingsByopID(order_product_id);
+                itemMap.put("toppings", toppings);
+
+                itemList.add(itemMap);
+            }   
+            orderMap.put("status", (Boolean) orderMap.get("is_refunded") == true ? "Refunded" : "Completed");
+            orderMap.put("items", itemList);
+            finalCompletedList.add(orderMap);
+        }
+        Map<String, List<Map<String, Object>>> result = new HashMap<>();
+        result.put("completed", finalCompletedList);
+
+        return result;
     }
 
     public Integer maxOrder(){

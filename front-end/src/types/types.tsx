@@ -99,6 +99,7 @@ export interface Order {
   order_date: string;
   order_id: number;
   total: number;
+  status? : string;
 }
 
 export interface OrderItem {

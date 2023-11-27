@@ -121,6 +121,11 @@ public class MainController {
         return service.pendingOrders();
     }
 
+    @GetMapping("/orders/completed")
+    public  Map<String, List<Map<String, Object>>> CompletedOrders() {
+        return service.completedOrders();
+    }
+
 
     //PARAM: HttpServletRequest request
     //System.out.println(findUserByAccessToken(request));
