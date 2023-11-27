@@ -108,7 +108,12 @@ public class MainController {
 
     @PostMapping("/orders/finish")
     public void orderFinish(@RequestParam Integer orderID){
-        service.finishOrder(orderID);
+        service.finishOrder(orderID, false);
+    }
+
+    @PostMapping("/orders/refund")
+    public void orderRefund(@RequestParam Integer orderID){
+        service.finishOrder(orderID, true);
     }
 
     @GetMapping("/orders/pending")

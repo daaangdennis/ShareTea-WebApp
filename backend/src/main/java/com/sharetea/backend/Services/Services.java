@@ -591,16 +591,16 @@ public class Services {
         return ordersRepository.maxOrder();
     }
 
-    public void finishOrder(Integer orderID){
+    public void finishOrder(Integer orderID, Boolean refund){
         Orders order = ordersRepository.findById(orderID).get();
         order.setIs_pending(false);
+        if(refund == true){
+            order.setIs_refunded(true);
+        }
         ordersRepository.save(order);
     }
 
 
-
-
-    
     public Map<String, Object> getAllProducts() {
         List<Product> products = productRepository.findByActive(true);
         List<Inventory> toppings = inventoryRepository.findToppings();
