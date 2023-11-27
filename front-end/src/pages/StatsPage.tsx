@@ -85,7 +85,7 @@ function StatsPage() {
             <div className="d-flex flex-wrap w-100 StatsButtonContainer p-0 justify-content-center">
               <button
                 onClick={handleProductSalesButton}
-                className={`btn mx-2 my-2 ${
+                className={`StatsButton.btn mx-2 my-2 ${
                   showSales === true ? "StatsButton" : "StatsButtonOn"
                 }`}
               >
@@ -93,7 +93,7 @@ function StatsPage() {
               </button>
               <button
                 onClick={handleProductUsageButton}
-                className={`btn mx-2 my-2 ${
+                className={`StatsButton.btn mx-2 my-2 ${
                   showProductUsage === true ? "StatsButton" : "StatsButtonOn"
                 }`}
               >
@@ -101,7 +101,7 @@ function StatsPage() {
               </button>
               <button
                 onClick={handleRestockButton}
-                className={`btn mx-2 my-2 ${
+                className={`StatsButton.btn mx-2 my-2 ${
                   showRestockUsage === true ? "StatsButton" : "StatsButtonOn"
                 }`}
               >
@@ -109,7 +109,7 @@ function StatsPage() {
               </button>
               <button
                 onClick={handleExcessButton}
-                className={`btn mx-2 my-2 ${
+                className={`StatsButton.btn mx-2 my-2 ${
                   showExcessUsage === true ? "StatsButton" : "StatsButtonOn"
                 }`}
               >
@@ -117,7 +117,7 @@ function StatsPage() {
               </button>
               <button
                 onClick={handlePopularPairsButton}
-                className={`btn mx-2 my-2 ${
+                className={`StatsButton.btn mx-2 my-2 ${
                   showPopularPairs === true ? "StatsButton" : "StatsButtonOn"
                 }`}
               >
@@ -156,39 +156,36 @@ function StatsPage() {
         <div className="col-12 p-0">
           <div className="StatsButtonContainer container-fluid d-flex justify-content-center align-items-center flex-column h-100 pt-2 pb-2">
             <div className="GenerateButton">
-              <button onClick={handleGenerate} className="btn StatsButtonOn">
+              <button onClick={handleGenerate} className="StatsButtonOn">
                 Generate Report
               </button>
             </div>
           </div>
         </div>
 
-        <div className="col-12 p-0">
-          <div className="container-fluid d-flex justify-content-center flex-column p-0">
-            <div className="col-md-6 container-fluid d-flex p-0 justify-content-center align-items-center flex-wrap w-100 pt-2">
-              <div className="TableContainer mx-4 mb-4 container-fluid d-flex justify-content-center table-responsive">
-                {generate && showSales && <SalesReportTable />}
-                {generate && showProductUsage && <ProductUsageTable />}
-                {generate && showRestockUsage && <RestockReportTable />}
-                {generate && showExcessUsage && (
-                  <ExcessItemsTable startDate={startDate} endDate={endDate} />
-                )}
-                {generate && showPopularPairs && (
-                  <PopularPairsTable startDate={startDate} endDate={endDate} />
-                )}
-              </div>
-              <div className="GraphContainer mx-4 mb-4">
-                {generate && showSales && (
-                  <SalesReportGraph startDate={startDate} endDate={endDate} />
-                )}
-                {generate && showProductUsage && (
-                  <ProductUsage startDate={startDate} endDate={endDate} />
-                )}
-                {generate && showExcessUsage && <ExcessItemsGraph />}
-                {generate && showRestockUsage && <RestockInventory />}
-                {generate && showPopularPairs && <PopularPairsGraph />}
-              </div>
-            </div>
+        <div className="col-md-6 d-flex container-fluid justify-content-center align-items-center mt-2">
+          <div className="TableContainer mx-4 mb-4 d-flex justify-content-center">
+            {generate && showSales && <SalesReportTable />}
+            {generate && showProductUsage && <ProductUsageTable />}
+            {generate && showRestockUsage && <RestockReportTable />}
+            {generate && showExcessUsage && (
+              <ExcessItemsTable startDate={startDate} endDate={endDate} />
+            )}
+            {generate && showPopularPairs && (
+              <PopularPairsTable startDate={startDate} endDate={endDate} />
+            )}
+          </div>
+
+          <div className="GraphContainer mx-4 mb-4 d-flex justify-content-center">
+            {generate && showSales && (
+              <SalesReportGraph startDate={startDate} endDate={endDate} />
+            )}
+            {generate && showProductUsage && (
+              <ProductUsage startDate={startDate} endDate={endDate} />
+            )}
+            {generate && showExcessUsage && <ExcessItemsGraph />}
+            {generate && showRestockUsage && <RestockInventory />}
+            {generate && showPopularPairs && <PopularPairsGraph />}
           </div>
         </div>
       </div>
