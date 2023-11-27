@@ -184,4 +184,5 @@
 .pendingpage-table-column {
     text-align: left;
     vertical-align: top;
+    max-lines: 1;
 }

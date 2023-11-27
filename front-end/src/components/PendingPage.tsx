@@ -1,6 +1,6 @@
 import PendingOrderGrid from "../components/PendingOrderGrid";
 import { useEffect, useState } from "react";
-import { getPendingOrders, finishOrder } from "../apis/Order";
+import { getPendingOrders, finishOrder, refundOrder } from "../apis/Order";
 import { OrderItem, PendingOrders, Order } from "../types/types";
 
 import "../styles/PendingPage.css";
@@ -65,6 +65,14 @@ function PendingPage() {
         }
     }
 
+    const handleRefundOrder = async () => {
+        if (selectedOrder) {
+            await refundOrder(selectedOrder.order_id);
+            await getPendingOrders(setPendingOrder);
+            setSelectedOrder(undefined);
+        }
+    }
+
     return (
         <div className="d-flex flex-column flex-column-reverse flex-md-row">
             <div className="col-md-8 pendingpage-orders-container">
@@ -106,7 +114,7 @@ function PendingPage() {
                     </div>
                     <div className="px-3 py-2 mb-3">
                         <button className="pendingpage-complete-button mb-3" onClick={handleCompleteOrder}>Complete Order</button>
-                        <button className="pendingpage-complete-button" onClick={handleCompleteOrder}>Cancel Order</button>
+                        <button className="pendingpage-complete-button" onClick={handleRefundOrder}>Cancel Order</button>
                     </div>
                     <table className="pendingpage-table mb-5">
                         <thead className="pendingpage-table-header">

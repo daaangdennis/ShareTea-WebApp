@@ -1,6 +1,6 @@
 import PendingOrderGrid from "../components/PendingOrderGrid";
 import { useEffect, useState } from "react";
-import { getUserOrders, finishOrder } from "../apis/Order";
+import { getUserOrders, refundOrder } from "../apis/Order";
 import { OrderItem, PendingOrders, Order } from "../types/types";
 import { useAuth0 } from "@auth0/auth0-react";
 
@@ -67,9 +67,9 @@ function UserPendingPage() {
         setOrderTime(regularTime);
     };
 
-    const handleCompleteOrder = async () => {
+    const handleRefundOrder = async () => {
         if (selectedOrder) {
-            await finishOrder(selectedOrder.order_id);
+            await refundOrder(selectedOrder.order_id);
             const accessToken = await getAccessTokenSilently();
             await getUserOrders(setPendingOrder, accessToken);
             setSelectedOrder(undefined);
@@ -106,14 +106,16 @@ function UserPendingPage() {
             {selectedOrder ? 
             (
                 <div className="col-md-4 pendingpage-orders-information-container">
-                    <div className="pendingpage-orders-information-header px-3 py-4">
+                    <div className="pendingpage-orders-information-header px-3 pb-2">
                         <h3>
                             Order #{selectedOrder.order_id}
                             <br></br>
                             ({orderTime})
                         </h3>
                     </div>
-
+                    <div className="px-3 py-2 mb-3">
+                        <button className="pendingpage-complete-button" onClick={handleRefundOrder}>Cancel Order</button>
+                    </div>
                     <table className="pendingpage-table mb-5">
                         <thead className="pendingpage-table-header">
                             <tr>
@@ -150,15 +152,12 @@ function UserPendingPage() {
                         </div>
                     </div>
                     <div className="pendingpage-total-information-container">
-                        <div className="col-md-6 px-3 py-2">
+                        <div className="col-md-6 px-3 py-2 mb-2">
                             <h5>Total:</h5>
                         </div>
-                        <div className="col-md-6 px-3 py-2">
+                        <div className="col-md-6 px-3 py-2 mb-2">
                             <h5>${(selectedOrder.total * 1.0825).toFixed(2)}</h5>
                         </div>
-                    </div>
-                    <div className="px-3 py-2 mb-3">
-                        <button className="pendingpage-complete-button" onClick={handleCompleteOrder}>Cancel Order</button>
                     </div>
                 </div>
             )

@@ -1,17 +1,19 @@
 import PendingOrderGrid from "../components/PendingOrderGrid";
 import { useEffect, useState } from "react";
-import { getPendingOrders, finishOrder } from "../apis/Order";
-import { OrderItem, PendingOrders, Order } from "../types/types";
+import { getUserOrderHistory, finishOrder } from "../apis/Order";
+import { OrderItem, CompletedOrders, Order } from "../types/types";
+import { useAuth0 } from "@auth0/auth0-react";
 
 import "../styles/PendingPage.css";
 
 function UserOrderHistory() {
-    const [pendingOrder, setPendingOrder] = useState<PendingOrders>(
-        {} as PendingOrders
+    const [completedOrders, setCompletedOrders] = useState<CompletedOrders>(
+        {} as CompletedOrders
     );
     const [pageNumber, setPageNumber] = useState<number>(1);
     const [maxOrdersPerPage, setMaxOrders] = useState<number>(10);
     const [selectedOrder, setSelectedOrder] = useState<Order>();
+    const { getAccessTokenSilently } = useAuth0();
     const [orderTime, setOrderTime] = useState<String>("");
     const tableColumns = [
         "Product Name",
@@ -22,7 +24,15 @@ function UserOrderHistory() {
     ];
 
     useEffect(() => {
-        getPendingOrders(setPendingOrder); 
+        const fetchData = async () => {
+            try {
+            const accessToken = await getAccessTokenSilently();
+            getUserOrderHistory(setCompletedOrders, accessToken);
+            } catch (error) {
+            console.error('Error fetching data:', error);
+            }
+        };
+        fetchData();
     }, []);
 
     //console.log(pendingOrder);
@@ -30,12 +40,12 @@ function UserOrderHistory() {
     //console.log(selectedOrder);
 
     const handlePrevButton = () => {
-        if (pendingOrder.pending && pageNumber > 1) {
+        if (completedOrders.completed && pageNumber > 1) {
             setPageNumber(pageNumber - 1);
         }
     };
     const handleNextButton = () => {
-        if (pendingOrder.pending && pageNumber < Math.ceil((pendingOrder.pending.length)/maxOrdersPerPage)) {
+        if (completedOrders.completed && pageNumber < Math.ceil((completedOrders.completed.length)/maxOrdersPerPage)) {
             setPageNumber(pageNumber + 1);
         }
     };
@@ -56,14 +66,6 @@ function UserOrderHistory() {
         setOrderTime(regularTime);
     };
 
-    const handleCompleteOrder = async () => {
-        if (selectedOrder) {
-            await finishOrder(selectedOrder.order_id);
-            await getPendingOrders(setPendingOrder);
-            setSelectedOrder(undefined);
-        }
-    }
-
     return (
         <div className="d-flex flex-column flex-column-reverse flex-md-row">
             <div className="col-md-8 pendingpage-orders-container">
@@ -77,16 +79,16 @@ function UserOrderHistory() {
                     >
                         Prev
                     </button>
-                    <h5>{pageNumber} of {pendingOrder.pending ? (Math.ceil((pendingOrder.pending.length)/maxOrdersPerPage)) : (1)}</h5>
+                    <h5>{pageNumber} of {completedOrders.completed ? (Math.ceil((completedOrders.completed.length)/maxOrdersPerPage)) : (1)}</h5>
                     <button 
-                        className={pendingOrder.pending && pageNumber >= Math.ceil((pendingOrder.pending.length)/maxOrdersPerPage) ? ("pendingpage-control-button-disabled") : ("pendingpage-control-button")} 
+                        className={completedOrders.completed && pageNumber >= Math.ceil((completedOrders.completed.length)/maxOrdersPerPage) ? ("pendingpage-control-button-disabled") : ("pendingpage-control-button")} 
                         onClick={handleNextButton}
                     >
                         Next
                     </button>
                 </div>
                 <PendingOrderGrid 
-                    pending={pendingOrder.pending ? (pendingOrder.pending.slice((pageNumber-1) * maxOrdersPerPage, maxOrdersPerPage + (pageNumber-1) * maxOrdersPerPage)) : ([])} 
+                    pending={completedOrders.completed ? (completedOrders.completed.slice((pageNumber-1) * maxOrdersPerPage, maxOrdersPerPage + (pageNumber-1) * maxOrdersPerPage)) : ([])} 
                     onCardClick={handleOrderSelect}
                     selectedOrder={selectedOrder}
                 />
@@ -104,7 +106,7 @@ function UserOrderHistory() {
                         </h3>
                     </div>
                     <div className="px-3 py-2 mb-3">
-                        <button className="pendingpage-complete-button" onClick={handleCompleteOrder}>Remove From History</button>
+                        <button className="pendingpage-complete-button" onClick={() =>console.log("removed")}>Remove From History</button>
                     </div>
                     <table className="pendingpage-table mb-5">
                         <thead className="pendingpage-table-header">
