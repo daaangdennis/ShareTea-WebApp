@@ -43,9 +43,17 @@ function MenuPage() {
         >
           {navItems.map((item, i) => (
             <div key={i}>
-              <Nav.Link 
-                eventKey={item.name} 
-                style={selectedNavItem === item.name ? ({textDecoration: "none", color: "white", fontWeight: "700"}) : ({textDecoration: "none", color: "white"})}
+              <Nav.Link
+                eventKey={item.name}
+                style={
+                  selectedNavItem === item.name
+                    ? {
+                        textDecoration: "none",
+                        color: "white",
+                        fontWeight: "700",
+                      }
+                    : { textDecoration: "none", color: "white" }
+                }
               >
                 {item.name}
               </Nav.Link>

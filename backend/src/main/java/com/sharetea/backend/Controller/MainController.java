@@ -64,11 +64,11 @@ public class MainController {
     public String favorite(HttpServletRequest request, @RequestBody Map<String, Object> favoriteData) throws URISyntaxException, IOException, InterruptedException {
         return service.addFavorite(request, favoriteData);
     }
-
-    // @GetMapping("user/favorite/get")
-    // public Map<String, Object> favorite(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException {
-    //     return service.getFavorite(request);
-    // }
+    
+    @GetMapping("/favorites/get")
+    public Map<String, Object> favorite(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException {
+        return service.getFavorite(request);
+    }
 
     @GetMapping("/permissions")
     public String getPermissions() throws URISyntaxException, IOException, InterruptedException {
@@ -108,12 +108,22 @@ public class MainController {
 
     @PostMapping("/orders/finish")
     public void orderFinish(@RequestParam Integer orderID){
-        service.finishOrder(orderID);
+        service.finishOrder(orderID, false);
+    }
+
+    @PostMapping("/orders/refund")
+    public void orderRefund(@RequestParam Integer orderID){
+        service.finishOrder(orderID, true);
     }
 
     @GetMapping("/orders/pending")
     public  Map<String, List<Map<String, Object>>> getPendingOrders() {
         return service.pendingOrders();
+    }
+
+    @GetMapping("/orders/completed")
+    public  Map<String, List<Map<String, Object>>> CompletedOrders() {
+        return service.completedOrders();
     }
 
 

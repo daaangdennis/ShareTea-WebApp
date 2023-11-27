@@ -17,6 +17,7 @@ import { LoginButton, LogoutButton } from "../components/Login";
 import Profile from "../components/UserInfo";
 import { useAuth0 } from "@auth0/auth0-react";
 import { cart } from "../atoms/cart";
+import { get } from "http";
 
 function LandingPage() {
   // const products: product[] = [
@@ -37,7 +38,6 @@ function LandingPage() {
   //     price: 5.49,
   //   }
   // ];
-
   const customStyle = {
     backgroundImage:
       "linear-gradient(rgba(50, 50, 50, 0.25), rgba(50, 50, 50, 0.25))",

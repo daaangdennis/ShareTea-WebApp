@@ -37,7 +37,7 @@ function App() {
       name: "Dashboard",
       path: "/Dashboard",
       element: <DashboardPage />,
-      roles: ["cashier", "manager"],
+      roles: ["manager"],
     },
     {
       name: "Orders",

@@ -1,4 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
+
+body {
+  font-family: "Poppins", sans-serif !important;
+}
 
 .image-gallery-container {
   position: relative;
@@ -40,16 +44,16 @@
 
 .infobar-text-container {
   color: white;
-  font-family: 'Poppins', 'sans-serif';
+  font-family: "Poppins", "sans-serif";
   background-color: #cf152d;
 }
 
-.infobar-text-container h2{
+.infobar-text-container h2 {
   font-weight: 700;
 }
 
 .landingpage-text {
-  font-family: 'Poppins', 'sans-serif';
+  font-family: "Poppins", "sans-serif";
   text-align: center;
   font-weight: 700;
   text-decoration: underline;

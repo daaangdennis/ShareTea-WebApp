@@ -70,6 +70,7 @@ export interface ToppingsGridProps {
 
 export interface CartCardProps {
   item: ICartItem;
+  favorite? : boolean;
 }
 
 export interface ICartItem {
@@ -98,6 +99,7 @@ export interface Order {
   order_date: string;
   order_id: number;
   total: number;
+  status? : string;
 }
 
 export interface OrderItem {
