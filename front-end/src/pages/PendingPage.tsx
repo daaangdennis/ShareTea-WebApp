@@ -13,6 +13,7 @@ function PendingPage() {
     const [pageNumber, setPageNumber] = useState<number>(1);
     const [maxOrdersPerPage, setMaxOrders] = useState<number>(10);
     const [selectedOrder, setSelectedOrder] = useState<Order>();
+    const [orderTime, setOrderTime] = useState<String>("");
     const tableColumns = [
         "Product Name",
         "Ice Level",
@@ -42,6 +43,18 @@ function PendingPage() {
 
     const handleOrderSelect = (order: Order) => {
         setSelectedOrder(order);
+        const isoTimestamp = order.order_date;
+        const date = new Date(isoTimestamp);
+
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1;
+        const day = date.getDate();
+        const hours = date.getHours();
+        const minutes = date.getMinutes();
+        const seconds = date.getSeconds();
+
+        const regularTime = `${month < 10 ? '0' + month : month}/${day < 10 ? '0' + day : day}/${year} ${hours < 10 ? '0' + hours : hours}:${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+        setOrderTime(regularTime);
     };
 
     const handleCompleteOrder = async () => {
@@ -87,6 +100,8 @@ function PendingPage() {
                             Order #{selectedOrder.order_id}
                             <br></br>
                             Customer Name: {selectedOrder.first_name} {selectedOrder.last_name}
+                            <br></br>
+                            ({orderTime})
                         </h3>
                     </div>
 
