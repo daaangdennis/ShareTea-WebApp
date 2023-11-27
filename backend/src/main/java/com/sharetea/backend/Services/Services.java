@@ -287,6 +287,7 @@ public class Services {
             ItemToppings i = new ItemToppings();
             i.setInventory_id(t);
             i.setOrder_product_id(favOP.getOrder_product_id());
+            itemToppingsRepository.save(i);
         }
 
         UserFavorite favorite = new UserFavorite();
@@ -296,22 +297,34 @@ public class Services {
         return "Added favorite.";
     }
 
-    // public Map<String, Object> getFavorite(HttpServletRequest request){
-    //     Map<String, String> userInfo = null;
-    //     try {
-    //         userInfo = findUserByAccessToken(request);
-    //     } catch(Exception e){e.printStackTrace();}
+    public Map<String, Object> getFavorite(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException{
+        Map<String, String> userInfo = findUserByAccessToken(request);
+        String email = userInfo.get("email");
+        Integer user_id = usersRepository.findByEmail(email).getUser_id();
 
-    //     String email = userInfo.get("email");
-    //     Integer user_id = usersRepository.findByEmail(email).getUser_id();
-    //     List<Map<String, Object>> favorites = userFavoriteRepository.getUserFavorite(user_id);
-    //     List<Inventory> toppings = inventoryRepository.findToppings();
+        List<Map<String, Object>> favorites = userFavoriteRepository.getUserFavorite(user_id);
+        
+        List<Map<String, Object>> favList = new ArrayList<>();
+        for(Map<String, Object> f : favorites){
+            Map<String, Object> currMap = new HashMap<>();
+            Integer productID = (Integer) f.get("product_id");
+            currMap.put("notes", (String) f.get("note"));
+            currMap.put("ice_level", (String) f.get("ice_level"));
+            currMap.put("sugar_level", (String) f.get("sugar_level"));
+            currMap.put("product", productRepository.MapById(productID));
 
-    //     Map<String, Object> favoriteMap = new HashMap<>();
-    //     favoriteMap.put("products", favorites);
-    //     favoriteMap.put("toppings", toppings);
-    //     return favoriteMap;
-    // }
+            Integer opID = (Integer) f.get("order_product_id");
+            currMap.put("toppings", inventoryRepository.getFavoriteToppings(opID));
+
+            favList.add(currMap);
+        }
+
+        Map<String, Object> finalList = new HashMap<>();
+        finalList.put("items", favList);
+        finalList.put("total", 0);
+
+        return finalList;
+    }
 
     public Map<String, Object> weatherProducts(Double temperature){
         List<Product> products = null;

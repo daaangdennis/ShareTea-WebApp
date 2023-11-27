@@ -70,6 +70,7 @@ export interface ToppingsGridProps {
 
 export interface CartCardProps {
   item: ICartItem;
+  favorite? : boolean;
 }
 
 export interface ICartItem {
