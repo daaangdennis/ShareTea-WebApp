@@ -1,9 +1,11 @@
 import { useRecoilValue } from "recoil";
 import { restockInventory } from "../atoms/statsItems";
 import { useState } from "react";
+import LazyLoadingTable from "../components/Table";
 
 function RestockReportTable() {
   const data = useRecoilValue(restockInventory);
+  const newData = data.map((props) => [props.name, props.quantity]);
 
   const itemsPerPage = 20;
   const [currentPage, setCurrentPage] = useState(1);
@@ -19,42 +21,48 @@ function RestockReportTable() {
   };
 
   return (
-    <div>
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Quantity</th>
-          </tr>
-        </thead>
-        <tbody>
-          {currentItems.map((item, index) => (
-            <tr key={index}>
-              <td>{item.name}</td>
-              <td>{item.quantity}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <div>
-        <button
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 1}
-        >
-          Previous
-        </button>
-        <span>
-          {" "}
-          Page {currentPage} of {totalPages}{" "}
-        </span>
-        <button
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage === totalPages}
-        >
-          Next
-        </button>
-      </div>
-    </div>
+    <LazyLoadingTable
+      className="m-4"
+      columns={["Name", "Quantity"]}
+      data={newData}
+      rowLoad={[10, 20, 30, 50, 100]}
+    />
+    // <div>
+    //   <table>
+    //     <thead>
+    //       <tr>
+    //         <th>Name</th>
+    //         <th>Quantity</th>
+    //       </tr>
+    //     </thead>
+    //     <tbody>
+    //       {currentItems.map((item, index) => (
+    //         <tr key={index}>
+    //           <td>{item.name}</td>
+    //           <td>{item.quantity}</td>
+    //         </tr>
+    //       ))}
+    //     </tbody>
+    //   </table>
+    //   <div>
+    //     <button
+    //       onClick={() => handlePageChange(currentPage - 1)}
+    //       disabled={currentPage === 1}
+    //     >
+    //       Previous
+    //     </button>
+    //     <span>
+    //       {" "}
+    //       Page {currentPage} of {totalPages}{" "}
+    //     </span>
+    //     <button
+    //       onClick={() => handlePageChange(currentPage + 1)}
+    //       disabled={currentPage === totalPages}
+    //     >
+    //       Next
+    //     </button>
+    //   </div>
+    // </div>
   );
 }
 

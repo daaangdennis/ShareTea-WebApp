@@ -23,11 +23,13 @@ function StatsPage() {
   const [showExcessUsage, setShowExcessUsage] = useState(false);
   const [showPopularPairs, setShowPopularPairs] = useState(false);
   const [showSales, setShowSales] = useState(false);
+  const [generate, setGenerate] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
 
   const handleProductUsageButton = () => {
-    setShowProductUsage((prevValue) => !prevValue);
+    setShowProductUsage(true);
+    setGenerate(false);
     setShowPopularPairs(false);
     setShowRestockUsage(false);
     setShowExcessUsage(false);
@@ -35,97 +37,154 @@ function StatsPage() {
   };
 
   const handleRestockButton = () => {
-    setShowRestockUsage((prevValue) => !prevValue);
+    setShowRestockUsage(true);
     setShowPopularPairs(false);
     setShowProductUsage(false);
     setShowExcessUsage(false);
     setShowSales(false);
+    setGenerate(false);
   };
 
   const handleExcessButton = () => {
-    setShowExcessUsage((prevValue) => !prevValue);
+    setShowExcessUsage(true);
     setShowPopularPairs(false);
     setShowProductUsage(false);
     setShowRestockUsage(false);
     setShowSales(false);
+    setGenerate(false);
   };
 
   const handlePopularPairsButton = () => {
-    setShowPopularPairs((prevValue) => !prevValue);
+    setShowPopularPairs(true);
     setShowExcessUsage(false);
     setShowProductUsage(false);
     setShowRestockUsage(false);
     setShowSales(false);
+    setGenerate(false);
   };
 
   const handleProductSalesButton = () => {
-    setShowSales((prevValue) => !prevValue);
+    setShowSales(true);
     setShowExcessUsage(false);
     setShowProductUsage(false);
     setShowRestockUsage(false);
     setShowPopularPairs(false);
+    setGenerate(false);
+  };
+
+  const handleGenerate = () => {
+    setGenerate(true);
   };
 
   return (
-    <div className="StatsContainer">
-      <DatePicker
-        className="startDate"
-        selected={startDate}
-        onChange={(date: Date) => setStartDate(date)}
-        dateFormat="yyyy-MM-dd"
-      />
-      <DatePicker
-        className="endDate"
-        selected={endDate}
-        onChange={(date: Date) => setEndDate(date)}
-        dateFormat="yyyy-MM-dd"
-      />
-      <div className="StatsButtonContainer">
-        <button onClick={handleProductSalesButton} className="btn StatsButton">
-          Sales Report
-        </button>
-        <button onClick={handleProductUsageButton} className="btn StatsButton">
-          Product Usage
-        </button>
-        <button onClick={handleRestockButton} className="btn StatsButton">
-          Restock Report
-        </button>
-        <button onClick={handleExcessButton} className="btn StatsButton">
-          Excess Report
-        </button>
-        <button onClick={handlePopularPairsButton} className="btn StatsButton">
-          Popular Pairs
-        </button>
-      </div>
-      <div className="GenerateButton">
-        <button className="btn StatsButton">Generate Report</button>
-      </div>
+    <div className="container-fluid p-0">
+      <div className="row m-0">
+        <div className="col-12 p-0">
+          <div className="container-fluid d-flex justify-content-center flex-column h-100 p-0 mt-2">
+            <div className="d-flex flex-wrap w-100 StatsButtonContainer p-0 justify-content-center">
+              <button
+                onClick={handleProductSalesButton}
+                className={`btn mx-2 my-2 ${
+                  showSales === true ? "StatsButton" : "StatsButtonOn"
+                }`}
+              >
+                Sales Report
+              </button>
+              <button
+                onClick={handleProductUsageButton}
+                className={`btn mx-2 my-2 ${
+                  showProductUsage === true ? "StatsButton" : "StatsButtonOn"
+                }`}
+              >
+                Product Usage
+              </button>
+              <button
+                onClick={handleRestockButton}
+                className={`btn mx-2 my-2 ${
+                  showRestockUsage === true ? "StatsButton" : "StatsButtonOn"
+                }`}
+              >
+                Restock Report
+              </button>
+              <button
+                onClick={handleExcessButton}
+                className={`btn mx-2 my-2 ${
+                  showExcessUsage === true ? "StatsButton" : "StatsButtonOn"
+                }`}
+              >
+                Excess Report
+              </button>
+              <button
+                onClick={handlePopularPairsButton}
+                className={`btn mx-2 my-2 ${
+                  showPopularPairs === true ? "StatsButton" : "StatsButtonOn"
+                }`}
+              >
+                Popular Pairs
+              </button>
+            </div>
+          </div>
+        </div>
+        <div className="col-12 p-0">
+          <div className="container-fluid d-flex justify-content-center flex-column p-0">
+            <div className="col-md-6 dateContainer container-fluid d-flex p-0 justify-content-center align-items-center flex-wrap w-100 pt-2">
+              <label htmlFor="startDate">Start Date: </label>
+              <DatePicker
+                id="startDate"
+                className="startDate mx-2 my-2  "
+                selected={startDate}
+                onChange={(date: Date) => setStartDate(date)}
+                dateFormat="yyyy-MM-dd"
+              />
 
-      <div className="DateSelecter">
-        {/* Here is where the date selecters should go to */}
-        {/* The date selectors I can choose from are react ones vs MUI */}
-      </div>
+              <label htmlFor="endDate">End Date: </label>
+              <DatePicker
+                id="endDate"
+                className="endDate  mx-2 my-2"
+                selected={endDate}
+                onChange={(date: Date) => setEndDate(date)}
+                dateFormat="yyyy-MM-dd"
+              />
+            </div>
+          </div>
+        </div>
+        <div className="col-12 p-0">
+          <div className="StatsButtonContainer container-fluid d-flex justify-content-center align-items-center flex-column h-100 pt-2 pb-2">
+            <div className="GenerateButton">
+              <button onClick={handleGenerate} className="btn StatsButtonOn">
+                Generate Report
+              </button>
+            </div>
+          </div>
+        </div>
 
-      <div className="GraphContainer">
-        {showSales && (
-          <SalesReportGraph startDate={startDate} endDate={endDate} />
-        )}
-        {showProductUsage && (
-          <ProductUsage startDate={startDate} endDate={endDate} />
-        )}
-        {showExcessUsage && <ExcessItemsGraph />}
-        {showRestockUsage && <RestockInventory />}
-      </div>
-      <div className="TableContainer">
-        {showSales && <SalesReportTable />}
-        {showProductUsage && <ProductUsageTable />}
-        {showRestockUsage && <RestockReportTable />}
-        {showExcessUsage && (
-          <ExcessItemsTable startDate={startDate} endDate={endDate} />
-        )}
-        {showPopularPairs && (
-          <PopularPairsTable startDate={startDate} endDate={endDate} />
-        )}
+        <div className="col-12 p-0">
+          <div className="container-fluid d-flex justify-content-center flex-column p-0">
+            <div className="col-md-6 container-fluid d-flex p-0 justify-content-center align-items-center flex-wrap w-100 pt-2">
+              <div className="TableContainer mx-4 mb-4 container-fluid d-flex justify-content-center table-responsive">
+                {generate && showSales && <SalesReportTable />}
+                {generate && showProductUsage && <ProductUsageTable />}
+                {generate && showRestockUsage && <RestockReportTable />}
+                {generate && showExcessUsage && (
+                  <ExcessItemsTable startDate={startDate} endDate={endDate} />
+                )}
+                {generate && showPopularPairs && (
+                  <PopularPairsTable startDate={startDate} endDate={endDate} />
+                )}
+              </div>
+              <div className="GraphContainer mx-4 mb-4">
+                {generate && showSales && (
+                  <SalesReportGraph startDate={startDate} endDate={endDate} />
+                )}
+                {generate && showProductUsage && (
+                  <ProductUsage startDate={startDate} endDate={endDate} />
+                )}
+                {generate && showExcessUsage && <ExcessItemsGraph />}
+                {generate && showRestockUsage && <RestockInventory />}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
