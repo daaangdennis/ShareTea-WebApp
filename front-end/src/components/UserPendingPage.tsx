@@ -1,19 +1,21 @@
 import PendingOrderGrid from "../components/PendingOrderGrid";
 import { useEffect, useState } from "react";
-import { getPendingOrders, finishOrder } from "../apis/Order";
+import { getUserOrders, finishOrder } from "../apis/Order";
 import { OrderItem, PendingOrders, Order } from "../types/types";
+import { useAuth0 } from "@auth0/auth0-react";
 
 import "../styles/PendingPage.css";
-import SubNav from "../components/SubNav";
 
-function PendingPage() {
+function UserPendingPage() {
     const [pendingOrder, setPendingOrder] = useState<PendingOrders>(
         {} as PendingOrders
     );
     const [pageNumber, setPageNumber] = useState<number>(1);
     const [maxOrdersPerPage, setMaxOrders] = useState<number>(10);
     const [selectedOrder, setSelectedOrder] = useState<Order>();
+    const { getAccessTokenSilently } = useAuth0();
     const [orderTime, setOrderTime] = useState<String>("");
+
     const tableColumns = [
         "Product Name",
         "Ice Level",
@@ -23,7 +25,15 @@ function PendingPage() {
     ];
 
     useEffect(() => {
-        getPendingOrders(setPendingOrder); 
+        const fetchData = async () => {
+            try {
+            const accessToken = await getAccessTokenSilently();
+            getUserOrders(setPendingOrder, accessToken);
+            } catch (error) {
+            console.error('Error fetching data:', error);
+            }
+        };
+        fetchData();
     }, []);
 
     //console.log(pendingOrder);
@@ -60,7 +70,8 @@ function PendingPage() {
     const handleCompleteOrder = async () => {
         if (selectedOrder) {
             await finishOrder(selectedOrder.order_id);
-            await getPendingOrders(setPendingOrder);
+            const accessToken = await getAccessTokenSilently();
+            await getUserOrders(setPendingOrder, accessToken);
             setSelectedOrder(undefined);
         }
     }
@@ -78,7 +89,7 @@ function PendingPage() {
                     >
                         Prev
                     </button>
-                    <h5>{pageNumber} of {pendingOrder.pending ? (Math.ceil((pendingOrder.pending.length)/maxOrdersPerPage)) : (1)}</h5>
+                    <h5>{pageNumber} of {pendingOrder.pending  && pendingOrder.pending.length > 0 ? (Math.ceil((pendingOrder.pending.length)/maxOrdersPerPage)) : (1)}</h5>
                     <button 
                         className={pendingOrder.pending && pageNumber >= Math.ceil((pendingOrder.pending.length)/maxOrdersPerPage) ? ("pendingpage-control-button-disabled") : ("pendingpage-control-button")} 
                         onClick={handleNextButton}
@@ -98,8 +109,6 @@ function PendingPage() {
                     <div className="pendingpage-orders-information-header px-3 py-4">
                         <h3>
                             Order #{selectedOrder.order_id}
-                            <br></br>
-                            Customer Name: {selectedOrder.first_name} {selectedOrder.last_name}
                             <br></br>
                             ({orderTime})
                         </h3>
@@ -149,7 +158,7 @@ function PendingPage() {
                         </div>
                     </div>
                     <div className="px-3 py-2 mb-3">
-                        <button className="pendingpage-complete-button" onClick={handleCompleteOrder}>Complete Order</button>
+                        <button className="pendingpage-complete-button" onClick={handleCompleteOrder}>Cancel Order</button>
                     </div>
                 </div>
             )
@@ -164,4 +173,4 @@ function PendingPage() {
     );
 };
 
-export default PendingPage;
+export default UserPendingPage;

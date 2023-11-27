@@ -1,21 +1,19 @@
 import PendingOrderGrid from "../components/PendingOrderGrid";
 import { useEffect, useState } from "react";
-import { getUserOrders, finishOrder } from "../apis/Order";
+import { getPendingOrders, finishOrder } from "../apis/Order";
 import { OrderItem, PendingOrders, Order } from "../types/types";
-import { useAuth0 } from "@auth0/auth0-react";
 
 import "../styles/PendingPage.css";
+import SubNav from "../components/SubNav";
 
-function UserPendingPage() {
+function OrderHistory() {
     const [pendingOrder, setPendingOrder] = useState<PendingOrders>(
         {} as PendingOrders
     );
     const [pageNumber, setPageNumber] = useState<number>(1);
     const [maxOrdersPerPage, setMaxOrders] = useState<number>(10);
     const [selectedOrder, setSelectedOrder] = useState<Order>();
-    const { getAccessTokenSilently } = useAuth0();
     const [orderTime, setOrderTime] = useState<String>("");
-
     const tableColumns = [
         "Product Name",
         "Ice Level",
@@ -25,15 +23,7 @@ function UserPendingPage() {
     ];
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-            const accessToken = await getAccessTokenSilently();
-            getUserOrders(setPendingOrder, accessToken);
-            } catch (error) {
-            console.error('Error fetching data:', error);
-            }
-        };
-        fetchData();
+        getPendingOrders(setPendingOrder); 
     }, []);
 
     //console.log(pendingOrder);
@@ -70,8 +60,7 @@ function UserPendingPage() {
     const handleCompleteOrder = async () => {
         if (selectedOrder) {
             await finishOrder(selectedOrder.order_id);
-            const accessToken = await getAccessTokenSilently();
-            await getUserOrders(setPendingOrder, accessToken);
+            await getPendingOrders(setPendingOrder);
             setSelectedOrder(undefined);
         }
     }
@@ -80,7 +69,7 @@ function UserPendingPage() {
         <div className="d-flex flex-column flex-column-reverse flex-md-row">
             <div className="col-md-8 pendingpage-orders-container">
                 <div className="pendingpage-orders-header m-4">
-                    <h2>Pending Orders ({pendingOrder.pending ? (pendingOrder.pending.length) : (0)})</h2>
+                    <h2>Order History</h2>
                 </div>
                 <div className="pendingpage-controls-container">
                     <button 
@@ -106,14 +95,18 @@ function UserPendingPage() {
             {selectedOrder ? 
             (
                 <div className="col-md-4 pendingpage-orders-information-container">
-                    <div className="pendingpage-orders-information-header px-3 py-4">
+                    <div className="pendingpage-orders-information-header px-3 pb-2">
                         <h3>
                             Order #{selectedOrder.order_id}
+                            <br></br>
+                            Customer Name: {selectedOrder.first_name} {selectedOrder.last_name}
                             <br></br>
                             ({orderTime})
                         </h3>
                     </div>
-
+                    <div className="px-3 py-2 mb-3">
+                        <button className="pendingpage-complete-button" onClick={handleCompleteOrder}>Remove From History</button>
+                    </div>
                     <table className="pendingpage-table mb-5">
                         <thead className="pendingpage-table-header">
                             <tr>
@@ -150,15 +143,12 @@ function UserPendingPage() {
                         </div>
                     </div>
                     <div className="pendingpage-total-information-container">
-                        <div className="col-md-6 px-3 py-2">
+                        <div className="col-md-6 px-3 py-2 mb-2">
                             <h5>Total:</h5>
                         </div>
-                        <div className="col-md-6 px-3 py-2">
+                        <div className="col-md-6 px-3 py-2 mb-2">
                             <h5>${(selectedOrder.total * 1.0825).toFixed(2)}</h5>
                         </div>
-                    </div>
-                    <div className="px-3 py-2 mb-3">
-                        <button className="pendingpage-complete-button" onClick={handleCompleteOrder}>Cancel Order</button>
                     </div>
                 </div>
             )
@@ -173,4 +163,4 @@ function UserPendingPage() {
     );
 };
 
-export default UserPendingPage;
+export default OrderHistory;
