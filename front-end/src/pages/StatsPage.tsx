@@ -16,6 +16,7 @@ import ProductUsageTable from "../components/ProductUsageTable";
 import ExcessItemsGraph from "../components/ExcessItemsGraph";
 import SalesReportTable from "../components/SalesReportTable";
 import SalesReportGraph from "../components/SalesReportGraph";
+import PopularPairsGraph from "../components/PopularPairsGraph";
 
 function StatsPage() {
   const [showProductUsage, setShowProductUsage] = useState(false);
@@ -128,7 +129,9 @@ function StatsPage() {
         <div className="col-12 p-0">
           <div className="container-fluid d-flex justify-content-center flex-column p-0">
             <div className="col-md-6 dateContainer container-fluid d-flex p-0 justify-content-center align-items-center flex-wrap w-100 pt-2">
-              <label htmlFor="startDate">Start Date: </label>
+              <label className="dateLabel" htmlFor="startDate">
+                Start Date:{" "}
+              </label>
               <DatePicker
                 id="startDate"
                 className="startDate mx-2 my-2  "
@@ -137,7 +140,9 @@ function StatsPage() {
                 dateFormat="yyyy-MM-dd"
               />
 
-              <label htmlFor="endDate">End Date: </label>
+              <label className="dateLabel" htmlFor="endDate">
+                End Date:{" "}
+              </label>
               <DatePicker
                 id="endDate"
                 className="endDate  mx-2 my-2"
@@ -181,6 +186,7 @@ function StatsPage() {
                 )}
                 {generate && showExcessUsage && <ExcessItemsGraph />}
                 {generate && showRestockUsage && <RestockInventory />}
+                {generate && showPopularPairs && <PopularPairsGraph />}
               </div>
             </div>
           </div>

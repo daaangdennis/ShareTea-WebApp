@@ -89,3 +89,8 @@
   text-align: center;
   text-decoration: none;
 }
+
+.dateLabel {
+  color: white;
+  font-weight: 700;
+}
