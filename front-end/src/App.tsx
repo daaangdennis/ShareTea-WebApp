@@ -30,7 +30,7 @@ function App() {
       name: "Dashboard",
       path: "/Dashboard",
       element: <DashboardPage />,
-      roles: ["cashier", "manager"],
+      roles: ["manager"],
     },
     {
       name: "Pending Orders",
@@ -57,7 +57,6 @@ function App() {
           </Route>
           <Route element={<ProtectedRoute roles={["manager"]} />}>
             {/* Add routes accessible by manager only here */}
-            <Route path="/Pending" element={<PendingPage />} />
             <Route path="/Dashboard" element={<DashboardPage />} />
           </Route>
         </Routes>
