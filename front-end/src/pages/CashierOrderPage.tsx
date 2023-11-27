@@ -58,22 +58,6 @@ function CashierOrderPage() {
     (string | string[] | undefined)[][]
   >([]);
 
-  useEffect(() => {
-    let sum: number = 0;
-    const newArray = cartItems.items.map((props) => [
-      props.product.name,
-      props.ice_level,
-      props.sugar_level,
-      props.toppings?.map((topping) => topping.name),
-      (props.product.price + (props.toppings?.length ?? 0) * 0.75).toFixed(2),
-    ]);
-    setFilteredCart(newArray);
-    cartItems.items.forEach((item) => {
-      sum += item.product.price;
-    });
-    setSubTotal(sum);
-  });
-
   // Add product functionality like checking to see if a product has toppings
 
   const iceLevel = [
@@ -121,7 +105,25 @@ function CashierOrderPage() {
     });
     newlist.total =
       newlist.total + selectedProduct.price + listToppings.length * 0.75;
+
+    console.log(newlist.total);
     setcartItems(newlist);
+
+    let sum: number = 0;
+    const newArray = newlist.items.map((props) => [
+      props.product.name,
+      props.ice_level,
+      props.sugar_level,
+      props.toppings?.map((topping) => topping.name),
+      (props.product.price + (props.toppings?.length ?? 0) * 0.75).toFixed(2),
+    ]);
+    setSubTotal(newlist.total);
+    setFilteredCart(newArray);
+    cartItems.items.forEach((item) => {
+      sum += item.product.price;
+    });
+    console.log(sum);
+    console.log(filteredCart);
   };
 
   const handleNoteChange = (event: any) => {
@@ -142,6 +144,10 @@ function CashierOrderPage() {
 
   const handleShowOrderDetails = () => {
     setShowOrderDetails((prevDiv) => !prevDiv);
+    setListToppings([]);
+    setSelectedIceLevel("");
+    setSelectedSugarLevel("");
+    setNote("");
   };
 
   const handleCancelButton = () => {
@@ -152,6 +158,7 @@ function CashierOrderPage() {
       items: [],
       total: 0,
     });
+    setFilteredCart([]);
   };
 
   const handleCashierMenuButton = (product: product) => {
@@ -159,27 +166,10 @@ function CashierOrderPage() {
     setSelectedProduct(product);
   };
 
-  const addNewItem = (
-    product: product,
-    _Ice: string,
-    _Sugar: string,
-    _Toppings: topping[]
-  ) => {
-    setRows((prevRows) => [
-      ...prevRows,
-      {
-        itemName: product.name,
-        itemIce: _Ice,
-        itemSugar: _Sugar,
-        itemToppings: _Toppings.map((topping) => topping.name).join(", "),
-        itemPrice: (product.price + _Toppings.length * 0.75).toFixed(2),
-      },
-    ]);
+  const addNewItem = () => {
     setShowOrderDetails(false);
     addProductToCart();
-    setSubTotal(
-      (prevSubTotal) => prevSubTotal + (product.price + _Toppings.length * 0.75)
-    );
+
     setSelectedIceLevel("No Ice");
     setSelectedSugarLevel("No Sugar");
     setSelectedProduct({
@@ -201,24 +191,6 @@ function CashierOrderPage() {
     console.log(cart);
   }, []);
 
-  useEffect(() => {
-    if (!itemsPreserved) {
-      cartItems.items.map((item) => {
-        const value: ItemEntry = {
-          itemName: item.product.name,
-          itemIce: item.ice_level || "",
-          itemSugar: item.sugar_level || "",
-          itemToppings:
-            item.toppings?.map((topping: topping) => topping.name).join(", ") ||
-            "",
-          itemPrice: item.product.price.toFixed(2),
-        };
-        setRows([...rows, value]);
-      });
-      setItemsPreserved(true);
-    }
-  });
-
   console.log("render");
   const handleCategoryButton = (category: string) => {
     setCategory(category);
@@ -234,52 +206,67 @@ function CashierOrderPage() {
 
   return (
     <div className="container-fluid p-0">
-      <div className="row m-0">
-        <div className="col-lg-9 d-flex flex-column justify-content-start">
-          <div className="CategoryNavBar">
+      <div className="row p-0">
+        <div className="col-lg-9 d-flex flex-column justify-content-start p-0">
+          <div className="CategoryNavBar mb-2 p-4">
             <button
               onClick={() => handleCategoryButton(drinks[0])}
-              className="cashier-page-button btn"
+              className="cashier-category-button btn mx-2"
             >
               {drinks[0]}
             </button>
             <button
               onClick={() => handleCategoryButton(drinks[1])}
-              className="cashier-page-button btn"
+              className="cashier-category-button btn mx-2"
             >
               {drinks[1]}
             </button>
             <button
               onClick={() => handleCategoryButton(drinks[2])}
-              className="cashier-page-button btn"
+              className="cashier-category-button btn mx-2"
             >
               {drinks[2]}
             </button>
             <button
               onClick={() => handleCategoryButton(drinks[3])}
-              className="cashier-page-button btn"
+              className="cashier-category-button btn mx-2"
             >
               {drinks[3]}
             </button>
             <button
               onClick={() => handleCategoryButton(drinks[4])}
-              className="cashier-page-button btn"
+              className="cashier-category-button btn mx-2"
             >
               {drinks[4]}
             </button>
             <button
               onClick={() => handleCategoryButton(drinks[5])}
-              className="cashier-page-button btn"
+              className="cashier-category-button btn mx-2"
             >
               {drinks[5]}
             </button>
           </div>
+          <div className="FoodItemButtonsContainer">
+            <div className="row row-cols-1 row-cols-md-2 row-cols-lg-6 m-2">
+              {filteredProducts.map((product: product) => (
+                <button
+                  className=" btn cashier-page-button mb-2 mx-2"
+                  onClick={() => handleCashierMenuButton(product)}
+                >
+                  {product.name}
+                  <div className="button-subtext">
+                    ${product.price.toFixed(2)}
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
         {!showOrderDetails ? (
-          <div className="col-lg-3">
-            <div className="OrderDetailsContainer flex-container flex-column d-flex h-100">
+          <div className="col-lg-3 p-0">
+            <div className="OrderDetailsContainer flex-container flex-column d-flex h-100 p-0">
               <div className="OrderHeader">
-                <h1>Order#</h1>
+                <h1 className="largeText">Order#</h1>
 
                 <div className="order-customer-name">
                   <textarea
@@ -297,22 +284,26 @@ function CashierOrderPage() {
                 data={filteredCart}
               />
               <div className="PricingContainer">
-                <h1>Subtotal: ${subTotal.toFixed(2)}</h1>
-                <h1>Tax: ${(subTotal * 0.0825).toFixed(2)}</h1>
+                <h1 className="largeText">Subtotal: ${subTotal.toFixed(2)}</h1>
+                <h1 className="largeText">
+                  Tax: ${(subTotal * 0.0825).toFixed(2)}
+                </h1>
                 <div className="dashed-line"></div>
-                <h1>Total: ${(subTotal * 1.0825).toFixed(2)}</h1>
+                <h1 className="largeText">
+                  Total: ${(subTotal * 1.0825).toFixed(2)}
+                </h1>
               </div>
-              <div className="OrderDetailsButtonContainer">
+              <div className="OrderDetailsButtonContainer d-flex justify-content-center align-items-center">
                 <button
                   onClick={handleProceedButton}
-                  className="cashier-page-button btn"
+                  className="cashier-category-button btn mx-2"
                 >
                   Proceed
                 </button>
 
                 <button
                   onClick={handleCancelButton}
-                  className="cashier-page-button btn"
+                  className="cashier-category-button btn mx-2"
                 >
                   Cancel
                 </button>
@@ -320,8 +311,8 @@ function CashierOrderPage() {
             </div>
           </div>
         ) : (
-          <div className="col-lg-3">
-            <div className="FoodItemContainer flex-container flex-column d-flex h-100">
+          <div className="col-lg-3 p-0">
+            <div className="FoodItemContainer flex-container flex-column d-flex h-100 p-0">
               <div className="cashier-page-item-text">
                 <h1>{selectedProduct.name}</h1>
                 <h2>${selectedProduct.price.toFixed(2)}</h2>
@@ -360,6 +351,7 @@ function CashierOrderPage() {
                 )}
               </div>
               <div className="cashier-topping-grid">
+                <h2 className="mt-4">Toppings</h2>
                 {sourceProducts.toppings && (
                   <ToppingsGrid
                     sourceToppings={sourceProducts.toppings}
@@ -380,20 +372,13 @@ function CashierOrderPage() {
               <div className="flex-column flex-sm-row d-flex align-items-center justify-content-center mb-2">
                 <button
                   onClick={handleShowOrderDetails}
-                  className="cashier-page-button btn mr-2"
+                  className="cashier-page-button btn mx-2"
                 >
                   Back
                 </button>
                 <button
-                  onClick={() =>
-                    addNewItem(
-                      selectedProduct,
-                      selectedIceLevel,
-                      selectedSugarLevel,
-                      listToppings
-                    )
-                  }
-                  className="cashier-page-button btn"
+                  onClick={() => addNewItem()}
+                  className="cashier-page-button btn mx-2"
                 >
                   Add to Order
                 </button>
@@ -401,19 +386,6 @@ function CashierOrderPage() {
             </div>
           </div>
         )}
-
-        <div className="FoodItemButtonsContainer py-md-5">
-          <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3">
-            {filteredProducts.map((product: product) => (
-              <button
-                className=" btn cashier-page-button"
-                onClick={() => handleCashierMenuButton(product)}
-              >
-                {product.name}
-              </button>
-            ))}
-          </div>
-        </div>
 
         {/* 
                 <div className="ItemGrid">

@@ -1,12 +1,11 @@
 .FoodItemContainer {
   background-color: white;
-  border: 2px solid red;
+  border: 2px solid #cf152d;
   position: relative;
 }
 
 .CategoryNavBar {
-  background-color: red;
-  border: 100px, solid, red;
+  background-color: #cf152d;
 }
 
 .cashier-page-item-text {
@@ -67,6 +66,18 @@
   text-decoration: none;
 }
 
+.cashier-category-button.btn {
+  font-weight: 700;
+  color: white;
+  padding: 9px 25px;
+  background-color: #cf152d;
+  border: solid white;
+  border-radius: 10px;
+  transition: all 0.3s ease 0s;
+  text-align: center;
+  text-decoration: none;
+}
+
 .cashier-page-button:hover {
   color: #cf152d;
   background-color: white;
@@ -90,7 +101,7 @@
 }
 
 .OrderDetailsContainer {
-  background-color: red;
+  background-color: #cf152d;
   border: 1px solid white;
   position: relative;
 }
@@ -118,9 +129,6 @@
 
 .FoodItemButtonsContainer {
   position: relative;
-  top: 200px;
-  left: 20px;
-  width: 1000px;
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
@@ -132,4 +140,9 @@
 
 .ItemGrid {
   position: relative;
+}
+
+.largeText {
+  color: white;
+  font-weight: 700;
 }
