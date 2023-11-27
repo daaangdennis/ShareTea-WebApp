@@ -314,6 +314,7 @@ public class Services {
             currMap.put("product", productRepository.MapById(productID));
 
             Integer opID = (Integer) f.get("order_product_id");
+            currMap.put("order_product_id", opID);
             currMap.put("toppings", inventoryRepository.getFavoriteToppings(opID));
 
             favList.add(currMap);
@@ -324,6 +325,16 @@ public class Services {
         finalList.put("total", 0);
 
         return finalList;
+    }
+
+    //TODO 
+    public List<Integer> deleteFavorite(HttpServletRequest request, Integer opID) throws URISyntaxException, IOException, InterruptedException{
+        Map<String, String> userInfo = findUserByAccessToken(request);
+        String email = userInfo.get("email");
+        Integer user_id = usersRepository.findByEmail(email).getUser_id();
+
+        List<Integer> deleteToppings = inventoryRepository.getFavoriteItemToppings(opID);
+        return deleteToppings;
     }
 
     public Map<String, Object> weatherProducts(Double temperature){
@@ -548,7 +559,53 @@ public class Services {
 
         finalList.put("pending", pendingList);
         return finalList;
+    }
 
+    public Map<String, List<Map<String,Object>>> userCompletedOrders(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException{
+        Map<String, String> userInfo = findUserByAccessToken(request);
+        if(userInfo == null){
+            return null;
+        }
+        String email = userInfo.get("email");
+        
+        Integer customer_id = usersRepository.findByEmail(email).getUser_id();
+        if(customer_id == null){
+            return null;
+        }
+        
+        Map<String, List<Map<String,Object>>> finalList = new HashMap<>();
+
+        List<Map<String,Object>> completedOrders = ordersRepository.userCompletedOrders(customer_id);
+        List<Map<String,Object>> completedList = new ArrayList<>();
+        
+        for(Map<String,Object> order : completedOrders){
+            Map<String,Object> orderMap = new HashMap<>(order);
+            Integer orderID = (Integer) order.get("order_id");
+
+            List<Map<String,Object>> productList = orderProductRepository.getProductsbyOrderID(orderID);
+            List<Map<String,Object>> itemList = new ArrayList<>();
+
+            for(Map<String, Object> product : productList){
+                Map<String,Object> itemMap = new HashMap<>();
+                Map<String, Object> productNamePrice = productRepository.findProductNamePrice((Integer) product.get("product_id"));
+                itemMap.put("product", productNamePrice.get("name"));
+                itemMap.put("price", productNamePrice.get("price"));
+
+                Integer order_product_id = (Integer) product.get("order_product_id");
+                List<String> toppings = itemToppingsRepository.getToppingsByopID(order_product_id);
+                itemMap.put("toppings", toppings);
+
+
+                itemList.add(itemMap);
+            }   
+
+            orderMap.put("items", itemList);
+            completedList.add(orderMap);
+            
+            finalList.put("completed", completedList);
+        }
+
+        return finalList;
     }
 
 
