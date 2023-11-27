@@ -14,6 +14,8 @@ import {
 import { cart } from "../atoms/cart";
 import { postCashierOrder } from "../apis/CashierOrder";
 import Table from "../components/Table";
+import { Categories } from "../atoms/product";
+import { useGetCategories } from "../apis/Category";
 var _ = require("lodash");
 
 interface ItemEntry {
@@ -57,9 +59,10 @@ function CashierOrderPage() {
   const [filteredCart, setFilteredCart] = useState<
     (string | string[] | undefined)[][]
   >([]);
+  const categoriesList: string[] = useRecoilValue(Categories);
 
   // Add product functionality like checking to see if a product has toppings
-
+  useGetCategories();
   const iceLevel = [
     "Select Ice Level",
     "No Ice",
@@ -191,13 +194,12 @@ function CashierOrderPage() {
     console.log(cart);
   }, []);
 
-  console.log("render");
-  const handleCategoryButton = (category: string) => {
-    setCategory(category);
+  const handleCategoryButton = (cate: string) => {
+    setCategory(cate);
   };
 
   let filteredProducts = bestSelling.products.filter(
-    (product) => product.category === category
+    (product) => product.category == category
   );
 
   if (filteredProducts.length === 0) {
@@ -209,9 +211,18 @@ function CashierOrderPage() {
       <div className="row p-0">
         <div className="col-lg-9 d-flex flex-column justify-content-start p-0">
           <div className="CategoryNavBar mb-2 p-4">
-            <button
+            {categoriesList.map((category) => (
+              <button
+                className=" cashier-category-button btn mx-2"
+                onClick={() => handleCategoryButton(category)}
+              >
+                {category}
+              </button>
+            ))}
+
+            {/* <button
               onClick={() => handleCategoryButton(drinks[0])}
-              className="cashier-category-button btn mx-2"
+              className=""
             >
               {drinks[0]}
             </button>
@@ -244,13 +255,13 @@ function CashierOrderPage() {
               className="cashier-category-button btn mx-2"
             >
               {drinks[5]}
-            </button>
+            </button> */}
           </div>
           <div className="FoodItemButtonsContainer">
             <div className="row row-cols-1 row-cols-md-2 row-cols-lg-6 m-2">
               {filteredProducts.map((product: product) => (
                 <button
-                  className=" btn cashier-page-button mb-2 mx-2"
+                  className=" btn cashier-page-button mb-2 mx-2 wrap-text"
                   onClick={() => handleCashierMenuButton(product)}
                 >
                   {product.name}
@@ -296,14 +307,14 @@ function CashierOrderPage() {
               <div className="OrderDetailsButtonContainer d-flex justify-content-center align-items-center">
                 <button
                   onClick={handleProceedButton}
-                  className="cashier-category-button btn mx-2"
+                  className="cashier-category-button btn mx-2 mb-4"
                 >
                   Proceed
                 </button>
 
                 <button
                   onClick={handleCancelButton}
-                  className="cashier-category-button btn mx-2"
+                  className="cashier-category-button btn mx-2 mb-4"
                 >
                   Cancel
                 </button>
