@@ -48,6 +48,12 @@ public class MainController {
             service.deleteUser(userId);
         } catch (Exception e) {e.printStackTrace();}
     }
+    @PostMapping("/users/update")
+    public void updateUser(@RequestParam String email, @RequestParam(required = false) String firstName, @RequestParam(required = false) String lastName) {
+        try {
+            service.changeUser(email, firstName, lastName);
+        } catch (Exception e) {e.printStackTrace();}
+    }
 
     @GetMapping("/user/orders")
     public Map<String, List<Map<String, Object>>> userOrders(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException {
