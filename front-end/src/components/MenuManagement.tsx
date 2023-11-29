@@ -21,7 +21,7 @@ const MenuManagement = () => {
   const [products, setProducts] = useRecoilState<listProductToppings>(Products);
 
   useEffect(() => {
-    getCategories(setCategories, getAccessTokenSilently);
+    getCategories(setCategories);
   }, []);
   useEffect(() => {
     setSortedProducts(products.products);
@@ -342,7 +342,8 @@ const MenuManagement = () => {
     if (InputMenuNewCategory) {
       addCategory(getAccessTokenSilently, InputMenuNewCategory)
         .then(() => {
-          getCategories(setCategories, getAccessTokenSilently);
+          getCategories(setCategories);
+          setInputMenuNewCategory("");
         })
         .catch(() => {});
     }
@@ -352,7 +353,7 @@ const MenuManagement = () => {
     if (InputMenuCategory) {
       deleteCategory(getAccessTokenSilently, InputMenuCategory)
         .then(() => {
-          getCategories(setCategories, getAccessTokenSilently);
+          getCategories(setCategories);
         })
         .catch(() => {});
     }
