@@ -91,7 +91,7 @@ export const LazyLoadingTable = ({
               </tr>
             ))}
             <tr>
-              <td colSpan={columns?.length - 1}>
+              <td colSpan={columns?.length <= 2 ? 1 : columns?.length - 1}>
                 <label htmlFor="row-count" className="me-2">
                   Rows per load:
                 </label>

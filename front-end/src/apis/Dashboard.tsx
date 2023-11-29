@@ -221,12 +221,20 @@ export function getUsers(
 export function updateUser(
   accessTokenPromise: any,
   userId: number,
-  role: string
+  role?: string,
+  email?: string,
+  firstName?: string,
+  lastName?: string
 ) {
   return new Promise((resolve, reject) => {
     accessTokenPromise().then((accessToken: any) => {
       const headers = { Authorization: `Bearer ${accessToken}` };
-      const URL = `${process.env.REACT_APP_BACKEND_URL}/users/update?userId=${userId}&role=${role}`;
+      let URL = `${process.env.REACT_APP_BACKEND_URL}/users/update?userId=${userId}`;
+
+      if (role !== undefined) URL += `&role=${role}`;
+      if (email !== undefined) URL += `&email=${email}`;
+      if (firstName !== undefined) URL += `&firstName=${firstName}`;
+      if (lastName !== undefined) URL += `&lastName=${lastName}`;
 
       Axios.post(URL, {}, { headers })
         .then((response) => {

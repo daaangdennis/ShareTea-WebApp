@@ -17,6 +17,7 @@ import { LoginButton, LogoutButton } from "../components/Login";
 import Profile from "../components/UserInfo";
 import { useAuth0 } from "@auth0/auth0-react";
 import { cart } from "../atoms/cart";
+import MenuBoard from "../components/MenuBoard";
 
 function LandingPage() {
   // const products: product[] = [
@@ -74,7 +75,10 @@ function LandingPage() {
   <div className="row">
     <div className="col"> */}
       <div className="image-gallery-container">
-        <ImageGallery images={landingPageImages.images} />
+        <ImageGallery
+          images={landingPageImages.images}
+          style={{ maxHeight: 500 }}
+        />
         {/* <h1 className="fw-light">ShareTea</h1> */}
         {/* <p className="example-text">Your text goes here</p> */}
         {/* <div className="image-text col-md-6 text-center font-size-lg">
@@ -89,6 +93,7 @@ function LandingPage() {
 
       <h1 className="landingpage-text my-md-4 my-5">Trending Products</h1>
       <ProductGrid products={bestSelling.products} />
+      <MenuBoard />
       <InfoBar
         header="Sharetea x Cookie Run Collaboration is Here!"
         information="Limited time only launching on 11/3/23, the collaboration will feature many sugary surprises for all the bubble tea lovers in 87 USA Sharetea locations as below.
