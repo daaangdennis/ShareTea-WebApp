@@ -14,9 +14,9 @@ import { Link } from "react-router-dom";
 import "../styles/CartPage.css";
 var _ = require("lodash");
 
-const CartItem: React.FC<CartCardProps> = ({ item }) => {
+export const CartItem: React.FC<CartCardProps> = ({ item, favorite}) => {
   const [cartItems, setcartItems] = useRecoilState<Cart>(cart);
-
+  
   const [data, setdata] = useState<customItem>({
     isEdit: true,
     isAdd: false,
@@ -59,6 +59,10 @@ const CartItem: React.FC<CartCardProps> = ({ item }) => {
       };
       setcartItems(newlist);
     }
+  };
+
+  const deleteFavorite = () =>{
+    
   };
 
   return (
@@ -112,17 +116,18 @@ const CartItem: React.FC<CartCardProps> = ({ item }) => {
             Additional Notes: {item.notes ? <>{item.notes}</> : <>None</>}
           </p>
           <div className="drink-order-button-container flex-column flex-lg-row">
+          {favorite ? (<></>) : 
             <Link
               to={`/custom`}
               state={{ data: data }}
               className="order-button"
-            >
-              Edit Drink
+            > Edit Drink
             </Link>
+            }
             <button className="order-button" onClick={addProductToCart}>
               Add
             </button>
-            <button className="order-button" onClick={deleteProductFromCart}>
+            <button className="order-button" onClick={favorite? deleteFavorite : deleteProductFromCart}>
               Delete
             </button>
           </div>

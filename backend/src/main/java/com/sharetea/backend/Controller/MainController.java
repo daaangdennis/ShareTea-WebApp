@@ -54,6 +54,11 @@ public class MainController {
         return service.userOrders(request, null);
     }
 
+    @GetMapping("/user/completed")
+    public Map<String, List<Map<String, Object>>> userCompletedOrders(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException {
+        return service.userCompletedOrders(request);
+    }
+
     @GetMapping("/user/orders/manager")
     public Map<String, List<Map<String, Object>>> userOrders(@RequestParam String email) throws URISyntaxException, IOException, InterruptedException {
         return service.userOrders(null, email);
@@ -64,11 +69,16 @@ public class MainController {
     public String favorite(HttpServletRequest request, @RequestBody Map<String, Object> favoriteData) throws URISyntaxException, IOException, InterruptedException {
         return service.addFavorite(request, favoriteData);
     }
+    
+    @GetMapping("/favorites/get")
+    public Map<String, Object> favorite(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException {
+        return service.getFavorite(request);
+    }
 
-    // @GetMapping("user/favorite/get")
-    // public Map<String, Object> favorite(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException {
-    //     return service.getFavorite(request);
-    // }
+    @PostMapping("/favorites/delete")
+    public List<Integer> deleteFavorite(HttpServletRequest request, @RequestParam Integer orderProductID) throws URISyntaxException, IOException, InterruptedException{
+        return service.deleteFavorite(request, orderProductID);
+    }
 
     @GetMapping("/permissions")
     public String getPermissions() throws URISyntaxException, IOException, InterruptedException {
@@ -76,8 +86,8 @@ public class MainController {
     }
 
     @PostMapping("/users/update")
-    public void changePermissions(@RequestParam Integer userId, @RequestParam String role) throws URISyntaxException, IOException, InterruptedException {
-         service.changePermissions(userId, role);
+    public void changePermissions(@RequestParam Integer userId, @RequestParam(required = false) String role, @RequestParam(required = false) String firstName, @RequestParam(required = false) String lastName) throws URISyntaxException, IOException, InterruptedException {
+        service.changePermissions(userId, role, firstName, lastName);
     }
 
     @GetMapping("/orders/get")
@@ -108,13 +118,30 @@ public class MainController {
 
     @PostMapping("/orders/finish")
     public void orderFinish(@RequestParam Integer orderID){
-        service.finishOrder(orderID);
+        service.finishOrder(orderID, false);
+    }
+
+    @PostMapping("/orders/refund")
+    public void orderRefund(@RequestParam Integer orderID){
+        service.finishOrder(orderID, true);
+    }
+
+    @PostMapping("/orders/remove")
+    public String orderRemove(@RequestParam Integer orderID){
+        return service.removeOrder(orderID);
     }
 
     @GetMapping("/orders/pending")
     public  Map<String, List<Map<String, Object>>> getPendingOrders() {
         return service.pendingOrders();
     }
+
+    @GetMapping("/orders/completed")
+    public  Map<String, List<Map<String, Object>>> CompletedOrders() {
+        return service.completedOrders();
+    }
+
+    
 
 
     //PARAM: HttpServletRequest request

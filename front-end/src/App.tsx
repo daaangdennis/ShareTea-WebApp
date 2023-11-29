@@ -24,19 +24,19 @@ function App() {
       name: "CashierOrder",
       path: "/CashierOrder",
       element: <CashierOrderPage />,
-      roles: ["cashier", "manager"],
+      roles: ["cashier", "manager", "admin"],
     },
     {
       name: "Dashboard",
       path: "/Dashboard",
       element: <DashboardPage />,
-      roles: ["cashier", "manager"],
+      roles: ["manager", "admin"],
     },
     {
       name: "Pending Orders",
       path: "/Pending",
       element: <PendingPage />,
-      roles: ["manager", "cashier"],
+      roles: ["manager", "cashier", "admin"],
     },
   ];
 
@@ -50,14 +50,15 @@ function App() {
           <Route path="/Cart" element={<CartPage />} />
           <Route path="/custom" element={<CustomPage />} />
 
-          <Route element={<ProtectedRoute roles={["cashier", "manager"]} />}>
+          <Route
+            element={<ProtectedRoute roles={["cashier", "manager", "admin"]} />}
+          >
             {/* Add routes accessible by cashier and manager here */}
             <Route path="/CashierOrder" element={<CashierOrderPage />} />
             <Route path="/Pending" element={<PendingPage />} />
           </Route>
-          <Route element={<ProtectedRoute roles={["manager"]} />}>
+          <Route element={<ProtectedRoute roles={["manager", "admin"]} />}>
             {/* Add routes accessible by manager only here */}
-            <Route path="/Pending" element={<PendingPage />} />
             <Route path="/Dashboard" element={<DashboardPage />} />
           </Route>
         </Routes>

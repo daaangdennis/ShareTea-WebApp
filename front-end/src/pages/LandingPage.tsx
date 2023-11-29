@@ -17,6 +17,7 @@ import { LoginButton, LogoutButton } from "../components/Login";
 import Profile from "../components/UserInfo";
 import { useAuth0 } from "@auth0/auth0-react";
 import { cart } from "../atoms/cart";
+import MenuBoard from "../components/MenuBoard";
 
 function LandingPage() {
   // const products: product[] = [
@@ -37,7 +38,6 @@ function LandingPage() {
   //     price: 5.49,
   //   }
   // ];
-
   const customStyle = {
     backgroundImage:
       "linear-gradient(rgba(50, 50, 50, 0.25), rgba(50, 50, 50, 0.25))",
@@ -89,6 +89,7 @@ function LandingPage() {
 
       <h1 className="landingpage-text my-md-4 my-5">Trending Products</h1>
       <ProductGrid products={bestSelling.products} />
+      <MenuBoard />
       <InfoBar
         header="Sharetea x Cookie Run Collaboration is Here!"
         information="Limited time only launching on 11/3/23, the collaboration will feature many sugary surprises for all the bubble tea lovers in 87 USA Sharetea locations as below.

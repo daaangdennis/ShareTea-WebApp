@@ -22,4 +22,10 @@ public interface InventoryRepository extends JpaRepository<Inventory, Integer> {
     public List<Map<String, Object>> findLowStock();
 
     List<Inventory> findByActive(Boolean active);
+
+    @Query(value = "select * from inventory where inventory_id in (select inventory_id from item_toppings where order_product_id = ?1)", nativeQuery = true)
+    public List<Map<String, Object>> getFavoriteToppings(Integer opID);
+
+    @Query(value = "select item_toppings_id from item_toppings where order_product_id = ?1", nativeQuery = true)
+    public List<Integer> getFavoriteItemToppings(Integer opID);
 }

@@ -89,94 +89,120 @@ public class Services {
     }
 
 
-    public void changePermissions(Integer id, String position) throws URISyntaxException, IOException, InterruptedException{
+    public void changePermissions(Integer id, String position, String firstName, String lastName) throws URISyntaxException, IOException, InterruptedException{
         Users thisUser = usersRepository.findById(id).get();
         if(thisUser == null){
             return;
         }
+        if(firstName != null){
+            thisUser.setFirst_name(firstName);
+        }
+        if(lastName != null){
+            thisUser.setLast_name(lastName);
+        }
+        usersRepository.save(thisUser);
+        
         String email = thisUser.getEmail();
+        if(position != null){
+            String encodedEmail = URLEncoder.encode(email, "UTF-8");
+            String emailURL = "https://dev-1jps85kh7htbmqki.us.auth0.com/api/v2/users-by-email?fields=user_id&email=" + encodedEmail;
+            String token = requestToken();
+            HttpRequest getID = HttpRequest.newBuilder()
+                    .uri(new URI(emailURL))
+                    .header("Accept", "application/json")
+                    .header("Authorization", "Bearer " + token)
+                    .GET()
+                    .build();
 
-        String encodedEmail = URLEncoder.encode(email, "UTF-8");
-        String emailURL = "https://dev-1jps85kh7htbmqki.us.auth0.com/api/v2/users-by-email?fields=user_id&email=" + encodedEmail;
-        String token = requestToken();
-        HttpRequest getID = HttpRequest.newBuilder()
-                .uri(new URI(emailURL))
-                .header("Accept", "application/json")
-                .header("Authorization", "Bearer " + token)
-                .GET()
-                .build();
+            HttpClient httpClient = HttpClient.newHttpClient();
+            HttpResponse<String> IDResponse = httpClient.send(getID, HttpResponse.BodyHandlers.ofString());
 
-        HttpClient httpClient = HttpClient.newHttpClient();
-        HttpResponse<String> IDResponse = httpClient.send(getID, HttpResponse.BodyHandlers.ofString());
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode responseBody = objectMapper.readTree(IDResponse.body());
-        String userID = responseBody.get(0).get("user_id").asText();
-        System.out.println(userID);
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode responseBody = objectMapper.readTree(IDResponse.body());
+            String userID = responseBody.get(0).get("user_id").asText();
+            System.out.println(userID);
 
 
-        String user = URLEncoder.encode(userID, "UTF-8");
-        String url = "https://dev-1jps85kh7htbmqki.us.auth0.com/api/v2/users/" + user +"/permissions";
-        try {  
-            Map<String, Object> deleteMap = new HashMap<>();
-            List<Map<String, String>> listMap = new ArrayList<>();
+            String user = URLEncoder.encode(userID, "UTF-8");
+            String url = "https://dev-1jps85kh7htbmqki.us.auth0.com/api/v2/users/" + user +"/permissions";
+            try {  
+                Map<String, Object> deleteMap = new HashMap<>();
+                List<Map<String, String>> listMap = new ArrayList<>();
 
-            Map<String, String> cashier = new HashMap<>();
-            cashier.put("resource_server_identifier", "https://sharetea315/");
-            cashier.put("permission_name", "cashier");
-            Map<String, String> manager = new HashMap<>();
-            manager.put("resource_server_identifier", "https://sharetea315/");
-            manager.put("permission_name", "manager");
-            listMap.add(cashier);
-            listMap.add(manager);
-            deleteMap.put("permissions", listMap);
+                Map<String, String> cashier = new HashMap<>();
+                cashier.put("resource_server_identifier", "https://sharetea315/");
+                cashier.put("permission_name", "cashier");
+                Map<String, String> manager = new HashMap<>();
+                manager.put("resource_server_identifier", "https://sharetea315/");
+                manager.put("permission_name", "manager");
+                Map<String, String> customer = new HashMap<>();
+                customer.put("resource_server_identifier", "https://sharetea315/");
+                customer.put("permission_name", "customer");
+                Map<String, String> admin = new HashMap<>();
+                admin.put("resource_server_identifier", "https://sharetea315/");
+                admin.put("permission_name", "admin");
 
-            String deleteMapString = objectMapper.writeValueAsString(deleteMap);
-            
-            BodyPublisher body = HttpRequest.BodyPublishers.ofString(deleteMapString);
-            HttpRequest deletePermissions = HttpRequest.newBuilder()
-            .uri(new URI(url))
-            .header("Content-Type", "application/json")
-            .header("Authorization", "Bearer " + token)
-            .method("DELETE", body)
-            .build();
+                listMap.add(cashier);
+                listMap.add(manager);
+                listMap.add(customer);
+                listMap.add(admin);
+                deleteMap.put("permissions", listMap);
 
-            HttpResponse<String> response = httpClient.send(deletePermissions, HttpResponse.BodyHandlers.ofString());
-            System.out.println(response);
-
-            if(position.toLowerCase().equals("cashier") || position.toLowerCase().equals("manager")){
-                Map<String, Object> addMap = new HashMap<>();
-                List<Map<String, String>> addListMap = new ArrayList<>();
-                if(position.toLowerCase().equals("cashier")){
-                    addListMap.add(cashier);
-                    thisUser.setPosition("cashier");
-                }
-                else if(position.toLowerCase().equals("manager")){
-                    addListMap.add(manager);
-                    thisUser.setPosition("manager");
-                }
-                addMap.put("permissions", addListMap);
-
-                String addMapString = objectMapper.writeValueAsString(addMap);
-                BodyPublisher addBody = HttpRequest.BodyPublishers.ofString(addMapString);
-                HttpRequest addPermissions = HttpRequest.newBuilder()
+                String deleteMapString = objectMapper.writeValueAsString(deleteMap);
+                
+                BodyPublisher body = HttpRequest.BodyPublishers.ofString(deleteMapString);
+                HttpRequest deletePermissions = HttpRequest.newBuilder()
                 .uri(new URI(url))
                 .header("Content-Type", "application/json")
                 .header("Authorization", "Bearer " + token)
-                .method("POST", addBody)
+                .method("DELETE", body)
                 .build();
 
-                HttpResponse<String> addResponse = httpClient.send(addPermissions, HttpResponse.BodyHandlers.ofString());
-                usersRepository.save(thisUser);
-                System.out.println(addResponse);
+                HttpResponse<String> response = httpClient.send(deletePermissions, HttpResponse.BodyHandlers.ofString());
+                System.out.println(response);
 
+                if(position.toLowerCase().equals("cashier") || position.toLowerCase().equals("manager") || position.toLowerCase().equals("customer") || position.toLowerCase().equals("admin")){
+                    Map<String, Object> addMap = new HashMap<>();
+                    List<Map<String, String>> addListMap = new ArrayList<>();
+                    if(position.toLowerCase().equals("cashier")){
+                        addListMap.add(cashier);
+                        thisUser.setPosition("cashier");
+                    }
+                    else if(position.toLowerCase().equals("manager")){
+                        addListMap.add(manager);
+                        thisUser.setPosition("manager");
+                    }
+                    else if(position.toLowerCase().equals("customer")){
+                        addListMap.add(customer);
+                        thisUser.setPosition("customer");
+                    }
+                    else if(position.toLowerCase().equals("admin")){
+                        addListMap.add(admin);
+                        thisUser.setPosition("admin");
+                    }
+                    addMap.put("permissions", addListMap);
+
+                    String addMapString = objectMapper.writeValueAsString(addMap);
+                    BodyPublisher addBody = HttpRequest.BodyPublishers.ofString(addMapString);
+                    HttpRequest addPermissions = HttpRequest.newBuilder()
+                    .uri(new URI(url))
+                    .header("Content-Type", "application/json")
+                    .header("Authorization", "Bearer " + token)
+                    .method("POST", addBody)
+                    .build();
+
+                    HttpResponse<String> addResponse = httpClient.send(addPermissions, HttpResponse.BodyHandlers.ofString());
+                    usersRepository.save(thisUser);
+                    System.out.println(addResponse);
+
+                }
+                else{
+                    thisUser.setPosition("customer");
+                    usersRepository.save(thisUser);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            else{
-                thisUser.setPosition("customer");
-                usersRepository.save(thisUser);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -221,6 +247,8 @@ public class Services {
         } 
         catch(Exception e){e.printStackTrace();}
     }
+
+
 
 
     public Map<String, String> findUserByAccessToken(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException{
@@ -279,6 +307,7 @@ public class Services {
             ItemToppings i = new ItemToppings();
             i.setInventory_id(t);
             i.setOrder_product_id(favOP.getOrder_product_id());
+            itemToppingsRepository.save(i);
         }
 
         UserFavorite favorite = new UserFavorite();
@@ -288,22 +317,45 @@ public class Services {
         return "Added favorite.";
     }
 
-    // public Map<String, Object> getFavorite(HttpServletRequest request){
-    //     Map<String, String> userInfo = null;
-    //     try {
-    //         userInfo = findUserByAccessToken(request);
-    //     } catch(Exception e){e.printStackTrace();}
+    public Map<String, Object> getFavorite(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException{
+        Map<String, String> userInfo = findUserByAccessToken(request);
+        String email = userInfo.get("email");
+        Integer user_id = usersRepository.findByEmail(email).getUser_id();
 
-    //     String email = userInfo.get("email");
-    //     Integer user_id = usersRepository.findByEmail(email).getUser_id();
-    //     List<Map<String, Object>> favorites = userFavoriteRepository.getUserFavorite(user_id);
-    //     List<Inventory> toppings = inventoryRepository.findToppings();
+        List<Map<String, Object>> favorites = userFavoriteRepository.getUserFavorite(user_id);
+        
+        List<Map<String, Object>> favList = new ArrayList<>();
+        for(Map<String, Object> f : favorites){
+            Map<String, Object> currMap = new HashMap<>();
+            Integer productID = (Integer) f.get("product_id");
+            currMap.put("notes", (String) f.get("note"));
+            currMap.put("ice_level", (String) f.get("ice_level"));
+            currMap.put("sugar_level", (String) f.get("sugar_level"));
+            currMap.put("product", productRepository.MapById(productID));
 
-    //     Map<String, Object> favoriteMap = new HashMap<>();
-    //     favoriteMap.put("products", favorites);
-    //     favoriteMap.put("toppings", toppings);
-    //     return favoriteMap;
-    // }
+            Integer opID = (Integer) f.get("order_product_id");
+            currMap.put("order_product_id", opID);
+            currMap.put("toppings", inventoryRepository.getFavoriteToppings(opID));
+
+            favList.add(currMap);
+        }
+
+        Map<String, Object> finalList = new HashMap<>();
+        finalList.put("items", favList);
+        finalList.put("total", 0);
+
+        return finalList;
+    }
+
+    //TODO 
+    public List<Integer> deleteFavorite(HttpServletRequest request, Integer opID) throws URISyntaxException, IOException, InterruptedException{
+        Map<String, String> userInfo = findUserByAccessToken(request);
+        String email = userInfo.get("email");
+        Integer user_id = usersRepository.findByEmail(email).getUser_id();
+
+        List<Integer> deleteToppings = inventoryRepository.getFavoriteItemToppings(opID);
+        return deleteToppings;
+    }
 
     public Map<String, Object> weatherProducts(Double temperature){
         List<Product> products = null;
@@ -356,10 +408,8 @@ public class Services {
             String lastName = userInfo.get("lastName");
             Users user = usersRepository.findByEmail(email);
             if( user != null) {
-                if(user.getFirst_name() != firstName){
+                if(user.getFirst_name() == null){
                     user.setFirst_name(firstName);
-                }
-                if(user.getLast_name() != lastName){
                     user.setLast_name(lastName);
                 }
                 usersRepository.addOrderCount(user.getUser_id());
@@ -450,6 +500,23 @@ public class Services {
         return order;
     }
 
+    public String removeOrder(Integer orderID){
+        Optional<Orders> order = ordersRepository.findById(orderID);
+        if(!order.isPresent()){
+            return "Couldn't find order";
+        }
+        
+        List<Integer> op = orderProductRepository.findByOrder_id(orderID);
+        List<Integer> it = new ArrayList<>();
+        for (Integer o : op){
+            it.addAll(itemToppingsRepository.findByOrder_product_id(o));
+        }
+        itemToppingsRepository.deleteAllById(it);
+        orderProductRepository.deleteAllById(op);
+        ordersRepository.deleteById(orderID);
+        return "Removed order " + orderID;
+    }
+
     public Map<String, List<Map<String,Object>>> userOrders(HttpServletRequest request, String paramEmail) throws URISyntaxException, IOException, InterruptedException{
         String email = "";
         if(request != null)
@@ -506,7 +573,7 @@ public class Services {
                 List<Map<String,Object>> itemList = new ArrayList<>();
 
                 for(Map<String, Object> product : productList){
-                    Map<String,Object> itemMap = new HashMap<>();
+                    Map<String,Object> itemMap = new HashMap<>(product);
                     Map<String, Object> productNamePrice = productRepository.findProductNamePrice((Integer) product.get("product_id"));
                     itemMap.put("product", productNamePrice.get("name"));
                     itemMap.put("price", productNamePrice.get("price"));
@@ -527,7 +594,53 @@ public class Services {
 
         finalList.put("pending", pendingList);
         return finalList;
+    }
 
+    public Map<String, List<Map<String,Object>>> userCompletedOrders(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException{
+        Map<String, String> userInfo = findUserByAccessToken(request);
+        if(userInfo == null){
+            return null;
+        }
+        String email = userInfo.get("email");
+        
+        Integer customer_id = usersRepository.findByEmail(email).getUser_id();
+        if(customer_id == null){
+            return null;
+        }
+        
+        Map<String, List<Map<String,Object>>> finalList = new HashMap<>();
+
+        List<Map<String,Object>> completedOrders = ordersRepository.userCompletedOrders(customer_id);
+        List<Map<String,Object>> completedList = new ArrayList<>();
+        
+        for(Map<String,Object> order : completedOrders){
+            Map<String,Object> orderMap = new HashMap<>(order);
+            Integer orderID = (Integer) order.get("order_id");
+
+            List<Map<String,Object>> productList = orderProductRepository.getProductsbyOrderID(orderID);
+            List<Map<String,Object>> itemList = new ArrayList<>();
+
+            for(Map<String, Object> product : productList){
+                Map<String,Object> itemMap = new HashMap<>();
+                Map<String, Object> productNamePrice = productRepository.findProductNamePrice((Integer) product.get("product_id"));
+                itemMap.put("product", productNamePrice.get("name"));
+                itemMap.put("price", productNamePrice.get("price"));
+
+                Integer order_product_id = (Integer) product.get("order_product_id");
+                List<String> toppings = itemToppingsRepository.getToppingsByopID(order_product_id);
+                itemMap.put("toppings", toppings);
+
+
+                itemList.add(itemMap);
+            }   
+
+            orderMap.put("items", itemList);
+            completedList.add(orderMap);
+            
+            finalList.put("completed", completedList);
+        }
+
+        return finalList;
     }
 
 
@@ -552,34 +665,68 @@ public class Services {
                 Integer order_product_id = (Integer) product.get("order_product_id");
                 List<String> toppings = itemToppingsRepository.getToppingsByopID(order_product_id);
                 itemMap.put("toppings", toppings);
-
+                
                 itemList.add(itemMap);
             }   
 
             orderMap.put("items", itemList);
+            orderMap.put("status", "Pending");
             finalPendingList.add(orderMap);
         }
         Map<String, List<Map<String, Object>>> result = new HashMap<>();
         result.put("pending", finalPendingList);
 
         return result;
+    }
 
+    public  Map<String, List<Map<String, Object>>> completedOrders(){
+        List<Map<String,Object>> completedOrders = ordersRepository.completedOrders();
+
+        List<Map<String,Object>> finalCompletedList = new ArrayList<>();
+
+        for(Map<String,Object> order : completedOrders){
+            Map<String,Object> orderMap = new HashMap<>(order);
+            Integer orderID = (Integer) order.get("order_id");
+
+            List<Map<String,Object>> productList = orderProductRepository.getProductsbyOrderID(orderID);
+            List<Map<String,Object>> itemList = new ArrayList<>();
+
+            for(Map<String, Object> product : productList){
+                Map<String,Object> itemMap = new HashMap<>(product);
+                Map<String, Object> productNamePrice = productRepository.findProductNamePrice((Integer) product.get("product_id"));
+                itemMap.put("product", productNamePrice.get("name"));
+                itemMap.put("price", productNamePrice.get("price"));
+
+                Integer order_product_id = (Integer) product.get("order_product_id");
+                List<String> toppings = itemToppingsRepository.getToppingsByopID(order_product_id);
+                itemMap.put("toppings", toppings);
+
+                itemList.add(itemMap);
+            }   
+            orderMap.put("status", (Boolean) orderMap.get("is_refunded") == true ? "Refunded" : "Completed");
+            orderMap.put("items", itemList);
+            finalCompletedList.add(orderMap);
+        }
+        Map<String, List<Map<String, Object>>> result = new HashMap<>();
+        result.put("completed", finalCompletedList);
+
+        return result;
     }
 
     public Integer maxOrder(){
         return ordersRepository.maxOrder();
     }
 
-    public void finishOrder(Integer orderID){
+    public void finishOrder(Integer orderID, Boolean refund){
         Orders order = ordersRepository.findById(orderID).get();
         order.setIs_pending(false);
+        if(refund == true){
+            order.setIs_refunded(true);
+        }
         ordersRepository.save(order);
     }
 
 
-
-
-    
     public Map<String, Object> getAllProducts() {
         List<Product> products = productRepository.findByActive(true);
         List<Inventory> toppings = inventoryRepository.findToppings();

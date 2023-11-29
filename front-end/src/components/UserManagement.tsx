@@ -9,31 +9,36 @@ const UserManagement = () => {
   const [usersSourceData, setUsersSourceData] = useState([
     {
       user_id: 1,
-      name: "John Doe",
+      first_name: "John",
+      last_name: "Doe",
       email: "johndoe@example.com",
       role: "Customer",
     },
     {
       user_id: 2,
-      name: "Jane Smith",
+      first_name: "Jane",
+      last_name: "Smith",
       email: "janesmith@example.com",
       role: "Customer",
     },
     {
       user_id: 3,
-      name: "Mike Johnson",
+      first_name: "Mike",
+      last_name: "Johnson",
       email: "mikejohnson@example.com",
       role: "Cashier",
     },
     {
       user_id: 4,
-      name: "Sarah Brown",
+      first_name: "Sarah",
+      last_name: "Brown",
       email: "sarahbrown@example.com",
       role: "Manager",
     },
     {
       user_id: 5,
-      name: "Alice Martin",
+      first_name: "Alice",
+      last_name: "Martin",
       email: "alicemartin@example.com",
       role: "Cashier",
     },
@@ -49,13 +54,21 @@ const UserManagement = () => {
   const [sortedUsers, setSortedUsers] = useState(usersSourceData);
   const [sortDirection, setSortDirection] = useState<any>({
     user_id: "",
-    name: "",
+    first_name: "",
+    last_name: "",
     email: "",
     role: "",
   });
-  const [roles, setRoles] = useState(["manager", "cashier", "customer"]);
+  const [roles, setRoles] = useState([
+    "manager",
+    "cashier",
+    "customer",
+    "admin",
+  ]);
   const [editRow, setEditRow] = useState(NaN);
   const [editedRole, setEditedRole] = useState("");
+  const [editedFirstName, setEditedFirstName] = useState("");
+  const [editedLastName, setEditedLastName] = useState("");
   const usersColumns = [
     <div className="d-flex align-items-center">
       User ID
@@ -68,7 +81,17 @@ const UserManagement = () => {
       />
     </div>,
     <div className="d-flex align-items-center">
-      User Name
+      First Name
+      <SortButtons
+        column="name"
+        sortedProducts={sortedUsers}
+        setSortedProducts={setSortedUsers}
+        sortDirection={sortDirection}
+        setSortDirection={setSortDirection}
+      />
+    </div>,
+    <div className="d-flex align-items-center">
+      Last Name
       <SortButtons
         column="name"
         sortedProducts={sortedUsers}
@@ -107,8 +130,15 @@ const UserManagement = () => {
       if (!isEditing) {
         setEditRow(i);
         setEditedRole(user.role);
+        setEditedFirstName(user.first_name);
+        setEditedLastName(user.last_name);
       } else {
-        handleUpdateUser(user.user_id, editedRole);
+        handleUpdateUser(
+          user.user_id,
+          editedRole,
+          editedFirstName,
+          editedLastName
+        );
         setEditRow(NaN);
       }
     };
@@ -119,7 +149,26 @@ const UserManagement = () => {
 
     return [
       user.user_id,
-      user.name,
+      isEditing ? (
+        <input
+          className="form-control"
+          value={editedFirstName}
+          onChange={(e) => setEditedFirstName(e.target.value)}
+          type="text"
+        />
+      ) : (
+        user.first_name
+      ),
+      isEditing ? (
+        <input
+          className="form-control"
+          value={editedLastName}
+          onChange={(e) => setEditedLastName(e.target.value)}
+          type="text"
+        />
+      ) : (
+        user.last_name
+      ),
       user.email,
       isEditing ? (
         <select
@@ -201,8 +250,19 @@ const UserManagement = () => {
     ];
   });
 
-  const handleUpdateUser = (userId: number, newRole: string) => {
-    updateUser(getAccessTokenSilently, userId, newRole)
+  const handleUpdateUser = (
+    userId: number,
+    newRole?: string,
+    newFirstName?: string,
+    newLastName?: string
+  ) => {
+    updateUser(
+      getAccessTokenSilently,
+      userId,
+      newRole,
+      newFirstName,
+      newLastName
+    )
       .then(() => {
         getUsers(setUsersSourceData, getAccessTokenSilently);
       })

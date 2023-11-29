@@ -13,6 +13,8 @@ import jakarta.transaction.Transactional;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Integer> {
+    @Query(value = "select * from product where product_id = ?1", nativeQuery = true)
+    Map<String, Object> MapById(Integer productID);
     List<Product> findByActive(Boolean active);
 
     List<Product> findByWeather(String weather);
