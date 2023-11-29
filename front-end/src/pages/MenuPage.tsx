@@ -11,7 +11,6 @@ function MenuPage() {
   const navItems = [
     { name: "Menu" },
     { name: "Recommended" },
-    { name: "Previous Orders" },
     { name: "Favorites" },
   ];
 
@@ -23,8 +22,6 @@ function MenuPage() {
         return <MenuContent />;
       case "Recommended":
         return <RecommendedContent />;
-      case "Previous Orders":
-        return <PreviousContent />;
       case "Favorites":
         return <FavoriteContent />;
       default:
