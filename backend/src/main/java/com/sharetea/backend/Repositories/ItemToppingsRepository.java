@@ -14,4 +14,7 @@ public interface ItemToppingsRepository extends JpaRepository<ItemToppings, Inte
     @Query(value = "select name from item_toppings i join inventory inv on i.inventory_id = inv.inventory_id where order_product_id = ?1", nativeQuery = true)
     public List<String> getToppingsByopID(Integer opID);
 
+    @Query(value = "select item_toppings_id from item_toppings where order_product_id = ?1", nativeQuery = true)
+    List<Integer> findByOrder_product_id(Integer order_product_id);
+
 }

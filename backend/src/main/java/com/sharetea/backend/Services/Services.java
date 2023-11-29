@@ -503,6 +503,23 @@ public class Services {
         return order;
     }
 
+    public String removeOrder(Integer orderID){
+        Optional<Orders> order = ordersRepository.findById(orderID);
+        if(!order.isPresent()){
+            return "Couldn't find order";
+        }
+        
+        List<Integer> op = orderProductRepository.findByOrder_id(orderID);
+        List<Integer> it = new ArrayList<>();
+        for (Integer o : op){
+            it.addAll(itemToppingsRepository.findByOrder_product_id(o));
+        }
+        itemToppingsRepository.deleteAllById(it);
+        orderProductRepository.deleteAllById(op);
+        ordersRepository.deleteById(orderID);
+        return "Removed order " + orderID;
+    }
+
     public Map<String, List<Map<String,Object>>> userOrders(HttpServletRequest request, String paramEmail) throws URISyntaxException, IOException, InterruptedException{
         String email = "";
         if(request != null)
