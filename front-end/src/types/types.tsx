@@ -118,6 +118,11 @@ export interface CompletedOrders {
   completed: Order[];
 }
 
+export interface UserOrders {
+  pending: Order[];
+  completed: Order[];
+}
+
 export interface PendingOrderGridProp {
   pending: Order[];
   onCardClick: (order: Order) => void;

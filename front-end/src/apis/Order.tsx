@@ -6,6 +6,7 @@ import {
   OrderItem,
   PendingOrders,
   CompletedOrders,
+  UserOrders,
   topping,
 } from "../types/types";
 import { useEffect, useState } from "react";
@@ -93,7 +94,7 @@ export async function removeOrder(order_id: number) {
 }
 
 export async function getUserOrders(
-  setPendingOrder: React.Dispatch<React.SetStateAction<PendingOrders>>, 
+  setUserOrders: React.Dispatch<React.SetStateAction<UserOrders>>, 
   accessTokenPromise: String
 ) {
   try {
@@ -104,28 +105,9 @@ export async function getUserOrders(
 
     Axios.get(process.env.REACT_APP_BACKEND_URL + "/user/orders", { headers })
     .then((response) => {
-      const pending: PendingOrders = response.data;
-      setPendingOrder(pending);
-    })
-  } catch (error) {
-    console.error("There was an error fetching data: ", error);
-  }
-}
-
-export async function getUserOrderHistory(
-  setCompletedOrders: React.Dispatch<React.SetStateAction<CompletedOrders>>, 
-  accessTokenPromise: String
-) {
-  try {
-    const accessToken = accessTokenPromise;
-    const headers = {
-      Authorization: `Bearer ${accessToken}`,
-    };
-
-    Axios.get(process.env.REACT_APP_BACKEND_URL + "/user/completed", { headers })
-    .then((response) => {
-      const completed: CompletedOrders = response.data;
-      setCompletedOrders(completed);
+      const orders: UserOrders = response.data;
+      setUserOrders(orders);
+      //console.log(response);
     })
   } catch (error) {
     console.error("There was an error fetching data: ", error);

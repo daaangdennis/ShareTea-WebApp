@@ -1,14 +1,14 @@
 import PendingOrderGrid from "../components/PendingOrderGrid";
 import { useEffect, useState } from "react";
-import { getUserOrderHistory, finishOrder } from "../apis/Order";
-import { OrderItem, CompletedOrders, Order } from "../types/types";
+import { getUserOrders } from "../apis/Order";
+import { OrderItem, UserOrders, Order } from "../types/types";
 import { useAuth0 } from "@auth0/auth0-react";
 
 import "../styles/PendingPage.css";
 
 function UserOrderHistory() {
-    const [completedOrders, setCompletedOrders] = useState<CompletedOrders>(
-        {} as CompletedOrders
+    const [userOrders, setUserOrders] = useState<UserOrders>(
+        {} as UserOrders
     );
     const [pageNumber, setPageNumber] = useState<number>(1);
     const [maxOrdersPerPage, setMaxOrders] = useState<number>(10);
@@ -27,7 +27,7 @@ function UserOrderHistory() {
         const fetchData = async () => {
             try {
             const accessToken = await getAccessTokenSilently();
-            getUserOrderHistory(setCompletedOrders, accessToken);
+            getUserOrders(setUserOrders, accessToken);
             } catch (error) {
             console.error('Error fetching data:', error);
             }
@@ -35,17 +35,14 @@ function UserOrderHistory() {
         fetchData();
     }, []);
 
-    //console.log(pendingOrder);
-    //console.log(selectedItems.length > 0);
-    //console.log(selectedOrder);
 
     const handlePrevButton = () => {
-        if (completedOrders.completed && pageNumber > 1) {
+        if (userOrders.completed && pageNumber > 1) {
             setPageNumber(pageNumber - 1);
         }
     };
     const handleNextButton = () => {
-        if (completedOrders.completed && pageNumber < Math.ceil((completedOrders.completed.length)/maxOrdersPerPage)) {
+        if (userOrders.completed && pageNumber < Math.ceil((userOrders.completed.length)/maxOrdersPerPage)) {
             setPageNumber(pageNumber + 1);
         }
     };
@@ -79,16 +76,16 @@ function UserOrderHistory() {
                     >
                         Prev
                     </button>
-                    <h5>{pageNumber} of {completedOrders.completed ? (Math.ceil((completedOrders.completed.length)/maxOrdersPerPage)) : (1)}</h5>
+                    <h5>{pageNumber} of {userOrders.completed ? (Math.ceil((userOrders.completed.length)/maxOrdersPerPage)) : (1)}</h5>
                     <button 
-                        className={completedOrders.completed && pageNumber >= Math.ceil((completedOrders.completed.length)/maxOrdersPerPage) ? ("pendingpage-control-button-disabled") : ("pendingpage-control-button")} 
+                        className={userOrders.completed && pageNumber >= Math.ceil((userOrders.completed.length)/maxOrdersPerPage) ? ("pendingpage-control-button-disabled") : ("pendingpage-control-button")} 
                         onClick={handleNextButton}
                     >
                         Next
                     </button>
                 </div>
                 <PendingOrderGrid 
-                    pending={completedOrders.completed ? (completedOrders.completed.slice((pageNumber-1) * maxOrdersPerPage, maxOrdersPerPage + (pageNumber-1) * maxOrdersPerPage)) : ([])} 
+                    pending={userOrders.completed ? (userOrders.completed.slice((pageNumber-1) * maxOrdersPerPage, maxOrdersPerPage + (pageNumber-1) * maxOrdersPerPage)) : ([])} 
                     onCardClick={handleOrderSelect}
                     selectedOrder={selectedOrder}
                 />
@@ -96,7 +93,7 @@ function UserOrderHistory() {
             {selectedOrder ? 
             (
                 <div className="col-md-4 pendingpage-orders-information-container">
-                    <div className="pendingpage-orders-information-header px-3 pb-2">
+                    <div className="pendingpage-orders-information-header px-3 pb-3">
                         <h3>
                             Order #{selectedOrder.order_id}
                             <br></br>
@@ -105,9 +102,7 @@ function UserOrderHistory() {
                             ({orderTime})
                         </h3>
                     </div>
-                    <div className="px-3 py-2 mb-3">
-                        <button className="pendingpage-complete-button" onClick={() =>console.log("removed")}>Remove From History</button>
-                    </div>
+
                     <table className="pendingpage-table mb-5">
                         <thead className="pendingpage-table-header">
                             <tr>

@@ -1,14 +1,14 @@
 import PendingOrderGrid from "../components/PendingOrderGrid";
 import { useEffect, useState } from "react";
 import { getUserOrders, refundOrder } from "../apis/Order";
-import { OrderItem, PendingOrders, Order } from "../types/types";
+import { OrderItem, UserOrders, Order } from "../types/types";
 import { useAuth0 } from "@auth0/auth0-react";
 
 import "../styles/PendingPage.css";
 
 function UserPendingPage() {
-    const [pendingOrder, setPendingOrder] = useState<PendingOrders>(
-        {} as PendingOrders
+    const [userOrders, setUserOrders] = useState<UserOrders>(
+        {} as UserOrders
     );
     const [pageNumber, setPageNumber] = useState<number>(1);
     const [maxOrdersPerPage, setMaxOrders] = useState<number>(10);
@@ -28,7 +28,7 @@ function UserPendingPage() {
         const fetchData = async () => {
             try {
             const accessToken = await getAccessTokenSilently();
-            getUserOrders(setPendingOrder, accessToken);
+            getUserOrders(setUserOrders, accessToken);
             } catch (error) {
             console.error('Error fetching data:', error);
             }
@@ -36,17 +36,13 @@ function UserPendingPage() {
         fetchData();
     }, []);
 
-    //console.log(pendingOrder);
-    //console.log(selectedItems.length > 0);
-    //console.log(selectedOrder);
-
     const handlePrevButton = () => {
-        if (pendingOrder.pending && pageNumber > 1) {
+        if (userOrders.pending && pageNumber > 1) {
             setPageNumber(pageNumber - 1);
         }
     };
     const handleNextButton = () => {
-        if (pendingOrder.pending && pageNumber < Math.ceil((pendingOrder.pending.length)/maxOrdersPerPage)) {
+        if (userOrders.pending && pageNumber < Math.ceil((userOrders.pending.length)/maxOrdersPerPage)) {
             setPageNumber(pageNumber + 1);
         }
     };
@@ -70,8 +66,8 @@ function UserPendingPage() {
     const handleRefundOrder = async () => {
         if (selectedOrder) {
             await refundOrder(selectedOrder.order_id);
-            const accessToken = await getAccessTokenSilently();
-            await getUserOrders(setPendingOrder, accessToken);
+            const updatedOrders = userOrders.pending.filter(order => order.order_id !== selectedOrder.order_id);
+            setUserOrders({ pending: updatedOrders, completed: userOrders.completed});
             setSelectedOrder(undefined);
         }
     }
@@ -80,7 +76,7 @@ function UserPendingPage() {
         <div className="d-flex flex-column flex-column-reverse flex-md-row">
             <div className="col-md-8 pendingpage-orders-container">
                 <div className="pendingpage-orders-header m-4">
-                    <h2>Pending Orders ({pendingOrder.pending ? (pendingOrder.pending.length) : (0)})</h2>
+                    <h2>Pending Orders ({userOrders.pending ? (userOrders.pending.length) : (0)})</h2>
                 </div>
                 <div className="pendingpage-controls-container">
                     <button 
@@ -89,16 +85,16 @@ function UserPendingPage() {
                     >
                         Prev
                     </button>
-                    <h5>{pageNumber} of {pendingOrder.pending  && pendingOrder.pending.length > 0 ? (Math.ceil((pendingOrder.pending.length)/maxOrdersPerPage)) : (1)}</h5>
+                    <h5>{pageNumber} of {userOrders.pending  && userOrders.pending.length > 0 ? (Math.ceil((userOrders.pending.length)/maxOrdersPerPage)) : (1)}</h5>
                     <button 
-                        className={pendingOrder.pending && pageNumber >= Math.ceil((pendingOrder.pending.length)/maxOrdersPerPage) ? ("pendingpage-control-button-disabled") : ("pendingpage-control-button")} 
+                        className={userOrders.pending && pageNumber >= Math.ceil((userOrders.pending.length)/maxOrdersPerPage) ? ("pendingpage-control-button-disabled") : ("pendingpage-control-button")} 
                         onClick={handleNextButton}
                     >
                         Next
                     </button>
                 </div>
                 <PendingOrderGrid 
-                    pending={pendingOrder.pending ? (pendingOrder.pending.slice((pageNumber-1) * maxOrdersPerPage, maxOrdersPerPage + (pageNumber-1) * maxOrdersPerPage)) : ([])} 
+                    pending={userOrders.pending ? (userOrders.pending.slice((pageNumber-1) * maxOrdersPerPage, maxOrdersPerPage + (pageNumber-1) * maxOrdersPerPage)) : ([])} 
                     onCardClick={handleOrderSelect}
                     selectedOrder={selectedOrder}
                 />
