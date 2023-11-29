@@ -111,7 +111,7 @@ export async function getUserOrderHistory(
       Authorization: `Bearer ${accessToken}`,
     };
 
-    Axios.get(process.env.REACT_APP_BACKEND_URL + "/user/orders", { headers })
+    Axios.get(process.env.REACT_APP_BACKEND_URL + "/user/completed", { headers })
     .then((response) => {
       const completed: CompletedOrders = response.data;
       setCompletedOrders(completed);
