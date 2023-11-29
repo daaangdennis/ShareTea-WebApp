@@ -5,6 +5,8 @@ import {
   product,
   OrderItem,
   PendingOrders,
+  CompletedOrders,
+  UserOrders,
   topping,
 } from "../types/types";
 import { useEffect, useState } from "react";
@@ -44,6 +46,20 @@ export function getPendingOrders(
     });
 }
 
+export function getOrderHistory(
+  setCompletedOrders: React.Dispatch<React.SetStateAction<CompletedOrders>>
+) {
+  Axios.get(process.env.REACT_APP_BACKEND_URL + "/orders/completed")
+    .then((response) => {
+      const completed: CompletedOrders = response.data;
+      console.log(completed);
+      setCompletedOrders(completed);
+    })
+    .catch((error) => {
+      console.error("There was an error fetching data:", error);
+    });
+}
+
 export async function finishOrder(order_id: number) {
   try {
     const response = await Axios.post(
@@ -52,6 +68,49 @@ export async function finishOrder(order_id: number) {
     console.log(response);
   } catch (error) {
     console.error("There was an error completing an order: ", error);
+  }
+}
+
+export async function refundOrder(order_id: number) {
+  try {
+    const response = await Axios.post(
+      process.env.REACT_APP_BACKEND_URL + "/orders/refund?orderID=" + order_id
+    );
+    console.log(response);
+  } catch (error) {
+    console.error("There was an error refunding an order: ", error);
+  }
+}
+
+export async function removeOrder(order_id: number) {
+  try {
+    const response = await Axios.post(
+      process.env.REACT_APP_BACKEND_URL + "/orders/remove?orderID=" + order_id
+    );
+    console.log(response);
+  } catch (error) {
+    console.error("There was an error removing an order: ", error);
+  }
+}
+
+export async function getUserOrders(
+  setUserOrders: React.Dispatch<React.SetStateAction<UserOrders>>, 
+  accessTokenPromise: String
+) {
+  try {
+    const accessToken = accessTokenPromise;
+    const headers = {
+      Authorization: `Bearer ${accessToken}`,
+    };
+
+    Axios.get(process.env.REACT_APP_BACKEND_URL + "/user/orders", { headers })
+    .then((response) => {
+      const orders: UserOrders = response.data;
+      setUserOrders(orders);
+      //console.log(response);
+    })
+  } catch (error) {
+    console.error("There was an error fetching data: ", error);
   }
 }
 
