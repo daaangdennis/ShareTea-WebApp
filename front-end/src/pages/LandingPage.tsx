@@ -75,10 +75,7 @@ function LandingPage() {
   <div className="row">
     <div className="col"> */}
       <div className="image-gallery-container">
-        <ImageGallery
-          images={landingPageImages.images}
-          style={{ maxHeight: 500 }}
-        />
+        <ImageGallery images={landingPageImages.images} />
         {/* <h1 className="fw-light">ShareTea</h1> */}
         {/* <p className="example-text">Your text goes here</p> */}
         {/* <div className="image-text col-md-6 text-center font-size-lg">
