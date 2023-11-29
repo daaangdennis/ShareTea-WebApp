@@ -16,6 +16,7 @@ import { LoginButton, LogoutButton } from "./Login";
 import { useAuth0 } from "@auth0/auth0-react";
 import UserInfo from "./UserInfo";
 import useUserRole from "../hooks/useUserRole";
+import GoogleTranslate from "./GoogleTranslate";
 
 const Navbar: React.FC<navbarProps> = ({ routes }) => {
   const { isAuthenticated, isLoading, getAccessTokenSilently } = useAuth0();
@@ -142,9 +143,10 @@ const Navbar: React.FC<navbarProps> = ({ routes }) => {
             })}
           </ul>
 
-          <div className="text-end">
+          <div className="d-flex text-end">
+            <GoogleTranslate />
             {isAuthenticated ? (
-              <div style={{ display: "flex" }}>
+              <div className="d-flex ms-3">
                 <UserInfo />
                 <LogoutButton />
               </div>

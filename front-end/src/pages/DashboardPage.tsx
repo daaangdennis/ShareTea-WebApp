@@ -1,31 +1,25 @@
-import { useRecoilState, useRecoilValue } from "recoil";
 import SubNav from "../components/SubNav";
-import { InventoryList, listProductToppings, product } from "../types/types";
-import { Products, filteredProducts } from "../atoms/product";
-import { useEffect, useState } from "react";
-import {
-  deleteInventory,
-  deleteMenu,
-  getInventory,
-  updateInventory,
-} from "../apis/Dashboard";
-import { getProducts } from "../apis/Product";
+import { useState } from "react";
 import "../styles/table.css";
-import Table from "../components/Table";
 import InventoryManagement from "../components/InventoryManagement";
 import MenuManagement from "../components/MenuManagement";
 import { Nav } from "react-bootstrap";
 import StatsPage from "./StatsPage";
 import UserManagement from "../components/UserManagement";
+import useUserRole from "../hooks/useUserRole";
 
 function DashboardPage() {
+  const { userRole, isLoading } = useUserRole();
+
   const navItems = [
     { name: "Inventory" },
     { name: "Menu" },
-    { name: "Users" },
     { name: "Statistics" },
   ];
 
+  if (userRole === "admin") {
+    navItems.push({ name: "Users" });
+  }
   const [selectedNavItem, setSelectedNavItem] = useState(navItems[0].name);
 
   const renderContent = () => {

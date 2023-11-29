@@ -139,8 +139,8 @@ public class Services {
                 customer.put("resource_server_identifier", "https://sharetea315/");
                 customer.put("permission_name", "customer");
                 Map<String, String> admin = new HashMap<>();
-                customer.put("resource_server_identifier", "https://sharetea315/");
-                customer.put("permission_name", "admin");
+                admin.put("resource_server_identifier", "https://sharetea315/");
+                admin.put("permission_name", "admin");
 
                 listMap.add(cashier);
                 listMap.add(manager);
