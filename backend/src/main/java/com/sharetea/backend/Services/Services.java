@@ -1,7 +1,6 @@
 package com.sharetea.backend.Services;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URI;
@@ -25,7 +24,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sharetea.backend.Entities.*;
 import com.sharetea.backend.Repositories.*;
-import com.sharetea.backend.RequestBodies.*;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -354,6 +352,9 @@ public class Services {
         Integer user_id = usersRepository.findByEmail(email).getUser_id();
 
         List<Integer> deleteToppings = inventoryRepository.getFavoriteItemToppings(opID);
+        itemToppingsRepository.deleteAllById(deleteToppings);
+        userFavoriteRepository.deleteByOP(opID);
+        orderProductRepository.deleteById(opID);
         return deleteToppings;
     }
 
@@ -419,7 +420,7 @@ public class Services {
                 return null;
             }
         }
-        else{
+        else if(cashierEmail != null || cashierFirstName != null){
             if(cashierEmail != null){
                 Users user = usersRepository.findByEmail(cashierEmail);
                 if( user != null) {
@@ -442,9 +443,6 @@ public class Services {
                 newUser.setLast_name(cashierLastName);
                 usersRepository.save(newUser);
                 order.setCustomer_id(newUser.getUser_id());
-            }
-            else{
-                return(null);
             }
         }
 
@@ -479,19 +477,24 @@ public class Services {
             }
 
             orderProductRepository.save(orderProduct);
+            inventoryRepository.subtractInventory(productID);
 
             List<Map<String, Object>> toppings = (List<Map<String, Object>>) item.get("toppings");
             if(toppings != null){
+                List<Integer> invIDList = new ArrayList<>();
                 for (Map<String, Object> topping : toppings) {
                     Integer inventoryID = (Integer) topping.get("inventory_id");
+                    invIDList.add(inventoryID);
 
                     ItemToppings itemTopping = new ItemToppings();
                     itemTopping.setOrder_product_id(orderProduct.getOrder_product_id());
                     itemTopping.setInventory_id(inventoryID);
                     itemToppingsRepository.save(itemTopping);
                 }
+                inventoryRepository.subtractInventoryByID(invIDList);
                 total += toppings.size() * 0.75;
             }
+
         }
         order.setTotal(total);
         ordersRepository.save(order);

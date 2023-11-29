@@ -105,6 +105,11 @@ public class MainController {
         return service.addOrder(request, null, null, null, orderData);
     }
 
+    @PostMapping("/orders/add/guest")
+    public Orders addOrder(Map<String, Object> orderData) throws URISyntaxException, IOException, InterruptedException {
+        return service.addOrder(null, null, null, null, orderData);
+    }
+
     @PostMapping("/orders/cashieradd")
     public Orders cashierAddOrder(@RequestParam(required = false) String email, @RequestParam(required = false) String firstName, @RequestParam(required = false) String lastName, @RequestBody Map<String, Object> orderData) throws URISyntaxException, IOException, InterruptedException {
         if(firstName == null){
@@ -172,7 +177,7 @@ public class MainController {
         return service.addProduct(name, category, price, weather);
     }
 
-    @PostMapping("/product/delete")
+    @PostMapping("/menu/delete")
     public String deleteProduct(@RequestParam String productName) {
         return service.deleteProduct(productName);
     }
