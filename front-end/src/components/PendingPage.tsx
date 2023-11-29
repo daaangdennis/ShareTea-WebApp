@@ -60,7 +60,8 @@ function PendingPage() {
     const handleCompleteOrder = async () => {
         if (selectedOrder) {
             await finishOrder(selectedOrder.order_id);
-            await getPendingOrders(setPendingOrder);
+            const updatedOrders = pendingOrder.pending.filter(order => order.order_id !== selectedOrder.order_id);
+            setPendingOrder({ pending: updatedOrders });
             setSelectedOrder(undefined);
         }
     }
@@ -68,7 +69,8 @@ function PendingPage() {
     const handleRefundOrder = async () => {
         if (selectedOrder) {
             await refundOrder(selectedOrder.order_id);
-            await getPendingOrders(setPendingOrder);
+            const updatedOrders = pendingOrder.pending.filter(order => order.order_id !== selectedOrder.order_id);
+            setPendingOrder({ pending: updatedOrders });
             setSelectedOrder(undefined);
         }
     }

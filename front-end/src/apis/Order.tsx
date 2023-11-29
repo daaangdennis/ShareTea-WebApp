@@ -81,6 +81,17 @@ export async function refundOrder(order_id: number) {
   }
 }
 
+export async function removeOrder(order_id: number) {
+  try {
+    const response = await Axios.post(
+      process.env.REACT_APP_BACKEND_URL + "/orders/remove?orderID=" + order_id
+    );
+    console.log(response);
+  } catch (error) {
+    console.error("There was an error removing an order: ", error);
+  }
+}
+
 export async function getUserOrders(
   setPendingOrder: React.Dispatch<React.SetStateAction<PendingOrders>>, 
   accessTokenPromise: String

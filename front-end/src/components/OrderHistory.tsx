@@ -1,10 +1,9 @@
 import PendingOrderGrid from "../components/PendingOrderGrid";
 import { useEffect, useState } from "react";
-import { getOrderHistory, finishOrder } from "../apis/Order";
+import { getOrderHistory, removeOrder } from "../apis/Order";
 import { OrderItem, CompletedOrders, Order } from "../types/types";
 
 import "../styles/PendingPage.css";
-import SubNav from "../components/SubNav";
 
 function OrderHistory() {
     const [completedOrders, setCompletedOrders] = useState<CompletedOrders>(
@@ -57,10 +56,11 @@ function OrderHistory() {
         setOrderTime(regularTime);
     };
 
-    const handleCompleteOrder = async () => {
+    const handleRemoveOrder = async () => {
         if (selectedOrder) {
-            await finishOrder(selectedOrder.order_id);
-            await getOrderHistory(setCompletedOrders);
+            await removeOrder(selectedOrder.order_id);
+            const updatedOrders = completedOrders.completed.filter(order => order.order_id !== selectedOrder.order_id);
+            setCompletedOrders({ completed: updatedOrders });
             setSelectedOrder(undefined);
         }
     }
@@ -107,7 +107,7 @@ function OrderHistory() {
                         </h3>
                     </div>
                     <div className="px-3 py-2 mb-3">
-                        <button className="pendingpage-complete-button" onClick={handleCompleteOrder}>Remove From History</button>
+                        <button className="pendingpage-complete-button" onClick={handleRemoveOrder}>Remove From History</button>
                     </div>
                     <table className="pendingpage-table mb-5">
                         <thead className="pendingpage-table-header">
