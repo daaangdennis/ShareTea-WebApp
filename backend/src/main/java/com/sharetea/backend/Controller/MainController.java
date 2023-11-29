@@ -48,12 +48,6 @@ public class MainController {
             service.deleteUser(userId);
         } catch (Exception e) {e.printStackTrace();}
     }
-    @PostMapping("/users/update/name")
-    public void updateUser(@RequestParam String email, @RequestParam(required = false) String firstName, @RequestParam(required = false) String lastName) {
-        try {
-            service.changeUser(email, firstName, lastName);
-        } catch (Exception e) {e.printStackTrace();}
-    }
 
     @GetMapping("/user/orders")
     public Map<String, List<Map<String, Object>>> userOrders(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException {
@@ -92,8 +86,8 @@ public class MainController {
     }
 
     @PostMapping("/users/update")
-    public void changePermissions(@RequestParam Integer userId, @RequestParam String role) throws URISyntaxException, IOException, InterruptedException {
-        service.changePermissions(userId, role);
+    public void changePermissions(@RequestParam Integer userId, @RequestParam(required = false) String role, @RequestParam(required = false) String firstName, @RequestParam(required = false) String lastName) throws URISyntaxException, IOException, InterruptedException {
+        service.changePermissions(userId, role, firstName, lastName);
     }
 
     @GetMapping("/orders/get")

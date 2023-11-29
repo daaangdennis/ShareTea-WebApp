@@ -75,6 +75,7 @@ export interface CartCardProps {
 
 export interface ICartItem {
   product: product;
+  order_product_id? : number
   cartId?: number;
   toppings?: topping[];
   ice_level?: string;

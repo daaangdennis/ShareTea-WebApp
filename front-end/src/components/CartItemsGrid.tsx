@@ -61,6 +61,10 @@ export const CartItem: React.FC<CartCardProps> = ({ item, favorite}) => {
     }
   };
 
+  const deleteFavorite = () =>{
+    
+  };
+
   return (
     <div className="row mx-4 mb-5 drink-order-container">
       <div className="col-md-4">
@@ -123,7 +127,7 @@ export const CartItem: React.FC<CartCardProps> = ({ item, favorite}) => {
             <button className="order-button" onClick={addProductToCart}>
               Add
             </button>
-            <button className="order-button" onClick={deleteProductFromCart}>
+            <button className="order-button" onClick={favorite? deleteFavorite : deleteProductFromCart}>
               Delete
             </button>
           </div>

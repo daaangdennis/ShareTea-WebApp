@@ -15,6 +15,7 @@ export async function getFavorites(
         const response = Axios.get(process.env.REACT_APP_BACKEND_URL + "/favorites/get", { headers })
         .then((response) => {
           const data: Cart = response.data;
+          console.log(headers.Authorization)
           console.log(data);
           setFavorites(data);
         })

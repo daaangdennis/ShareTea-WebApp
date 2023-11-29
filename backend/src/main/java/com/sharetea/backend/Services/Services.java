@@ -89,111 +89,120 @@ public class Services {
     }
 
 
-    public void changePermissions(Integer id, String position) throws URISyntaxException, IOException, InterruptedException{
+    public void changePermissions(Integer id, String position, String firstName, String lastName) throws URISyntaxException, IOException, InterruptedException{
         Users thisUser = usersRepository.findById(id).get();
         if(thisUser == null){
             return;
         }
+        if(firstName != null){
+            thisUser.setFirst_name(firstName);
+        }
+        if(lastName != null){
+            thisUser.setLast_name(lastName);
+        }
+        usersRepository.save(thisUser);
+        
         String email = thisUser.getEmail();
+        if(position != null){
+            String encodedEmail = URLEncoder.encode(email, "UTF-8");
+            String emailURL = "https://dev-1jps85kh7htbmqki.us.auth0.com/api/v2/users-by-email?fields=user_id&email=" + encodedEmail;
+            String token = requestToken();
+            HttpRequest getID = HttpRequest.newBuilder()
+                    .uri(new URI(emailURL))
+                    .header("Accept", "application/json")
+                    .header("Authorization", "Bearer " + token)
+                    .GET()
+                    .build();
 
-        String encodedEmail = URLEncoder.encode(email, "UTF-8");
-        String emailURL = "https://dev-1jps85kh7htbmqki.us.auth0.com/api/v2/users-by-email?fields=user_id&email=" + encodedEmail;
-        String token = requestToken();
-        HttpRequest getID = HttpRequest.newBuilder()
-                .uri(new URI(emailURL))
-                .header("Accept", "application/json")
-                .header("Authorization", "Bearer " + token)
-                .GET()
-                .build();
+            HttpClient httpClient = HttpClient.newHttpClient();
+            HttpResponse<String> IDResponse = httpClient.send(getID, HttpResponse.BodyHandlers.ofString());
 
-        HttpClient httpClient = HttpClient.newHttpClient();
-        HttpResponse<String> IDResponse = httpClient.send(getID, HttpResponse.BodyHandlers.ofString());
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode responseBody = objectMapper.readTree(IDResponse.body());
-        String userID = responseBody.get(0).get("user_id").asText();
-        System.out.println(userID);
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode responseBody = objectMapper.readTree(IDResponse.body());
+            String userID = responseBody.get(0).get("user_id").asText();
+            System.out.println(userID);
 
 
-        String user = URLEncoder.encode(userID, "UTF-8");
-        String url = "https://dev-1jps85kh7htbmqki.us.auth0.com/api/v2/users/" + user +"/permissions";
-        try {  
-            Map<String, Object> deleteMap = new HashMap<>();
-            List<Map<String, String>> listMap = new ArrayList<>();
+            String user = URLEncoder.encode(userID, "UTF-8");
+            String url = "https://dev-1jps85kh7htbmqki.us.auth0.com/api/v2/users/" + user +"/permissions";
+            try {  
+                Map<String, Object> deleteMap = new HashMap<>();
+                List<Map<String, String>> listMap = new ArrayList<>();
 
-            Map<String, String> cashier = new HashMap<>();
-            cashier.put("resource_server_identifier", "https://sharetea315/");
-            cashier.put("permission_name", "cashier");
-            Map<String, String> manager = new HashMap<>();
-            manager.put("resource_server_identifier", "https://sharetea315/");
-            manager.put("permission_name", "manager");
-            Map<String, String> customer = new HashMap<>();
-            customer.put("resource_server_identifier", "https://sharetea315/");
-            customer.put("permission_name", "customer");
-            Map<String, String> admin = new HashMap<>();
-            customer.put("resource_server_identifier", "https://sharetea315/");
-            customer.put("permission_name", "admin");
+                Map<String, String> cashier = new HashMap<>();
+                cashier.put("resource_server_identifier", "https://sharetea315/");
+                cashier.put("permission_name", "cashier");
+                Map<String, String> manager = new HashMap<>();
+                manager.put("resource_server_identifier", "https://sharetea315/");
+                manager.put("permission_name", "manager");
+                Map<String, String> customer = new HashMap<>();
+                customer.put("resource_server_identifier", "https://sharetea315/");
+                customer.put("permission_name", "customer");
+                Map<String, String> admin = new HashMap<>();
+                customer.put("resource_server_identifier", "https://sharetea315/");
+                customer.put("permission_name", "admin");
 
-            listMap.add(cashier);
-            listMap.add(manager);
-            listMap.add(customer);
-            listMap.add(admin);
-            deleteMap.put("permissions", listMap);
+                listMap.add(cashier);
+                listMap.add(manager);
+                listMap.add(customer);
+                listMap.add(admin);
+                deleteMap.put("permissions", listMap);
 
-            String deleteMapString = objectMapper.writeValueAsString(deleteMap);
-            
-            BodyPublisher body = HttpRequest.BodyPublishers.ofString(deleteMapString);
-            HttpRequest deletePermissions = HttpRequest.newBuilder()
-            .uri(new URI(url))
-            .header("Content-Type", "application/json")
-            .header("Authorization", "Bearer " + token)
-            .method("DELETE", body)
-            .build();
-
-            HttpResponse<String> response = httpClient.send(deletePermissions, HttpResponse.BodyHandlers.ofString());
-            System.out.println(response);
-
-            if(position.toLowerCase().equals("cashier") || position.toLowerCase().equals("manager") || position.toLowerCase().equals("customer") || position.toLowerCase().equals("admin")){
-                Map<String, Object> addMap = new HashMap<>();
-                List<Map<String, String>> addListMap = new ArrayList<>();
-                if(position.toLowerCase().equals("cashier")){
-                    addListMap.add(cashier);
-                    thisUser.setPosition("cashier");
-                }
-                else if(position.toLowerCase().equals("manager")){
-                    addListMap.add(manager);
-                    thisUser.setPosition("manager");
-                }
-                else if(position.toLowerCase().equals("customer")){
-                    addListMap.add(customer);
-                    thisUser.setPosition("customer");
-                }
-                else if(position.toLowerCase().equals("admin")){
-                    addListMap.add(admin);
-                    thisUser.setPosition("admin");
-                }
-                addMap.put("permissions", addListMap);
-
-                String addMapString = objectMapper.writeValueAsString(addMap);
-                BodyPublisher addBody = HttpRequest.BodyPublishers.ofString(addMapString);
-                HttpRequest addPermissions = HttpRequest.newBuilder()
+                String deleteMapString = objectMapper.writeValueAsString(deleteMap);
+                
+                BodyPublisher body = HttpRequest.BodyPublishers.ofString(deleteMapString);
+                HttpRequest deletePermissions = HttpRequest.newBuilder()
                 .uri(new URI(url))
                 .header("Content-Type", "application/json")
                 .header("Authorization", "Bearer " + token)
-                .method("POST", addBody)
+                .method("DELETE", body)
                 .build();
 
-                HttpResponse<String> addResponse = httpClient.send(addPermissions, HttpResponse.BodyHandlers.ofString());
-                usersRepository.save(thisUser);
-                System.out.println(addResponse);
+                HttpResponse<String> response = httpClient.send(deletePermissions, HttpResponse.BodyHandlers.ofString());
+                System.out.println(response);
 
+                if(position.toLowerCase().equals("cashier") || position.toLowerCase().equals("manager") || position.toLowerCase().equals("customer") || position.toLowerCase().equals("admin")){
+                    Map<String, Object> addMap = new HashMap<>();
+                    List<Map<String, String>> addListMap = new ArrayList<>();
+                    if(position.toLowerCase().equals("cashier")){
+                        addListMap.add(cashier);
+                        thisUser.setPosition("cashier");
+                    }
+                    else if(position.toLowerCase().equals("manager")){
+                        addListMap.add(manager);
+                        thisUser.setPosition("manager");
+                    }
+                    else if(position.toLowerCase().equals("customer")){
+                        addListMap.add(customer);
+                        thisUser.setPosition("customer");
+                    }
+                    else if(position.toLowerCase().equals("admin")){
+                        addListMap.add(admin);
+                        thisUser.setPosition("admin");
+                    }
+                    addMap.put("permissions", addListMap);
+
+                    String addMapString = objectMapper.writeValueAsString(addMap);
+                    BodyPublisher addBody = HttpRequest.BodyPublishers.ofString(addMapString);
+                    HttpRequest addPermissions = HttpRequest.newBuilder()
+                    .uri(new URI(url))
+                    .header("Content-Type", "application/json")
+                    .header("Authorization", "Bearer " + token)
+                    .method("POST", addBody)
+                    .build();
+
+                    HttpResponse<String> addResponse = httpClient.send(addPermissions, HttpResponse.BodyHandlers.ofString());
+                    usersRepository.save(thisUser);
+                    System.out.println(addResponse);
+
+                }
+                else{
+                    thisUser.setPosition("customer");
+                    usersRepository.save(thisUser);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            else{
-                thisUser.setPosition("customer");
-                usersRepository.save(thisUser);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -239,19 +248,7 @@ public class Services {
         catch(Exception e){e.printStackTrace();}
     }
 
-    public void changeUser(String email, String firstName, String lastName){
-        Users user = usersRepository.findByEmail(email);
-        if(user == null){
-            return;
-        }
-        if(firstName != null){
-            user.setFirst_name(firstName);
-        }
-        if(lastName != null){
-            user.setLast_name(lastName);
-        }
-        usersRepository.save(user);
-    }   
+
 
 
     public Map<String, String> findUserByAccessToken(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException{
