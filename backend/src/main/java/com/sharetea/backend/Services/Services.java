@@ -439,7 +439,7 @@ public class Services {
             }
             else if(cashierFirstName != null && cashierLastName != null){
                 Users newUser = new Users();
-                newUser.setFirst_name(cashierLastName);
+                newUser.setFirst_name(cashierFirstName);
                 newUser.setLast_name(cashierLastName);
                 usersRepository.save(newUser);
                 order.setCustomer_id(newUser.getUser_id());
