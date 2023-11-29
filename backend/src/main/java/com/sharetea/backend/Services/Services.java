@@ -127,12 +127,17 @@ public class Services {
             Map<String, String> manager = new HashMap<>();
             manager.put("resource_server_identifier", "https://sharetea315/");
             manager.put("permission_name", "manager");
-             Map<String, String> customer = new HashMap<>();
+            Map<String, String> customer = new HashMap<>();
             customer.put("resource_server_identifier", "https://sharetea315/");
             customer.put("permission_name", "customer");
+            Map<String, String> admin = new HashMap<>();
+            customer.put("resource_server_identifier", "https://sharetea315/");
+            customer.put("permission_name", "admin");
+
             listMap.add(cashier);
             listMap.add(manager);
             listMap.add(customer);
+            listMap.add(admin);
             deleteMap.put("permissions", listMap);
 
             String deleteMapString = objectMapper.writeValueAsString(deleteMap);
@@ -148,7 +153,7 @@ public class Services {
             HttpResponse<String> response = httpClient.send(deletePermissions, HttpResponse.BodyHandlers.ofString());
             System.out.println(response);
 
-            if(position.toLowerCase().equals("cashier") || position.toLowerCase().equals("manager") || position.toLowerCase().equals("customer")){
+            if(position.toLowerCase().equals("cashier") || position.toLowerCase().equals("manager") || position.toLowerCase().equals("customer") || position.toLowerCase().equals("admin")){
                 Map<String, Object> addMap = new HashMap<>();
                 List<Map<String, String>> addListMap = new ArrayList<>();
                 if(position.toLowerCase().equals("cashier")){
@@ -162,6 +167,10 @@ public class Services {
                 else if(position.toLowerCase().equals("customer")){
                     addListMap.add(customer);
                     thisUser.setPosition("customer");
+                }
+                else if(position.toLowerCase().equals("admin")){
+                    addListMap.add(admin);
+                    thisUser.setPosition("admin");
                 }
                 addMap.put("permissions", addListMap);
 
@@ -229,6 +238,20 @@ public class Services {
         } 
         catch(Exception e){e.printStackTrace();}
     }
+
+    public void changeUser(String email, String firstName, String lastName){
+        Users user = usersRepository.findByEmail(email);
+        if(user == null){
+            return;
+        }
+        if(firstName != null){
+            user.setFirst_name(firstName);
+        }
+        if(lastName != null){
+            user.setLast_name(lastName);
+        }
+        usersRepository.save(user);
+    }   
 
 
     public Map<String, String> findUserByAccessToken(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException{
@@ -388,10 +411,8 @@ public class Services {
             String lastName = userInfo.get("lastName");
             Users user = usersRepository.findByEmail(email);
             if( user != null) {
-                if(user.getFirst_name() != firstName){
+                if(user.getFirst_name() == null){
                     user.setFirst_name(firstName);
-                }
-                if(user.getLast_name() != lastName){
                     user.setLast_name(lastName);
                 }
                 usersRepository.addOrderCount(user.getUser_id());
@@ -482,6 +503,23 @@ public class Services {
         return order;
     }
 
+    public String removeOrder(Integer orderID){
+        Optional<Orders> order = ordersRepository.findById(orderID);
+        if(!order.isPresent()){
+            return "Couldn't find order";
+        }
+        
+        List<Integer> op = orderProductRepository.findByOrder_id(orderID);
+        List<Integer> it = new ArrayList<>();
+        for (Integer o : op){
+            it.addAll(itemToppingsRepository.findByOrder_product_id(o));
+        }
+        itemToppingsRepository.deleteAllById(it);
+        orderProductRepository.deleteAllById(op);
+        ordersRepository.deleteById(orderID);
+        return "Removed order " + orderID;
+    }
+
     public Map<String, List<Map<String,Object>>> userOrders(HttpServletRequest request, String paramEmail) throws URISyntaxException, IOException, InterruptedException{
         String email = "";
         if(request != null)
@@ -538,7 +576,7 @@ public class Services {
                 List<Map<String,Object>> itemList = new ArrayList<>();
 
                 for(Map<String, Object> product : productList){
-                    Map<String,Object> itemMap = new HashMap<>();
+                    Map<String,Object> itemMap = new HashMap<>(product);
                     Map<String, Object> productNamePrice = productRepository.findProductNamePrice((Integer) product.get("product_id"));
                     itemMap.put("product", productNamePrice.get("name"));
                     itemMap.put("price", productNamePrice.get("price"));

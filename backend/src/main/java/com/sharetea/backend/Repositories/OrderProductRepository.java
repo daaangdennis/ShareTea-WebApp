@@ -15,4 +15,7 @@ public interface OrderProductRepository extends JpaRepository<OrderProduct, Inte
 
     @Query(value = "select order_product_id, product_id, note, sugar_level, ice_level from order_product where order_id = ?1" , nativeQuery = true)
     public List<Map<String,Object>> getProductsbyOrderID(Integer orderID);
+
+    @Query(value = "select order_product_id from order_product where order_id = ?1", nativeQuery = true)
+    List<Integer> findByOrder_id(Integer order_id);
 }
