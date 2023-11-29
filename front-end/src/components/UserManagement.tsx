@@ -44,9 +44,9 @@ const UserManagement = () => {
     },
   ]);
 
-  // useEffect(() => {
-  //   getUsers(setUsersSourceData, getAccessTokenSilently);
-  // }, []);
+  useEffect(() => {
+    getUsers(setUsersSourceData, getAccessTokenSilently);
+  }, []);
   useEffect(() => {
     setSortedUsers(usersSourceData);
   }, [usersSourceData]);
