@@ -222,7 +222,6 @@ export function updateUser(
   accessTokenPromise: any,
   userId: number,
   role?: string,
-  email?: string,
   firstName?: string,
   lastName?: string
 ) {
@@ -232,7 +231,6 @@ export function updateUser(
       let URL = `${process.env.REACT_APP_BACKEND_URL}/users/update?userId=${userId}`;
 
       if (role !== undefined) URL += `&role=${role}`;
-      if (email !== undefined) URL += `&email=${email}`;
       if (firstName !== undefined) URL += `&firstName=${firstName}`;
       if (lastName !== undefined) URL += `&lastName=${lastName}`;
 

@@ -69,7 +69,6 @@ const UserManagement = () => {
   const [editedRole, setEditedRole] = useState("");
   const [editedFirstName, setEditedFirstName] = useState("");
   const [editedLastName, setEditedLastName] = useState("");
-  const [editedEmail, setEditedEmail] = useState("");
   const usersColumns = [
     <div className="d-flex align-items-center">
       User ID
@@ -131,14 +130,12 @@ const UserManagement = () => {
       if (!isEditing) {
         setEditRow(i);
         setEditedRole(user.role);
-        setEditedEmail(user.email);
         setEditedFirstName(user.first_name);
         setEditedLastName(user.last_name);
       } else {
         handleUpdateUser(
           user.user_id,
           editedRole,
-          editedEmail,
           editedFirstName,
           editedLastName
         );
@@ -172,16 +169,7 @@ const UserManagement = () => {
       ) : (
         user.last_name
       ),
-      isEditing ? (
-        <input
-          className="form-control"
-          value={editedEmail}
-          onChange={(e) => setEditedEmail(e.target.value)}
-          type="email"
-        />
-      ) : (
-        user.email
-      ),
+      user.email,
       isEditing ? (
         <select
           className="form-select"
@@ -265,7 +253,6 @@ const UserManagement = () => {
   const handleUpdateUser = (
     userId: number,
     newRole?: string,
-    newEmail?: string,
     newFirstName?: string,
     newLastName?: string
   ) => {
@@ -273,7 +260,6 @@ const UserManagement = () => {
       getAccessTokenSilently,
       userId,
       newRole,
-      newEmail,
       newFirstName,
       newLastName
     )
