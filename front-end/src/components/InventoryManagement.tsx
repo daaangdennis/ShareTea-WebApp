@@ -238,7 +238,7 @@ const InventoryManagement = () => {
             </svg>
           </button>
           <button
-            onClick={() => handleDeleteInventory(item.name)}
+            onClick={() => handleDeleteInventory(item.inventory_id)}
             className="btn btn-danger btn-sm"
           >
             <svg
@@ -291,9 +291,9 @@ const InventoryManagement = () => {
     setInputInventoryName("");
     setInputInventoryQuantity("");
   };
-  const handleDeleteInventory = (name: string) => {
-    if (name) {
-      deleteInventory(getAccessTokenSilently, name)
+  const handleDeleteInventory = (id: number) => {
+    if (id) {
+      deleteInventory(getAccessTokenSilently, id)
         .then(() => {
           getInventory(setInventoryDataSource, getAccessTokenSilently);
         })

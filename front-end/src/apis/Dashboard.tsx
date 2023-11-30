@@ -83,18 +83,18 @@ export function addInventory(
   });
 }
 
-export function deleteInventory(accessTokenPromise: any, name: string) {
+export function deleteInventory(accessTokenPromise: any, id: number) {
   return new Promise((resolve, reject) => {
     accessTokenPromise().then((accessToken: any) => {
       const headers = { Authorization: `Bearer ${accessToken}` };
       const URL =
         process.env.REACT_APP_BACKEND_URL +
-        `/inventory/delete?inventoryName=${name}`;
+        `/inventory/delete?inventoryId=${id}`;
 
       Axios.post(URL, {}, { headers })
         .then((response) => {
           console.log(
-            "deleteInventory: item name = " + name + " Response: " + response
+            "deleteInventory: item id = " + id + " Response: " + response
           );
           resolve(true);
         })

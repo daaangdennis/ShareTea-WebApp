@@ -28,7 +28,7 @@ function App() {
     },
     { name: "Cart", path: "/Cart", element: <CartPage /> },
     {
-      name: "CashierOrder",
+      name: "Checkout",
       path: "/CashierOrder",
       element: <CashierOrderPage />,
       roles: ["cashier", "manager", "admin"],
