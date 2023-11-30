@@ -34,16 +34,18 @@ function UserOrdersPage() {
                     activeKey={selectedNavItem}
                     onSelect={(key) => setSelectedNavItem(key || "")}
                     >
-                    {navItems.map((item, i) => (
-                        <div key={i}>
-                        <Nav.Link 
-                            eventKey={item.name} 
-                            style={selectedNavItem === item.name ? ({textDecoration: "none", color: "white", fontWeight: "700"}) : ({textDecoration: "none", color: "white"})}
-                        >
-                            {item.name}
-                        </Nav.Link>
-                        </div>
-                    ))}
+                    <div className="menupage-navbar-link-container p-0">
+                        {navItems.map((item, i) => (
+                            <div key={i}>
+                            <Nav.Link 
+                                eventKey={item.name} 
+                                style={selectedNavItem === item.name ? ({textDecoration: "none", color: "white", fontWeight: "700"}) : ({textDecoration: "none", color: "white"})}
+                            >
+                                {item.name}
+                            </Nav.Link>
+                            </div>
+                        ))}
+                    </div>
                 </Nav>
             </SubNav>
             <div className="row">
