@@ -163,8 +163,8 @@ function StatsPage() {
           </div>
         </div>
 
-        <div className="col-md-9 d-flex container-fluid justify-content-center align-items-center mt-2">
-          <div className="TableContainer mx-4 mb-4 d-flex justify-content-center overflow-auto">
+        <div className="col-md-6 d-flex container-fluid justify-content-center align-items-center mt-2">
+          <div className="TableContainer mb-4 mx-1 justify-content-center overflow-auto flex-sm-column flex-md-row">
             {generate && showSales && <SalesReportTable />}
             {generate && showProductUsage && <ProductUsageTable />}
             {generate && showRestockUsage && <RestockReportTable />}
@@ -175,8 +175,9 @@ function StatsPage() {
               <PopularPairsTable startDate={startDate} endDate={endDate} />
             )}
           </div>
-
-          <div className="GraphContainer mx-4 mb-4 d-flex justify-content-center">
+        </div>
+        <div className="col-md-6 d-flex container-fluid justify-content-center align-items-center mt-2">
+          <div className="GraphContainer mx-2 mb-4 d-flex justify-content-center overflow-auto flex-sm-column flex-md-row">
             {generate && showSales && (
               <SalesReportGraph startDate={startDate} endDate={endDate} />
             )}

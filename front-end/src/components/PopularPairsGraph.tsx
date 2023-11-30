@@ -47,13 +47,13 @@ function PopularPairsGraph() {
   };
 
   return (
-    <PieChart width={400} height={400}>
+    <PieChart width={500} height={500}>
       <Pie
         data={formattedData}
         dataKey="value"
-        cx={200}
-        cy={200}
-        outerRadius={80}
+        cx={250}
+        cy={230}
+        outerRadius={160}
         fill="#8884d8"
         label
       >

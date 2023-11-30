@@ -20,14 +20,15 @@ function ProductUsage({ startDate, endDate }: dateProps) {
   return (
     <ResponsiveContainer width="100%" height="100%">
       <BarChart
-        width={500}
+        style={{ width: "100%" }}
+        width={300}
         height={300}
         data={data}
         margin={{
           top: 5,
-          right: 30,
-          left: 20,
-          bottom: 150,
+          right: 0,
+          left: 0,
+          bottom: 60,
         }}
       >
         <CartesianGrid strokeDasharray="3 3" />
@@ -39,7 +40,7 @@ function ProductUsage({ startDate, endDate }: dateProps) {
         />
         <YAxis dataKey="quantity_used" />
         <Tooltip />
-        <Legend layout="vertical" verticalAlign="middle" align="right" />
+        <Legend layout="vertical" verticalAlign="top" align="center" />
         <Bar
           dataKey="quantity_used"
           fill="#82ca9d"

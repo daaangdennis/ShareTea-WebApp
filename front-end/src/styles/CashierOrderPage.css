@@ -6,6 +6,7 @@
 
 .CategoryNavBar {
   background-color: #cf152d;
+  overflow-x: auto;
 }
 
 .cashier-page-item-text {
@@ -147,4 +148,16 @@
 .largeText {
   color: white;
   font-weight: 700;
+}
+
+.cashier-done-button.btn {
+  font-weight: 700;
+  color: white;
+  padding: 9px 25px;
+  background-color: #cf152d;
+  border: solid #cf152d;
+  border-radius: 10px;
+  transition: all 0.3s ease 0s;
+  text-align: center;
+  text-decoration: none;
 }
