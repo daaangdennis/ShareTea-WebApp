@@ -240,8 +240,8 @@ public class MainController {
     }
 
     @PostMapping("/inventory/delete")
-    public String inventoryDelete(@RequestParam String inventoryName) {
-        return service.deleteInventory(inventoryName);
+    public String inventoryDelete(@RequestParam Integer inventoryId) {
+        return service.deleteInventory(inventoryId);
     }
 
     @GetMapping("/categories/get")
