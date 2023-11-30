@@ -929,15 +929,15 @@ public class Services {
         }
     }
 
-    public String deleteInventory(String name){
-        Inventory inventory = inventoryRepository.findByName(name);
-        if(inventory == null){
-            return ("Could not find " + name + " in the inventory list.");
+    public String deleteInventory(Integer ID){
+        Optional<Inventory> inventory = inventoryRepository.findById(ID);
+        if(!inventory.isPresent()){
+            return ("Could not find " + ID + " in the inventory list.");
         }
-        String invName = inventory.getName();
-        inventory.setActive(false);
-        inventoryRepository.save(inventory);
-        return ("Deleted " + invName);
+        Inventory presentInventory = inventory.get();
+        presentInventory.setActive(false);
+        inventoryRepository.save(presentInventory);
+        return ("Deleted inventory#" + ID);
     }
 
     public List<Map<String, Object>> lowStock(){

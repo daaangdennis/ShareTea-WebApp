@@ -14,7 +14,10 @@ import jakarta.transaction.Transactional;
 
 @Repository
 public interface InventoryRepository extends JpaRepository<Inventory, Integer> {
+
+    @Query(value = "select * from inventory where name = ?1", nativeQuery = true)
     Inventory findByName(String name);
+    
     @Transactional void deleteByName(String name);
 
     @Query(value = "select * from inventory where active = 'true' and is_topping = 'true'", nativeQuery = true)
