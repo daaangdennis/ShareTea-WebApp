@@ -4,7 +4,7 @@ import { SubNavProps } from "../types/types";
 const SubNav: React.FC<SubNavProps> = ({ children }) => {
   return (
     <div className="menupage-navbar">
-      <div className="menupage-navbar-link-container px-md-5">{children}</div>
+      <div className="menupage-navbar-link-container py-2">{children}</div>
     </div>
   );
 };

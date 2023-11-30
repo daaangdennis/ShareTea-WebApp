@@ -58,7 +58,8 @@ function CartPage() {
               </div>
               <div className="col-md-6">
                 ${cartItems.total.toFixed(2)}
-                <br></br>${(cartItems.total * 0.0625).toFixed(2)}
+                <br></br>
+                ${(cartItems.total * 0.0825).toFixed(2)}
               </div>
             </div>
             <div className="total-information">
@@ -66,7 +67,7 @@ function CartPage() {
               <div className="col-md-6">
                 $
                 {(
-                  parseFloat((cartItems.total * 0.0625).toFixed(2)) +
+                  parseFloat((cartItems.total * 0.0825).toFixed(2)) +
                   parseFloat(cartItems.total.toFixed(2))
                 ).toFixed(2)}
               </div>

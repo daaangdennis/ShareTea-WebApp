@@ -12,14 +12,17 @@ import {
   Cart,
 } from "../types/types";
 import { cart } from "../atoms/cart";
-import { postCashierOrder } from "../apis/CashierOrder";
+import { nextOrder, postCashierOrder } from "../apis/CashierOrder";
+import Table from "../components/Table";
+import { Categories } from "../atoms/product";
+import { useGetCategories } from "../apis/Category";
 var _ = require("lodash");
 
 interface ItemEntry {
   itemName: string;
   itemIce: string;
   itemSugar: string;
-  itemToppings: string;
+  itemToppings: string | string[];
   itemPrice: string;
 }
 
@@ -53,9 +56,17 @@ function CashierOrderPage() {
   const [subTotal, setSubTotal] = useState<number>(0.0);
   const [cartItems, setcartItems] = useRecoilState<Cart>(cart);
   const [itemsPreserved, setItemsPreserved] = useState(false);
-
+  const [filteredCart, setFilteredCart] = useState<
+    (string | string[] | undefined)[][]
+  >([]);
+  const categoriesList: string[] = useRecoilValue(Categories);
+  const [currentOrderNumber, setCurrentOrderNumber] = useState(0);
+  const [customerName, setCustomerName] = useState("");
+  const [displayIce, setDisplayIce] = useState(false);
+  const [displaySugar, setDisplaySugar] = useState(false);
+  const [displayTopping, setDisplayTopping] = useState(false);
   // Add product functionality like checking to see if a product has toppings
-
+  useGetCategories();
   const iceLevel = [
     "Select Ice Level",
     "No Ice",
@@ -75,18 +86,9 @@ function CashierOrderPage() {
     "120% Sugar",
   ];
 
-  const drinks = [
-    "Milk Tea",
-    "Fruit Tea",
-    "Brewed Tea",
-    "Ice Blended",
-    "Tea Mojito",
-    "Creama",
-    "Fresh Milk",
-  ];
-
   const handleProceedButton = () => {
-    postCashierOrder(customerEmail, cartItems);
+    setCurrentOrderNumber(currentOrderNumber + 1);
+    postCashierOrder(customerName, customerEmail, cartItems);
     handleCancelButton();
   };
 
@@ -101,7 +103,25 @@ function CashierOrderPage() {
     });
     newlist.total =
       newlist.total + selectedProduct.price + listToppings.length * 0.75;
+
+    console.log(newlist.total);
     setcartItems(newlist);
+
+    let sum: number = 0;
+    const newArray = newlist.items.map((props) => [
+      props.product.name,
+      props.ice_level,
+      props.sugar_level,
+      props.toppings?.map((topping) => topping.name),
+      (props.product.price + (props.toppings?.length ?? 0) * 0.75).toFixed(2),
+    ]);
+    setSubTotal(newlist.total);
+    setFilteredCart(newArray);
+    cartItems.items.forEach((item) => {
+      sum += item.product.price;
+    });
+    console.log(sum);
+    console.log(filteredCart);
   };
 
   const handleNoteChange = (event: any) => {
@@ -110,6 +130,10 @@ function CashierOrderPage() {
 
   const handleEmailChange = (event: any) => {
     setCustomerEmail(event.target.value);
+  };
+
+  const handleNameChange = (event: any) => {
+    setCustomerName(event.target.value);
   };
 
   const handleIceLevelChange = (event: any) => {
@@ -122,6 +146,10 @@ function CashierOrderPage() {
 
   const handleShowOrderDetails = () => {
     setShowOrderDetails((prevDiv) => !prevDiv);
+    setListToppings([]);
+    setSelectedIceLevel("");
+    setSelectedSugarLevel("");
+    setNote("");
   };
 
   const handleCancelButton = () => {
@@ -132,34 +160,23 @@ function CashierOrderPage() {
       items: [],
       total: 0,
     });
+    setFilteredCart([]);
   };
 
   const handleCashierMenuButton = (product: product) => {
+    setDisplayIce(product.has_ice);
+    setDisplaySugar(product.has_sugar);
+    setDisplayTopping(product.has_toppings);
+    console.log(displayIce);
+    console.log(displaySugar);
+    console.log(displayTopping);
     setShowOrderDetails(true);
     setSelectedProduct(product);
   };
 
-  const addNewItem = (
-    product: product,
-    _Ice: string,
-    _Sugar: string,
-    _Toppings: topping[]
-  ) => {
-    setRows((prevRows) => [
-      ...prevRows,
-      {
-        itemName: product.name,
-        itemIce: _Ice,
-        itemSugar: _Sugar,
-        itemToppings: _Toppings.map((topping) => topping.name).join(", "),
-        itemPrice: (product.price + _Toppings.length * 0.75).toFixed(2),
-      },
-    ]);
+  const addNewItem = () => {
     setShowOrderDetails(false);
     addProductToCart();
-    setSubTotal(
-      (prevSubTotal) => prevSubTotal + (product.price + _Toppings.length * 0.75)
-    );
     setSelectedIceLevel("No Ice");
     setSelectedSugarLevel("No Sugar");
     setSelectedProduct({
@@ -178,34 +195,20 @@ function CashierOrderPage() {
   /**These states are probably used for atoms, but I will look into getting rid of them */
   useEffect(() => {
     getProducts(setBestSelling, setFilteredBestSelling);
+    const fetchData = async () => {
+      const result = await nextOrder();
+      setCurrentOrderNumber(result);
+    };
+    fetchData(); // Call the async function
     console.log(cart);
   }, []);
 
-  useEffect(() => {
-    if (!itemsPreserved) {
-      cartItems.items.map((item) => {
-        const value: ItemEntry = {
-          itemName: item.product.name,
-          itemIce: item.ice_level || "",
-          itemSugar: item.sugar_level || "",
-          itemToppings:
-            item.toppings?.map((topping: topping) => topping.name).join(", ") ||
-            "",
-          itemPrice: item.product.price.toFixed(2),
-        };
-        setRows([...rows, value]);
-      });
-      setItemsPreserved(true);
-    }
-  });
-
-  console.log("render");
-  const handleCategoryButton = (category: string) => {
-    setCategory(category);
+  const handleCategoryButton = (cate: string) => {
+    setCategory(cate);
   };
 
   let filteredProducts = bestSelling.products.filter(
-    (product) => product.category === category
+    (product) => product.category == category
   );
 
   if (filteredProducts.length === 0) {
@@ -213,238 +216,248 @@ function CashierOrderPage() {
   }
 
   return (
-    <main>
-      <div className="OrderContainer">
-        <div className="CategoryNavBar">
-          {/*scrollable navigation bar*/}
-          {/* create category buttons here */}
-          <button
-            onClick={() => handleCategoryButton(drinks[0])}
-            className="cashier-page-button"
-          >
-            {drinks[0]}
-          </button>
-          <button
-            onClick={() => handleCategoryButton(drinks[1])}
-            className="cashier-page-button"
-          >
-            {drinks[1]}
-          </button>
-          <button
-            onClick={() => handleCategoryButton(drinks[2])}
-            className="cashier-page-button"
-          >
-            {drinks[2]}
-          </button>
-          <button
-            onClick={() => handleCategoryButton(drinks[3])}
-            className="cashier-page-button"
-          >
-            {drinks[3]}
-          </button>
-          <button
-            onClick={() => handleCategoryButton(drinks[4])}
-            className="cashier-page-button"
-          >
-            {drinks[4]}
-          </button>
-          <button
-            onClick={() => handleCategoryButton(drinks[5])}
-            className="cashier-page-button"
-          >
-            {drinks[5]}
-          </button>
-        </div>
-        <div className="FoodItemButtonsContainer py-md-5">
-          {/* create food item buttons and add them here */}
-          {/* when button is clicked FoodItemContainer pops into frame to edit the options for the order */}
-          {/* <ProductGrid products={filteredProducts} /> */}
-          <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3">
-            {filteredProducts.map((product: product) => (
+    <div className="container-fluid p-0">
+      <div className="row p-0">
+        <div className="col-lg-9 d-flex flex-column justify-content-start p-0">
+          <div className="CategoryNavBar mb-2 p-4">
+            {categoriesList.map((category) => (
               <button
-                className="cashierItemButton btn btn-primary"
-                onClick={() => handleCashierMenuButton(product)}
+                className=" cashier-category-button btn my-1 mx-2"
+                onClick={() => handleCategoryButton(category)}
               >
-                {product.name}
+                {category}
               </button>
             ))}
           </div>
+          <div className="FoodItemButtonsContainer">
+            <div className="row row-cols-1 row-cols-md-2 row-cols-lg-6 m-2">
+              {filteredProducts.map((product: product) => (
+                <button
+                  className=" btn cashier-page-button mb-2 mx-2 wrap-text"
+                  onClick={() => handleCashierMenuButton(product)}
+                >
+                  {product.name}
+                  <div className="button-subtext">
+                    ${product.price.toFixed(2)}
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
-        {showOrderDetails ? (
-          <div className="FoodItemContainer">
-            {/* box used to contain details about the food item selected */}
-            <div className="cashier-page-item-text">
-              <h1>{selectedProduct.name}</h1>
-              <h2>${selectedProduct.price.toFixed(2)}</h2>
-            </div>
+        {!showOrderDetails ? (
+          <div className="col-lg-3 p-0">
+            <div className="OrderDetailsContainer flex-container flex-column d-flex h-100 p-0">
+              <div className="OrderHeader">
+                <h1 className="largeText">Order#{currentOrderNumber}</h1>
 
-            <div className="cashier-ice-dropdown">
-              {/* drop down for selecting the ice level of drinks */}
-              {iceLevel && (
-                <div>
-                  <h2>Ice Level</h2>
-                  <select
-                    value={selectedIceLevel}
-                    onChange={handleIceLevelChange}
-                    className="form-control-lg custompage-dropdown"
-                  >
-                    {iceLevel.map((level: string, i: number) => (
-                      <option key={i}>{level}</option>
-                    ))}
-                  </select>
+                <div className="order-customer-name">
+                  <textarea
+                    className="form-control cashier-page-textarea mb-1"
+                    placeholder="Enter Customer Name..."
+                    rows={1}
+                    value={customerName}
+                    onChange={handleNameChange}
+                  ></textarea>
+                  <textarea
+                    className="form-control cashier-page-textarea"
+                    placeholder="Enter Customer Email..."
+                    rows={1}
+                    value={customerEmail}
+                    onChange={handleEmailChange}
+                  ></textarea>
                 </div>
-              )}
-            </div>
-            <div className="cashier-sugar-dropdown">
-              {/* drop down for selecting the sugar level of drinks */}
-              {sugarLevel && (
-                <div>
-                  <h2>Sugar Level</h2>
-                  <select
-                    value={selectedSugarLevel}
-                    onChange={handleSugarLevelChange}
-                    className="form-control-lg custompage-dropdown"
-                  >
-                    {sugarLevel.map((level: string, i: number) => (
-                      <option key={i}>{level}</option>
-                    ))}
-                  </select>
-                </div>
-              )}
-            </div>
-            <div className="cashier-topping-grid">
-              {/* add toggle buttons for selecting toppings */}
-              {sourceProducts.toppings && (
-                <ToppingsGrid
-                  sourceToppings={sourceProducts.toppings}
-                  toppings={listToppings}
-                  setToppings={setListToppings}
-                />
-              )}
-            </div>
-            <div className="mt-2 cashier-notes-container">
-              {/* add text box to add additional notes to the order */}
-              <h2>Additional Notes</h2>
-              <textarea
-                className="form-control cashier-page-textarea"
-                rows={3}
-                value={note}
-                onChange={handleNoteChange}
-              ></textarea>
-            </div>
-            <div className="cashier-add-to-order-container flex-column flex-sm-row">
-              {/* add a button to add the item to the order */}
-              {/* closes the FoodItemContainer div */}
-              <button
-                onClick={() =>
-                  addNewItem(
-                    selectedProduct,
-                    selectedIceLevel,
-                    selectedSugarLevel,
-                    listToppings
-                  )
-                }
-                className="cashier-page-button cashier-add-to-order"
-              >
-                Add to Order
-              </button>
+              </div>
+              <Table
+                className="m-4"
+                columns={["Name", "Ice", "Sugar", "Toppings", "Price"]}
+                data={filteredCart}
+              />
+              <div className="PricingContainer">
+                <h1 className="largeText">Subtotal: ${subTotal.toFixed(2)}</h1>
+                <h1 className="largeText">
+                  Tax: ${(subTotal * 0.0825).toFixed(2)}
+                </h1>
+                <div className="dashed-line"></div>
+                <h1 className="largeText">
+                  Total: ${(subTotal * 1.0825).toFixed(2)}
+                </h1>
+              </div>
+              <div className="OrderDetailsButtonContainer d-flex justify-content-center align-items-center">
+                <button
+                  onClick={handleProceedButton}
+                  className="cashier-category-button btn mx-2 mb-4"
+                >
+                  Proceed
+                </button>
+
+                <button
+                  onClick={handleCancelButton}
+                  className="cashier-category-button btn mx-2 mb-4"
+                >
+                  Cancel
+                </button>
+              </div>
             </div>
           </div>
         ) : (
-          <div className="OrderDetailsContainer ">
-            <div className="OrderHeader">
-              {/* order number here */}
-              <h1>Order#</h1>
-              {/* enter customer name text box */}
-              <div className="order-customer-name">
-                <textarea
-                  className="form-control cashier-page-textarea"
-                  placeholder="Enter Customer Email..."
-                  rows={1}
-                  value={customerEmail}
-                  onChange={handleEmailChange}
-                ></textarea>
-              </div>
-            </div>
-            <div className="ItemGrid">
-              <div className="ItemCategories row">
-                {/* name column */}
-                <div className="col orderColumns">
-                  <p>Name</p>
-                </div>
-                {/* ice column */}
-                <div className="col orderColumns">
-                  <p>Ice</p>
-                </div>
-                {/* sugar column */}
-                <div className="col orderColumns">
-                  <p>Sugar</p>
-                </div>
-                {/* toppings column */}
-                <div className="col orderColumns">
-                  <p>Toppings</p>
-                </div>
-                {/* price column */}
-                <div className="col orderColumns">
-                  <p>Price</p>
-                </div>
+          <div className="col-lg-3 p-0">
+            <div className="FoodItemContainer flex-container flex-column d-flex h-100 p-0">
+              <div className="cashier-page-item-text">
+                <h1>{selectedProduct.name}</h1>
+                <h2>${selectedProduct.price.toFixed(2)}</h2>
               </div>
 
-              {rows.map((rowData, index) => (
-                <div key={index} className="CartItems row">
-                  <div className="col orderColumns" style={{ maxWidth: "20%" }}>
-                    <p>{rowData.itemName}</p>
-                  </div>
-                  <div className="col orderColumns" style={{ maxWidth: "20%" }}>
-                    <p>{rowData.itemIce}</p>
-                  </div>
-                  <div className="col orderColumns" style={{ maxWidth: "20%" }}>
-                    <p>{rowData.itemSugar}</p>
-                  </div>
-                  <div className="col orderColumns" style={{ maxWidth: "20%" }}>
-                    <p>{rowData.itemToppings}</p>
-                  </div>
-                  <div className="col orderColumns" style={{ maxWidth: "20%" }}>
-                    <p>${rowData.itemPrice}</p>
-                  </div>
+              {displayIce && (
+                <div className="cashier-ice-dropdown">
+                  {iceLevel && (
+                    <div>
+                      <h2>Ice Level</h2>
+                      <select
+                        value={selectedIceLevel}
+                        onChange={handleIceLevelChange}
+                        className="form-control-lg custompage-dropdown"
+                      >
+                        {iceLevel.map((level: string, i: number) => (
+                          <option key={i}>{level}</option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
                 </div>
-              ))}
-            </div>
-            <div className="PricingContainer">
-              {/* Subtotal:
-                Tax:
-                White Dashed Line
-                Total: */}
-              <h1>Subtotal: ${subTotal.toFixed(2)}</h1>
-              <h1>Tax: ${(subTotal * 0.0825).toFixed(2)}</h1>
-              <div className="dashed-line"></div>
-              <h1>Total: ${(subTotal * 1.0825).toFixed(2)}</h1>
-            </div>
-            <div className="OrderDetailsButtonContainer">
-              {/* Proceed Button */}
-              <button
-                onClick={handleProceedButton}
-                className="cashier-page-button"
-              >
-                Proceed
-              </button>
-              {/* Cancel Button */}
-              <button
-                onClick={handleCancelButton}
-                className="cashier-page-button"
-              >
-                Cancel
-              </button>
+              )}
+              {displaySugar && (
+                <div className="cashier-sugar-dropdown">
+                  {sugarLevel && (
+                    <div>
+                      <h2>Sugar Level</h2>
+                      <select
+                        value={selectedSugarLevel}
+                        onChange={handleSugarLevelChange}
+                        className="form-control-lg custompage-dropdown"
+                      >
+                        {sugarLevel.map((level: string, i: number) => (
+                          <option key={i}>{level}</option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
+                </div>
+              )}
+              {displayTopping && (
+                <div className="cashier-topping-grid">
+                  <h2 className="mt-4">Toppings</h2>
+                  {sourceProducts.toppings && (
+                    <ToppingsGrid
+                      sourceToppings={sourceProducts.toppings}
+                      toppings={listToppings}
+                      setToppings={setListToppings}
+                    />
+                  )}
+                </div>
+              )}
+              <div className="mt-2 cashier-page-item-text mb-2">
+                <h2 className="text-center">Additional Notes</h2>
+                <textarea
+                  className="form-control cashier-page-textarea"
+                  rows={3}
+                  value={note}
+                  onChange={handleNoteChange}
+                ></textarea>
+              </div>
+              <div className="flex-column flex-sm-row d-flex align-items-center justify-content-center mb-2">
+                <button
+                  onClick={handleShowOrderDetails}
+                  className="cashier-done-button btn mx-2"
+                >
+                  Back
+                </button>
+                <button
+                  onClick={() => addNewItem()}
+                  className="cashier-done-button btn mx-2"
+                >
+                  Add to Order
+                </button>
+              </div>
             </div>
           </div>
         )}
-        <div className="ViewOrder cashier-page-button-container flex-column flex-sm-row">
-          {/* create view order button and add api functionality */}
-          {/* switches pages to the orderViewPage */}
-          <button className="cashier-page-button">View Order</button>
+
+        {/* 
+                <div className="ItemGrid">
+                  <div className="ItemCategories row">
+           
+                    <div className="col orderColumns">
+                      <p>Name</p>
+                    </div>
+
+                    <div className="col orderColumns">
+                      <p>Ice</p>
+                    </div>
+          
+                    <div className="col orderColumns">
+                      <p>Sugar</p>
+                    </div>
+              
+                    <div className="col orderColumns">
+                      <p>Toppings</p>
+                    </div>
+               
+                    <div className="col orderColumns">
+                      <p>Price</p>
+                    </div>
+                  </div>
+
+                  {rows.map((rowData, index) => (
+                    <div key={index} className="CartItems row">
+                      <div
+                        className="col orderColumns"
+                        style={{ maxWidth: "20%" }}
+                      >
+                        <p>{rowData.itemName}</p>
+                      </div>
+                      <div
+                        className="col orderColumns"
+                        style={{ maxWidth: "20%" }}
+                      >
+                        <p>{rowData.itemIce}</p>
+                      </div>
+                      <div
+                        className="col orderColumns"
+                        style={{ maxWidth: "20%" }}
+                      >
+                        <p>{rowData.itemSugar}</p>
+                      </div>
+                      <div
+                        className="col orderColumns"
+                        style={{ maxWidth: "20%" }}
+                      >
+                        <p>{rowData.itemToppings}</p>
+                      </div>
+                      <div
+                        className="col orderColumns"
+                        style={{ maxWidth: "20%" }}
+                      >
+                        <p>${rowData.itemPrice}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div> */}
+
+        {/* </div>
+            </div>
+          </div>
         </div>
       </div>
-    </main>
+
+      <div className="ViewOrder cashier-page-button-container flex-column flex-sm-row">
+ 
+   
+        <button className="cashier-page-button">View Order</button>
+      </div>
+    </div> */}
+      </div>
+    </div>
   );
 }
 

@@ -1,6 +1,6 @@
 import { useRecoilValue } from "recoil";
-import { SalesProduct } from "../atoms/statsItems";
-import { productSales } from "../types/types";
+import { SalesProduct, inventoryUsage } from "../atoms/statsItems";
+import { dateProps, productSales } from "../types/types";
 import { useGetSalesReport } from "../apis/SalesReport";
 import {
   BarChart,
@@ -13,29 +13,36 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-function ProductUsage() {
-  const data = useRecoilValue(SalesProduct);
-  useGetSalesReport();
+import { useGetProductUsageReport } from "../apis/ProductUsageReport";
+function ProductUsage({ startDate, endDate }: dateProps) {
+  const data = useRecoilValue(inventoryUsage);
+  useGetProductUsageReport(startDate, endDate);
   return (
     <ResponsiveContainer width="100%" height="100%">
       <BarChart
-        width={500}
+        style={{ width: "100%" }}
+        width={300}
         height={300}
         data={data}
         margin={{
           top: 5,
-          right: 30,
-          left: 20,
-          bottom: 150,
+          right: 0,
+          left: 0,
+          bottom: 60,
         }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="name" angle={-45} interval={0} textAnchor="end" />
-        <YAxis dataKey="count" />
+        <XAxis
+          dataKey="inventory_name"
+          angle={-45}
+          interval={0}
+          textAnchor="end"
+        />
+        <YAxis dataKey="quantity_used" />
         <Tooltip />
-        <Legend layout="vertical" verticalAlign="middle" align="right" />
+        <Legend layout="vertical" verticalAlign="top" align="center" />
         <Bar
-          dataKey="count"
+          dataKey="quantity_used"
           fill="#82ca9d"
           activeBar={<Rectangle fill="gold" stroke="purple" />}
         />

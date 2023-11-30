@@ -1,19 +1,18 @@
 import Axios from "axios";
-import { listProductToppings, product } from "../types/types";
+import { dateProps, listProductToppings, product } from "../types/types";
 import { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { productSales } from "../types/types";
 import { SalesProduct } from "../atoms/statsItems";
 import { useRecoilState } from "recoil";
 
-export function useGetSalesReport() {
+export function useGetSalesReport(startDate: Date, endDate: Date) {
   const [saleItems, setSaleItems] = useRecoilState(SalesProduct);
-
+  const start = startDate.toISOString().split("T")[0];
+  const end = endDate.toISOString().split("T")[0];
+  const route = "/product/sales?startDate=" + start + "&endDate=" + end;
   useEffect(() => {
-    Axios.get(
-      process.env.REACT_APP_BACKEND_URL +
-        "/product/sales?startDate=2023-01-01&endDate=2023-11-10"
-    )
+    Axios.get(process.env.REACT_APP_BACKEND_URL + route)
       .then((response) => {
         const data: productSales[] = response.data;
         setSaleItems(data);

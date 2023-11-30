@@ -2,7 +2,7 @@ import Axios from "axios";
 import { listProductToppings, product } from "../types/types";
 import { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { productSales } from "../types/types";
+import { restockItems } from "../types/types";
 import { restockInventory } from "../atoms/statsItems";
 import { useRecoilState } from "recoil";
 
@@ -12,7 +12,7 @@ export function useGetRestockReport() {
   useEffect(() => {
     Axios.get(process.env.REACT_APP_BACKEND_URL + "/inventory/low")
       .then((response) => {
-        const data: productSales[] = response.data;
+        const data: restockItems[] = response.data;
         setRestockItems(data);
         console.log(data);
       })
