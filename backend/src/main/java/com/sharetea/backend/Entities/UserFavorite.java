@@ -15,7 +15,7 @@ public class UserFavorite {
     private Integer user_favorite_id;
 
     @NotNull Integer user_id;
-    @NotNull Integer product_id;
+    @NotNull Integer order_product_id;
 
     public Integer getUser_favorite_id() {
         return user_favorite_id;
@@ -29,12 +29,13 @@ public class UserFavorite {
     public void setUser_id(Integer user_id) {
         this.user_id = user_id;
     }
-    public Integer getProduct_id() {
-        return product_id;
+    public Integer getOrder_product_id() {
+        return order_product_id;
     }
-    public void setProduct_id(Integer product_id) {
-        this.product_id = product_id;
+    public void setOrder_product_id(Integer order_product_id) {
+        this.order_product_id = order_product_id;
     }
+
 
     
 

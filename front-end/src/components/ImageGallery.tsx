@@ -29,7 +29,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, style }) => {
         <div className="image-gallery-container d-flex" style={{ ...style }}>
           <img
             src={images[index]}
-            className="ImageGallery, img-fluid"
+            className="ImageGallery object-fit-cover"
             alt={`Image ${index + 1}`}
           />
           <div className="gallery-button-container col-md-12 col-md-6 d-flex">

@@ -3,12 +3,14 @@ import MenuContent from "../components/MenuContent";
 import MenuSidebar from "../components/MenuSidebar";
 import SubNav from "../components/SubNav";
 import Nav from "react-bootstrap/Nav";
+import RecommendedContent from "../components/RecommendedContent";
+import PreviousContent from "../components/PreviousContent";
+import FavoriteContent from "../components/FavoriteContent";
 
 function MenuPage() {
   const navItems = [
     { name: "Menu" },
     { name: "Recommended" },
-    { name: "Previous Orders" },
     { name: "Favorites" },
   ];
 
@@ -19,32 +21,43 @@ function MenuPage() {
       case "Menu":
         return <MenuContent />;
       case "Recommended":
-        return <div>Recommended Content</div>;
-      case "Previous Orders":
-        return <div>Previous Orders Content</div>;
+        return <RecommendedContent />;
       case "Favorites":
-        return <div>Favorites Content</div>;
+        return <FavoriteContent />;
       default:
         return <MenuContent />;
     }
   };
 
-  const shouldRenderSidebar =
-    selectedNavItem === "Menu" || selectedNavItem === "Recommended";
+  const shouldRenderSidebar = selectedNavItem === "Menu";
 
   return (
     <div className="col">
       <SubNav>
         <Nav
-          variant="tabs"
           activeKey={selectedNavItem}
           onSelect={(key) => setSelectedNavItem(key || "")}
         >
-          {navItems.map((item, i) => (
-            <Nav.Item key={i}>
-              <Nav.Link eventKey={item.name}>{item.name}</Nav.Link>
-            </Nav.Item>
-          ))}
+          <div className="menupage-navbar-link-container p-0">
+            {navItems.map((item, i) => (
+              <div key={i}>
+                <Nav.Link
+                  eventKey={item.name}
+                  style={
+                    selectedNavItem === item.name
+                      ? {
+                          textDecoration: "none",
+                          color: "white",
+                          fontWeight: "700",
+                        }
+                      : { textDecoration: "none", color: "white" }
+                  }
+                >
+                  {item.name}
+                </Nav.Link>
+              </div>
+            ))}
+          </div>
         </Nav>
       </SubNav>
       <div className="row">

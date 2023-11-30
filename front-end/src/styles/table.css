@@ -1,0 +1,28 @@
+.custom-header th {
+  background-color: #cf152d !important; /* A light background color */
+  color: white !important; /* Darker text color for contrast */
+  font-weight: bold;
+}
+.rounded-table {
+  border-spacing: 0;
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.custom-cell td {
+  padding: 12px; /* Adjust as needed */
+  vertical-align: middle;
+}
+.shadow-table {
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+}
+
+.rounded-circle-btn {
+  border-radius: 50% !important;
+  width: 30px !important; /* Adjust as needed */
+  height: 30px !important; /* Adjust as needed */
+  padding: 0 !important; /* Removes default padding */
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}

@@ -23,9 +23,10 @@ public class SecurityConfig {
                 .cors(withDefaults())
                 .authorizeHttpRequests((authorize) -> authorize
                     .requestMatchers(new AntPathRequestMatcher("/**")).permitAll()
+                    // .requestMatchers(new AntPathRequestMatcher("/product/**")).permitAll()
+                    // .requestMatchers(new AntPathRequestMatcher("/orders/pending")).permitAll()
                     .requestMatchers(new AntPathRequestMatcher("/product/**")).permitAll()
-                    .requestMatchers(new AntPathRequestMatcher("/orders/pending")).permitAll()
-                    .requestMatchers(new AntPathRequestMatcher("/permissions")).hasAnyAuthority("manager")
+                    .requestMatchers(new AntPathRequestMatcher("/**")).hasAnyAuthority("manager")
                     .anyRequest().authenticated()
                     //.requestMatchers("/api/private-scoped").hasAuthority("SCOPE_read:messages")
                 )
