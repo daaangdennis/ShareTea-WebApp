@@ -775,6 +775,16 @@ public class Services {
         if(del == null){
             return "Error deleting " + categoryName;
         }
+        if(categoryName.strip().equals("Others")){
+            return "Can't delete Others";
+        }
+
+        List<Product> categoryProducts = productRepository.findAllByCategory(categoryName);
+        for(Product p : categoryProducts){
+            p.setCategory("Others");
+        }
+        productRepository.saveAll(categoryProducts);
+
         categoryRepository.delete(del);
         return "Deleted " + categoryName;
     }
