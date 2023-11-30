@@ -26,3 +26,22 @@ export async function getFavorites(
         console.error("There was an error calling API: ", error);
     }
 }
+
+export async function deleteFavoriteApi(
+    accessToken: any, orderProductID : number
+  ) {
+      try {
+          const headers = { Authorization: `Bearer ${accessToken}` };
+          console.log(accessToken);
+  
+          const url = process.env.REACT_APP_BACKEND_URL + "/favorites/delete";
+          const params = { orderProductID }; // Send data as parameters
+  
+          await Axios.post(url, null, { headers, params })
+          .catch((error) => {
+            console.error("There was an error deleting favorite:", error);
+          });
+      } catch (error) {
+          console.error("There was an error calling API: ", error);
+      }
+  }

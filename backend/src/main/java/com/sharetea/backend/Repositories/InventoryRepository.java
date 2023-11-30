@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import com.sharetea.backend.Entities.*;
 
@@ -28,4 +30,10 @@ public interface InventoryRepository extends JpaRepository<Inventory, Integer> {
 
     @Query(value = "select item_toppings_id from item_toppings where order_product_id = ?1", nativeQuery = true)
     public List<Integer> getFavoriteItemToppings(Integer opID);
+    
+    @Transactional @Modifying @Query(value = "UPDATE inventory SET quantity = quantity - 1 WHERE inventory_id IN (SELECT inventory_id FROM inventory_product WHERE product_id = ?1)", nativeQuery = true)
+    public void subtractInventory(Integer productID);
+
+    @Transactional @Modifying @Query(value = "UPDATE inventory SET quantity = quantity - 1 WHERE inventory_id IN (:inventories) ", nativeQuery = true)
+    public void subtractInventoryByID(@Param("inventories") List<Integer> inventories);
 }

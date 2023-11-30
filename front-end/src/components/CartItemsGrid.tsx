@@ -12,10 +12,15 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { cart } from "../atoms/cart";
 import { Link } from "react-router-dom";
 import "../styles/CartPage.css";
+import { useAuth0 } from "@auth0/auth0-react";
+import { deleteFavoriteApi } from "../apis/Favorite";
+import { getFavorites } from "../apis/Favorite";
+import FavoriteItemsGrid from "./FavoriteGrid";
 var _ = require("lodash");
 
 export const CartItem: React.FC<CartCardProps> = ({ item, favorite}) => {
   const [cartItems, setcartItems] = useRecoilState<Cart>(cart);
+  const { isAuthenticated, getAccessTokenSilently } = useAuth0();
   
   const [data, setdata] = useState<customItem>({
     isEdit: true,
@@ -61,8 +66,11 @@ export const CartItem: React.FC<CartCardProps> = ({ item, favorite}) => {
     }
   };
 
-  const deleteFavorite = () =>{
-    
+  const deleteFavorite = async () =>{
+    const accessToken = await getAccessTokenSilently();
+    if(item.order_product_id != null){
+      deleteFavoriteApi(accessToken, item.order_product_id)
+    }
   };
 
   return (
