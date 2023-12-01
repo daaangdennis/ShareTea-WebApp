@@ -24,16 +24,16 @@ function RestockInventory() {
         data={data}
         margin={{
           top: 5,
-          right: 30,
-          left: 20,
-          bottom: 150,
+          right: 5,
+          left: 0,
+          bottom: 80,
         }}
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="name" angle={-45} interval={0} textAnchor="end" />
         <YAxis dataKey="quantity" />
         <Tooltip />
-        <Legend layout="vertical" verticalAlign="middle" align="right" />
+        <Legend layout="vertical" verticalAlign="top" align="center" />
         <Bar
           dataKey="quantity"
           fill="#82ca9d"

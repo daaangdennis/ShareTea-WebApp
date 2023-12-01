@@ -15,25 +15,29 @@ import {
 } from "recharts";
 function ProductUsage({ startDate, endDate }: dateProps) {
   const data = useRecoilValue(SalesProduct);
+  const abbreviatedData = data.map((item) => ({
+    ...item,
+    name: item.name.substring(0, 15),
+  }));
   useGetSalesReport(startDate, endDate);
   return (
     <ResponsiveContainer width="100%" height="100%">
       <BarChart
         width={500}
         height={300}
-        data={data}
+        data={abbreviatedData}
         margin={{
           top: 5,
-          right: 30,
-          left: 20,
+          right: 10,
+          left: 0,
           bottom: 150,
         }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="name" angle={-45} interval={0} textAnchor="end" />
+        <XAxis dataKey="name" angle={-90} interval={0} textAnchor="end" />
         <YAxis dataKey="count" />
         <Tooltip />
-        <Legend layout="vertical" verticalAlign="middle" align="right" />
+        <Legend layout="vertical" verticalAlign="top" align="center" />
         <Bar
           dataKey="count"
           fill="#82ca9d"

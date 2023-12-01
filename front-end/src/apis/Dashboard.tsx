@@ -83,18 +83,18 @@ export function addInventory(
   });
 }
 
-export function deleteInventory(accessTokenPromise: any, name: string) {
+export function deleteInventory(accessTokenPromise: any, id: number) {
   return new Promise((resolve, reject) => {
     accessTokenPromise().then((accessToken: any) => {
       const headers = { Authorization: `Bearer ${accessToken}` };
       const URL =
         process.env.REACT_APP_BACKEND_URL +
-        `/inventory/delete?inventoryName=${name}`;
+        `/inventory/delete?inventoryId=${id}`;
 
       Axios.post(URL, {}, { headers })
         .then((response) => {
           console.log(
-            "deleteInventory: item name = " + name + " Response: " + response
+            "deleteInventory: item id = " + id + " Response: " + response
           );
           resolve(true);
         })
@@ -294,23 +294,16 @@ export function addCategory(accessTokenPromise: any, categoryName: string) {
 }
 
 export function getCategories(
-  setCategories: React.Dispatch<React.SetStateAction<any>>,
-  accessTokenPromise: any
+  setCategories: React.Dispatch<React.SetStateAction<any>>
 ) {
-  accessTokenPromise().then((accessToken: any) => {
-    const headers = { Authorization: `Bearer ${accessToken}` };
-    Axios.get(process.env.REACT_APP_BACKEND_URL + "/categories/get", {
-      headers,
+  Axios.get(process.env.REACT_APP_BACKEND_URL + "/categories/get", {})
+    .then((response) => {
+      const categories: any[] = response.data || [];
+      setCategories(categories);
     })
-      .then((response) => {
-        const categories: any[] = response.data || [];
-        categories.push("Not selected");
-        setCategories(categories);
-      })
-      .catch((error) => {
-        console.error("There was an error fetching categories:", error);
-      });
-  });
+    .catch((error) => {
+      console.error("There was an error fetching categories:", error);
+    });
 }
 
 export function deleteCategory(accessTokenPromise: any, categoryName: string) {

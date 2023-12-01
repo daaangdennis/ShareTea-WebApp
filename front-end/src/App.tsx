@@ -24,11 +24,11 @@ function App() {
       name: "Your Orders",
       path: "/UserOrders",
       element: <UserOrdersPage />,
-      roles: ["customer"],
+      roles: ["customer", "manager", "cashier", "admin"],
     },
     { name: "Cart", path: "/Cart", element: <CartPage /> },
     {
-      name: "CashierOrder",
+      name: "Checkout",
       path: "/CashierOrder",
       element: <CashierOrderPage />,
       roles: ["cashier", "manager", "admin"],
@@ -43,7 +43,7 @@ function App() {
       name: "Orders",
       path: "/Orders",
       element: <OrdersPage />,
-      roles: ["manager", "cashier"],
+      roles: ["manager", "cashier", "admin"],
     },
   ];
 
@@ -56,17 +56,25 @@ function App() {
           <Route path="/Menu" element={<MenuPage />} />
           <Route path="/Cart" element={<CartPage />} />
           <Route path="/custom" element={<CustomPage />} />
-          <Route element={<ProtectedRoute roles={["customer"]} />}>
+          <Route
+            element={
+              <ProtectedRoute roles={["customer", "admin", "manager"]} />
+            }
+          >
             {/* Add routes accessible by customer only here */}
             <Route path="/UserOrders" element={<UserOrdersPage />} />
           </Route>
-          <Route element={<ProtectedRoute roles={["cashier", "manager"]} />}>
+          <Route
+            element={<ProtectedRoute roles={["cashier", "manager", "admin"]} />}
+          >
             {/* Add routes accessible by cashier and manager here */}
+            <Route path="/UserOrders" element={<UserOrdersPage />} />
             <Route path="/CashierOrder" element={<CashierOrderPage />} />
             <Route path="/Orders" element={<OrdersPage />} />
           </Route>
           <Route element={<ProtectedRoute roles={["manager", "admin"]} />}>
             {/* Add routes accessible by manager only here */}
+            <Route path="/UserOrders" element={<UserOrdersPage />} />
             <Route path="/Dashboard" element={<DashboardPage />} />
           </Route>
         </Routes>

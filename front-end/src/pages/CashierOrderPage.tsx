@@ -12,7 +12,7 @@ import {
   Cart,
 } from "../types/types";
 import { cart } from "../atoms/cart";
-import { postCashierOrder } from "../apis/CashierOrder";
+import { nextOrder, postCashierOrder } from "../apis/CashierOrder";
 import Table from "../components/Table";
 import { Categories } from "../atoms/product";
 import { useGetCategories } from "../apis/Category";
@@ -60,7 +60,11 @@ function CashierOrderPage() {
     (string | string[] | undefined)[][]
   >([]);
   const categoriesList: string[] = useRecoilValue(Categories);
-
+  const [currentOrderNumber, setCurrentOrderNumber] = useState(0);
+  const [customerName, setCustomerName] = useState("");
+  const [displayIce, setDisplayIce] = useState(false);
+  const [displaySugar, setDisplaySugar] = useState(false);
+  const [displayTopping, setDisplayTopping] = useState(false);
   // Add product functionality like checking to see if a product has toppings
   useGetCategories();
   const iceLevel = [
@@ -82,18 +86,9 @@ function CashierOrderPage() {
     "120% Sugar",
   ];
 
-  const drinks = [
-    "Milk Tea",
-    "Fruit Tea",
-    "Brewed Tea",
-    "Ice Blended",
-    "Tea Mojito",
-    "Creama",
-    "Fresh Milk",
-  ];
-
   const handleProceedButton = () => {
-    postCashierOrder(customerEmail, cartItems);
+    setCurrentOrderNumber(currentOrderNumber + 1);
+    postCashierOrder(customerName, customerEmail, cartItems);
     handleCancelButton();
   };
 
@@ -137,6 +132,10 @@ function CashierOrderPage() {
     setCustomerEmail(event.target.value);
   };
 
+  const handleNameChange = (event: any) => {
+    setCustomerName(event.target.value);
+  };
+
   const handleIceLevelChange = (event: any) => {
     setSelectedIceLevel(event.target.value);
   };
@@ -165,6 +164,12 @@ function CashierOrderPage() {
   };
 
   const handleCashierMenuButton = (product: product) => {
+    setDisplayIce(product.has_ice);
+    setDisplaySugar(product.has_sugar);
+    setDisplayTopping(product.has_toppings);
+    console.log(displayIce);
+    console.log(displaySugar);
+    console.log(displayTopping);
     setShowOrderDetails(true);
     setSelectedProduct(product);
   };
@@ -172,7 +177,6 @@ function CashierOrderPage() {
   const addNewItem = () => {
     setShowOrderDetails(false);
     addProductToCart();
-
     setSelectedIceLevel("No Ice");
     setSelectedSugarLevel("No Sugar");
     setSelectedProduct({
@@ -191,6 +195,11 @@ function CashierOrderPage() {
   /**These states are probably used for atoms, but I will look into getting rid of them */
   useEffect(() => {
     getProducts(setBestSelling, setFilteredBestSelling);
+    const fetchData = async () => {
+      const result = await nextOrder();
+      setCurrentOrderNumber(result);
+    };
+    fetchData(); // Call the async function
     console.log(cart);
   }, []);
 
@@ -213,49 +222,12 @@ function CashierOrderPage() {
           <div className="CategoryNavBar mb-2 p-4">
             {categoriesList.map((category) => (
               <button
-                className=" cashier-category-button btn mx-2"
+                className=" cashier-category-button btn my-1 mx-2"
                 onClick={() => handleCategoryButton(category)}
               >
                 {category}
               </button>
             ))}
-
-            {/* <button
-              onClick={() => handleCategoryButton(drinks[0])}
-              className=""
-            >
-              {drinks[0]}
-            </button>
-            <button
-              onClick={() => handleCategoryButton(drinks[1])}
-              className="cashier-category-button btn mx-2"
-            >
-              {drinks[1]}
-            </button>
-            <button
-              onClick={() => handleCategoryButton(drinks[2])}
-              className="cashier-category-button btn mx-2"
-            >
-              {drinks[2]}
-            </button>
-            <button
-              onClick={() => handleCategoryButton(drinks[3])}
-              className="cashier-category-button btn mx-2"
-            >
-              {drinks[3]}
-            </button>
-            <button
-              onClick={() => handleCategoryButton(drinks[4])}
-              className="cashier-category-button btn mx-2"
-            >
-              {drinks[4]}
-            </button>
-            <button
-              onClick={() => handleCategoryButton(drinks[5])}
-              className="cashier-category-button btn mx-2"
-            >
-              {drinks[5]}
-            </button> */}
           </div>
           <div className="FoodItemButtonsContainer">
             <div className="row row-cols-1 row-cols-md-2 row-cols-lg-6 m-2">
@@ -277,9 +249,16 @@ function CashierOrderPage() {
           <div className="col-lg-3 p-0">
             <div className="OrderDetailsContainer flex-container flex-column d-flex h-100 p-0">
               <div className="OrderHeader">
-                <h1 className="largeText">Order#</h1>
+                <h1 className="largeText">Order#{currentOrderNumber}</h1>
 
                 <div className="order-customer-name">
+                  <textarea
+                    className="form-control cashier-page-textarea mb-1"
+                    placeholder="Enter Customer Name..."
+                    rows={1}
+                    value={customerName}
+                    onChange={handleNameChange}
+                  ></textarea>
                   <textarea
                     className="form-control cashier-page-textarea"
                     placeholder="Enter Customer Email..."
@@ -329,50 +308,56 @@ function CashierOrderPage() {
                 <h2>${selectedProduct.price.toFixed(2)}</h2>
               </div>
 
-              <div className="cashier-ice-dropdown">
-                {iceLevel && (
-                  <div>
-                    <h2>Ice Level</h2>
-                    <select
-                      value={selectedIceLevel}
-                      onChange={handleIceLevelChange}
-                      className="form-control-lg custompage-dropdown"
-                    >
-                      {iceLevel.map((level: string, i: number) => (
-                        <option key={i}>{level}</option>
-                      ))}
-                    </select>
-                  </div>
-                )}
-              </div>
-              <div className="cashier-sugar-dropdown">
-                {sugarLevel && (
-                  <div>
-                    <h2>Sugar Level</h2>
-                    <select
-                      value={selectedSugarLevel}
-                      onChange={handleSugarLevelChange}
-                      className="form-control-lg custompage-dropdown"
-                    >
-                      {sugarLevel.map((level: string, i: number) => (
-                        <option key={i}>{level}</option>
-                      ))}
-                    </select>
-                  </div>
-                )}
-              </div>
-              <div className="cashier-topping-grid">
-                <h2 className="mt-4">Toppings</h2>
-                {sourceProducts.toppings && (
-                  <ToppingsGrid
-                    sourceToppings={sourceProducts.toppings}
-                    toppings={listToppings}
-                    setToppings={setListToppings}
-                  />
-                )}
-              </div>
-              <div className="mt-2 cashier-notes-container ml-2">
-                <h2>Additional Notes</h2>
+              {displayIce && (
+                <div className="cashier-ice-dropdown">
+                  {iceLevel && (
+                    <div>
+                      <h2>Ice Level</h2>
+                      <select
+                        value={selectedIceLevel}
+                        onChange={handleIceLevelChange}
+                        className="form-control-lg custompage-dropdown"
+                      >
+                        {iceLevel.map((level: string, i: number) => (
+                          <option key={i}>{level}</option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
+                </div>
+              )}
+              {displaySugar && (
+                <div className="cashier-sugar-dropdown">
+                  {sugarLevel && (
+                    <div>
+                      <h2>Sugar Level</h2>
+                      <select
+                        value={selectedSugarLevel}
+                        onChange={handleSugarLevelChange}
+                        className="form-control-lg custompage-dropdown"
+                      >
+                        {sugarLevel.map((level: string, i: number) => (
+                          <option key={i}>{level}</option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
+                </div>
+              )}
+              {displayTopping && (
+                <div className="cashier-topping-grid">
+                  <h2 className="mt-4">Toppings</h2>
+                  {sourceProducts.toppings && (
+                    <ToppingsGrid
+                      sourceToppings={sourceProducts.toppings}
+                      toppings={listToppings}
+                      setToppings={setListToppings}
+                    />
+                  )}
+                </div>
+              )}
+              <div className="mt-2 cashier-page-item-text mb-2">
+                <h2 className="text-center">Additional Notes</h2>
                 <textarea
                   className="form-control cashier-page-textarea"
                   rows={3}
@@ -383,13 +368,13 @@ function CashierOrderPage() {
               <div className="flex-column flex-sm-row d-flex align-items-center justify-content-center mb-2">
                 <button
                   onClick={handleShowOrderDetails}
-                  className="cashier-page-button btn mx-2"
+                  className="cashier-done-button btn mx-2"
                 >
                   Back
                 </button>
                 <button
                   onClick={() => addNewItem()}
-                  className="cashier-page-button btn mx-2"
+                  className="cashier-done-button btn mx-2"
                 >
                   Add to Order
                 </button>

@@ -22,6 +22,7 @@ function ProductUsageTable() {
   return (
     <LazyLoadingTable
       className="m-4"
+      style={{ width: "90%" }}
       columns={["Name", "Quantity"]}
       data={newData}
       rowLoad={[10, 20, 30, 50, 100]}

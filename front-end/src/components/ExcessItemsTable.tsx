@@ -18,7 +18,8 @@ function ExcessItemsTable({ startDate, endDate }: dateProps) {
 
   return (
     <LazyLoadingTable
-      className="m-4"
+      className="mt-2"
+      style={{ width: "90%" }}
       columns={["Item", "Name", "Quantity", "Used"]}
       data={newData}
       rowLoad={[10, 20, 30, 50, 100]}
