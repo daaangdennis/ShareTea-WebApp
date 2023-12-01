@@ -1,3 +1,10 @@
 .menuboard-container {
   height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.menuboard-content {
+  display: flex;
+  flex-flow: column wrap;
 }
