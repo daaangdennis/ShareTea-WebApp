@@ -116,7 +116,7 @@ function PendingPage() {
                     </div>
                     <div className="px-3 py-2 mb-3">
                         <button className="pendingpage-complete-button" onClick={handleCompleteOrder}>Complete Order</button>
-                        {userRole === "manager" ? <button className="pendingpage-complete-button mt-3" onClick={handleRefundOrder}>Cancel Order</button> : (<></>)}
+                        {(userRole === "manager" || userRole === "admin") ? <button className="pendingpage-complete-button mt-3" onClick={handleRefundOrder}>Cancel Order</button> : (<></>)}
                     </div>
                     <table className="pendingpage-table mb-5">
                         <thead className="pendingpage-table-header">

@@ -110,7 +110,7 @@ function OrderHistory() {
                             ({orderTime})
                         </h3>
                     </div>
-                    {userRole === "manager" ?
+                    {(userRole === "manager" || userRole === "admin") ?
                     (
                         <div className="px-3 py-2 mb-3">
                             <button className="pendingpage-complete-button" onClick={handleRemoveOrder}>Remove From History</button>
