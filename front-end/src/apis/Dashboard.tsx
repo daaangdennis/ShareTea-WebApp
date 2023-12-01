@@ -218,12 +218,70 @@ export function getUsers(
   });
 }
 
+export function getUser(
+  setUser: React.Dispatch<React.SetStateAction<any>>,
+  accessTokenPromise: any
+) {
+  accessTokenPromise().then((accessToken: any) => {
+    const headers = { Authorization: `Bearer ${accessToken}` };
+    Axios.get(process.env.REACT_APP_BACKEND_URL + "/user/get", { headers })
+      .then((response) => {
+        const user = response.data;
+        setUser(user);
+      })
+      .catch((error) => {
+        console.error("There was an error fetching user data:", error);
+      });
+  });
+}
+
+export function addUser(
+  accessTokenPromise: any,
+  email: string,
+  role: string,
+  firstName?: string,
+  lastName?: string,
+  phone?: string,
+  address?: string,
+  SSN?: string,
+  picture?: string
+) {
+  return new Promise((resolve, reject) => {
+    accessTokenPromise().then((accessToken: any) => {
+      const headers = { Authorization: `Bearer ${accessToken}` };
+      let URL = `${process.env.REACT_APP_BACKEND_URL}/users/add?email=${email}&role=${role}`;
+
+      if (firstName !== undefined) URL += `&firstName=${firstName}`;
+      if (lastName !== undefined) URL += `&lastName=${lastName}`;
+      if (phone !== undefined) URL += `&phone=${phone}`;
+      if (address !== undefined) URL += `&address=${address}`;
+      if (SSN !== undefined) URL += `&SSN=${SSN}`;
+      if (picture !== undefined) URL += `&picture=${picture}`;
+
+      Axios.post(URL, {}, { headers })
+        .then((response) => {
+          console.log("addUser: New user added. Response:", response);
+          resolve(true);
+        })
+        .catch((error) => {
+          console.error("There was an error adding the user:", error);
+          reject(error);
+        });
+    });
+  });
+}
+
 export function updateUser(
   accessTokenPromise: any,
   userId: number,
   role?: string,
   firstName?: string,
-  lastName?: string
+  lastName?: string,
+  email?: string,
+  phone?: string,
+  address?: string,
+  SSN?: string,
+  picture?: string
 ) {
   return new Promise((resolve, reject) => {
     accessTokenPromise().then((accessToken: any) => {
@@ -233,6 +291,11 @@ export function updateUser(
       if (role !== undefined) URL += `&role=${role}`;
       if (firstName !== undefined) URL += `&firstName=${firstName}`;
       if (lastName !== undefined) URL += `&lastName=${lastName}`;
+      if (email !== undefined) URL += `&email=${email}`;
+      if (phone !== undefined) URL += `&phone=${phone}`;
+      if (address !== undefined) URL += `&address=${address}`;
+      if (SSN !== undefined) URL += `&SSN=${SSN}`;
+      if (picture !== undefined) URL += `&picture=${picture}`;
 
       Axios.post(URL, {}, { headers })
         .then((response) => {
