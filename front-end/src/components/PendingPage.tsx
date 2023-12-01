@@ -2,9 +2,8 @@ import PendingOrderGrid from "../components/PendingOrderGrid";
 import { useEffect, useState } from "react";
 import { getPendingOrders, finishOrder, refundOrder } from "../apis/Order";
 import { OrderItem, PendingOrders, Order } from "../types/types";
-
+import useUserRole from "../hooks/useUserRole";
 import "../styles/PendingPage.css";
-import SubNav from "../components/SubNav";
 
 function PendingPage() {
     const [pendingOrder, setPendingOrder] = useState<PendingOrders>(
@@ -14,6 +13,7 @@ function PendingPage() {
     const [maxOrdersPerPage, setMaxOrders] = useState<number>(10);
     const [selectedOrder, setSelectedOrder] = useState<Order>();
     const [orderTime, setOrderTime] = useState<String>("");
+    const { userRole, isLoading } = useUserRole();
     const tableColumns = [
         "Product Name",
         "Ice Level",
@@ -105,7 +105,7 @@ function PendingPage() {
             {selectedOrder ? 
             (
                 <div className="col-md-4 pendingpage-orders-information-container">
-                    <div className="pendingpage-orders-information-header px-3 pb-2">
+                    <div className="pendingpage-orders-information-header px-3 pb-3">
                         <h3>
                             Order #{selectedOrder.order_id}
                             <br></br>
@@ -115,8 +115,8 @@ function PendingPage() {
                         </h3>
                     </div>
                     <div className="px-3 py-2 mb-3">
-                        <button className="pendingpage-complete-button mb-3" onClick={handleCompleteOrder}>Complete Order</button>
-                        <button className="pendingpage-complete-button" onClick={handleRefundOrder}>Cancel Order</button>
+                        <button className="pendingpage-complete-button" onClick={handleCompleteOrder}>Complete Order</button>
+                        {userRole === "manager" ? <button className="pendingpage-complete-button mt-3" onClick={handleRefundOrder}>Cancel Order</button> : (<></>)}
                     </div>
                     <table className="pendingpage-table mb-5">
                         <thead className="pendingpage-table-header">
