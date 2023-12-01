@@ -12,7 +12,7 @@ function MenuPage() {
     { name: "Menu" },
     { name: "Recommended" },
     { name: "Favorites" },
-    { name: "Board" },
+    { name: "Menu Board" },
   ];
 
   const [selectedNavItem, setSelectedNavItem] = useState(navItems[0].name);
@@ -25,7 +25,7 @@ function MenuPage() {
         return <RecommendedContent />;
       case "Favorites":
         return <FavoriteContent />;
-      case "Board":
+      case "Menu Board":
         return <MenuBoard />;
       default:
         return <MenuContent />;
