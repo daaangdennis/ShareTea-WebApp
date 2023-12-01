@@ -1,4 +1,5 @@
 import "../styles/CashierOrderPage.css";
+import "../styles/PendingPage.css";
 import React, { useState, useEffect } from "react";
 import { Products } from "../atoms/product";
 import { DefaultValue, useRecoilState, useRecoilValue } from "recoil";
@@ -10,6 +11,7 @@ import {
   ToppingsGridProps,
   product,
   Cart,
+  ICartItem,
 } from "../types/types";
 import { cart } from "../atoms/cart";
 import { nextOrder, postCashierOrder } from "../apis/CashierOrder";
@@ -86,6 +88,13 @@ function CashierOrderPage() {
     "120% Sugar",
   ];
 
+  const tableColumns = [
+    "Product Name",
+    "Ice Level",
+    "Sugar Level",
+    "Toppings",
+    "Price",
+  ];
   const handleProceedButton = () => {
     setCurrentOrderNumber(currentOrderNumber + 1);
     postCashierOrder(customerName, customerEmail, cartItems);
@@ -218,7 +227,7 @@ function CashierOrderPage() {
   return (
     <div className="container-fluid p-0">
       <div className="row p-0">
-        <div className="col-lg-9 d-flex flex-column justify-content-start p-0">
+        <div className="col-lg-8 d-flex flex-column justify-content-start p-0">
           <div className="CategoryNavBar mb-2 p-4">
             {categoriesList.map((category) => (
               <button
@@ -246,7 +255,7 @@ function CashierOrderPage() {
           </div>
         </div>
         {!showOrderDetails ? (
-          <div className="col-lg-3 p-0">
+          <div className="col-lg-4 p-0">
             <div className="OrderDetailsContainer flex-container flex-column d-flex h-100 p-0">
               <div className="OrderHeader">
                 <h1 className="largeText">Order#{currentOrderNumber}</h1>
@@ -268,11 +277,76 @@ function CashierOrderPage() {
                   ></textarea>
                 </div>
               </div>
-              <Table
+              {/* <Table
                 className="m-4"
                 columns={["Name", "Ice", "Sugar", "Toppings", "Price"]}
                 data={filteredCart}
-              />
+              /> */}
+
+              <table className="pendingpage-table mb-5">
+                <thead className="pendingpage-table-header">
+                  <tr>
+                    {tableColumns.map((name: string, i: number) => {
+                      return (
+                        <th
+                          key={i}
+                          scope="col"
+                          className="pendingpage-table-column px-3 py-2"
+                          style={{ width: `${100 / tableColumns.length}%` }}
+                        >
+                          {name}
+                        </th>
+                      );
+                    })}
+                  </tr>
+                </thead>
+                <tbody>
+                  {cartItems?.items.map((item: ICartItem, i: number) => (
+                    <tr key={i}>
+                      <td
+                        className="pendingpage-table-column px-3 py-2"
+                        style={{ width: `${100 / tableColumns.length}%` }}
+                      >
+                        {item.product.name ? item.product.name : "None"}
+                      </td>
+                      <td
+                        className="pendingpage-table-column px-3 py-2"
+                        style={{ width: `${100 / tableColumns.length}%` }}
+                      >
+                        {item.ice_level ? item.ice_level : "No Ice"}
+                      </td>
+                      <td
+                        className="pendingpage-table-column px-3 py-2"
+                        style={{ width: `${100 / tableColumns.length}%` }}
+                      >
+                        {item.sugar_level ? item.sugar_level : "No Sugar"}
+                      </td>
+                      <td
+                        className="pendingpage-table-column px-3 py-2"
+                        style={{ width: `${100 / tableColumns.length}%` }}
+                      >
+                        {item.toppings?.length ?? 0 > 0
+                          ? item.toppings
+                              ?.map((topping) => topping.name)
+                              .join(", ")
+                          : "No Toppings"}
+                      </td>
+                      <td
+                        className="pendingpage-table-column px-3 py-2"
+                        style={{ width: `${100 / tableColumns.length}%` }}
+                      >
+                        $
+                        {(
+                          item.product.price +
+                          (item.toppings?.length ?? 0) * 0.75
+                        ).toFixed(2)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+
+              {/* Testing */}
               <div className="PricingContainer">
                 <h1 className="largeText">Subtotal: ${subTotal.toFixed(2)}</h1>
                 <h1 className="largeText">
@@ -301,7 +375,7 @@ function CashierOrderPage() {
             </div>
           </div>
         ) : (
-          <div className="col-lg-3 p-0">
+          <div className="col-lg-4 p-0">
             <div className="FoodItemContainer flex-container flex-column d-flex h-100 p-0">
               <div className="cashier-page-item-text">
                 <h1>{selectedProduct.name}</h1>
@@ -382,80 +456,6 @@ function CashierOrderPage() {
             </div>
           </div>
         )}
-
-        {/* 
-                <div className="ItemGrid">
-                  <div className="ItemCategories row">
-           
-                    <div className="col orderColumns">
-                      <p>Name</p>
-                    </div>
-
-                    <div className="col orderColumns">
-                      <p>Ice</p>
-                    </div>
-          
-                    <div className="col orderColumns">
-                      <p>Sugar</p>
-                    </div>
-              
-                    <div className="col orderColumns">
-                      <p>Toppings</p>
-                    </div>
-               
-                    <div className="col orderColumns">
-                      <p>Price</p>
-                    </div>
-                  </div>
-
-                  {rows.map((rowData, index) => (
-                    <div key={index} className="CartItems row">
-                      <div
-                        className="col orderColumns"
-                        style={{ maxWidth: "20%" }}
-                      >
-                        <p>{rowData.itemName}</p>
-                      </div>
-                      <div
-                        className="col orderColumns"
-                        style={{ maxWidth: "20%" }}
-                      >
-                        <p>{rowData.itemIce}</p>
-                      </div>
-                      <div
-                        className="col orderColumns"
-                        style={{ maxWidth: "20%" }}
-                      >
-                        <p>{rowData.itemSugar}</p>
-                      </div>
-                      <div
-                        className="col orderColumns"
-                        style={{ maxWidth: "20%" }}
-                      >
-                        <p>{rowData.itemToppings}</p>
-                      </div>
-                      <div
-                        className="col orderColumns"
-                        style={{ maxWidth: "20%" }}
-                      >
-                        <p>${rowData.itemPrice}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div> */}
-
-        {/* </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="ViewOrder cashier-page-button-container flex-column flex-sm-row">
- 
-   
-        <button className="cashier-page-button">View Order</button>
-      </div>
-    </div> */}
       </div>
     </div>
   );

@@ -107,6 +107,9 @@
   background-color: #cf152d;
   border: 1px solid white;
   position: relative;
+  background-color: #cf152d;
+  font-family: "Poppins", "sans-serif";
+  color: white;
 }
 
 .OrderHeader {
