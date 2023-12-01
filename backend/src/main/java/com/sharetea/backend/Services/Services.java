@@ -86,8 +86,26 @@ public class Services {
         return usersRepository.getUsers();
     }
 
+    public void addUser(String firstName, String lastName, String email, String permission, String phoneNumber, String SSN, String address){
+        Users user = new Users();
+        if(email == null || permission == null){
+            return;
+        }
+        user.setEmail(email);
+        user.setPosition(permission);
+        if(firstName != null){
+            user.setFirst_name(firstName);
+        }
+        if(lastName != null){
+            user.setLast_name(lastName);
+        }
+        if(address != null){
+            user.setAddress(address);
+        }
+        usersRepository.save(user);
+    }
 
-    public void changePermissions(Integer id, String position, String firstName, String lastName) throws URISyntaxException, IOException, InterruptedException{
+    public void changePermissions(Integer id, String position, String firstName, String lastName, String phoneNumber) throws URISyntaxException, IOException, InterruptedException{
         Users thisUser = usersRepository.findById(id).get();
         if(thisUser == null){
             return;
@@ -97,6 +115,9 @@ public class Services {
         }
         if(lastName != null){
             thisUser.setLast_name(lastName);
+        }
+        if(phoneNumber != null){
+            thisUser.setPhone_number(phoneNumber);
         }
         usersRepository.save(thisUser);
         
@@ -206,7 +227,7 @@ public class Services {
 
     public void deleteUser(Integer id) throws IOException, InterruptedException, URISyntaxException{
         String email = usersRepository.findById(id).get().getEmail();
-        if(id == null || id == 27){ //27 is deleted user default, don't delete
+        if(id == null || id == 27 || id == 48){ //27 is deleted user default, 48 is guest user, don't delete
             return;
         }
         usersRepository.deleteUserOrder(id);
@@ -346,7 +367,7 @@ public class Services {
     }
 
     //TODO 
-    public List<Integer> deleteFavorite(HttpServletRequest request, Integer opID) throws URISyntaxException, IOException, InterruptedException{
+    public void deleteFavorite(HttpServletRequest request, Integer opID) throws URISyntaxException, IOException, InterruptedException{
         Map<String, String> userInfo = findUserByAccessToken(request);
         String email = userInfo.get("email");
         Integer user_id = usersRepository.findByEmail(email).getUser_id();
@@ -355,7 +376,6 @@ public class Services {
         itemToppingsRepository.deleteAllById(deleteToppings);
         userFavoriteRepository.deleteByOP(opID);
         orderProductRepository.deleteById(opID);
-        return deleteToppings;
     }
 
     public Map<String, Object> weatherProducts(Double temperature){
@@ -379,27 +399,11 @@ public class Services {
         return weatherMap;
     }
 
-    public List<List<String>> getMostandLeastOrdered(Integer customer_id) {
-        List<List<String>> mostAndLeastAll = productRepository.getMostandLeastOrdered(customer_id);
-        List<List<String>> mostAndLeast = new ArrayList<>();
-
-        mostAndLeast.add(mostAndLeastAll.get(0));
-        mostAndLeast.add(mostAndLeastAll.get(1));
-        mostAndLeast.add(mostAndLeastAll.get(2));
-
-        mostAndLeast.add(mostAndLeastAll.get(mostAndLeastAll.size() - 1));
-        mostAndLeast.add(mostAndLeastAll.get(mostAndLeastAll.size() - 2));
-        mostAndLeast.add(mostAndLeastAll.get(mostAndLeastAll.size() - 3));
-
-        return mostAndLeast;
-    }
-
-
     public List<Orders> getAllOrders() {
         return ordersRepository.findAll();
     }
-
-    public Orders addOrder(HttpServletRequest request, String cashierEmail, String cashierFirstName, String cashierLastName, Map<String, Object> orderData) throws URISyntaxException, IOException, InterruptedException {
+    
+    public Orders addOrder(HttpServletRequest request, String cashierEmail, String cashierFirstName, String cashierLastName, String customerFirstName, String customerLastName, Map<String, Object> orderData) throws URISyntaxException, IOException, InterruptedException {
         Orders order = new Orders();
 
         if(request != null){
@@ -444,6 +448,17 @@ public class Services {
                 usersRepository.save(newUser);
                 order.setCustomer_id(newUser.getUser_id());
             }
+        }
+        else if(customerFirstName != null){
+            Users newUser = new Users();
+            newUser.setFirst_name(customerFirstName);
+            newUser.setLast_name(customerLastName);
+            usersRepository.save(newUser);
+            order.setCustomer_id(newUser.getUser_id());
+        }
+        else{
+            order.setCustomer_id(48);
+            usersRepository.addOrderCount(48);
         }
 
         order.setTotal(0.00);
@@ -503,10 +518,10 @@ public class Services {
         return order;
     }
 
-    public String removeOrder(Integer orderID){
+    public void removeOrder(Integer orderID){
         Optional<Orders> order = ordersRepository.findById(orderID);
         if(!order.isPresent()){
-            return "Couldn't find order";
+            return;
         }
         
         List<Integer> op = orderProductRepository.findByOrder_id(orderID);
@@ -517,7 +532,6 @@ public class Services {
         itemToppingsRepository.deleteAllById(it);
         orderProductRepository.deleteAllById(op);
         ordersRepository.deleteById(orderID);
-        return "Removed order " + orderID;
     }
 
     public Map<String, List<Map<String,Object>>> userOrders(HttpServletRequest request, String paramEmail) throws URISyntaxException, IOException, InterruptedException{
@@ -883,14 +897,13 @@ public class Services {
     }
 
 
-    public String deleteProduct(String productName){
+    public void deleteProduct(String productName){
         Product product = productRepository.findByName(productName);
         if(product == null){
-            return ("Could not find " + productName + " in the inventory list.");
+            return;
         }
         product.setActive(false);
         productRepository.save(product);
-        return ("Deleted " + productName);
     }
 
     public List<Inventory> getAllInventory() {

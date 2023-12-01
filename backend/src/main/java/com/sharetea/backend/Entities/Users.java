@@ -21,6 +21,8 @@ public class Users {
     private Integer order_count = 1;
 
     private String position;
+    private String phone_number;
+    private String address;
 
     public Integer getUser_id() {
         return user_id;
@@ -68,6 +70,22 @@ public class Users {
 
     public void setPosition(String position) {
         this.position = position;
+    }
+
+    public String getPhone_number() {
+        return phone_number;
+    }
+
+    public void setPhone_number(String phone_number) {
+        this.phone_number = phone_number;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     
