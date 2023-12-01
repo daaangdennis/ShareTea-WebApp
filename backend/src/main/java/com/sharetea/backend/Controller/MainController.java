@@ -351,11 +351,17 @@ public class MainController {
         return service.excessStock(LocalDate.parse(date));
     }
 
+    /**
+     * Returns amount of individual inventory used between two dates
+     * @param startDate Start date for data
+     * @param endDate End date for data 
+     * @return JSON Object containing all inventory names and their usage between dates 
+     */
     @GetMapping("/inventory/usage")
     public List<Map<String,Object>> inventoryUsage(@RequestParam String startDate, @RequestParam String endDate) {
         return service.inventoryUsage(LocalDate.parse(startDate), LocalDate.parse(endDate));
     }
-
+    
     @PostMapping("/inventory/update")
     public Inventory updateInventory(@RequestParam Integer inventoryId, @RequestParam(required = false) String newName, @RequestParam(required = false) Integer quantity, @RequestParam(required = false) Boolean isTopping) {
         return service.updateInventory(inventoryId, newName, quantity, isTopping);
