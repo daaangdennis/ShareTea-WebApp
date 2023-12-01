@@ -99,6 +99,8 @@ function UserOrderHistory() {
                             <br></br>
                             Customer Name: {selectedOrder.first_name} {selectedOrder.last_name}
                             <br></br>
+                            Status: {selectedOrder.status}
+                            <br></br>
                             ({orderTime})
                         </h3>
                     </div>

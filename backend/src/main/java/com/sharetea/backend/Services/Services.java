@@ -585,7 +585,7 @@ public class Services {
 
                     itemList.add(itemMap);
                 }   
-
+                orderMap.put("status", (Boolean) orderMap.get("is_refunded") == true ? "Refunded" : "Completed");
                 orderMap.put("items", itemList);
                 completedList.add(orderMap);
             }
