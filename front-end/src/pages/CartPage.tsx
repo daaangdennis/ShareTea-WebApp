@@ -3,7 +3,7 @@ import { useRecoilValue, useRecoilState } from "recoil";
 import { Cart, product } from "../types/types";
 import { cart } from "../atoms/cart";
 import CartItemsGrid from "../components/CartItemsGrid";
-import { postCashierOrder } from "../apis/CashierOrder";
+
 import "../styles/CartPage.css";
 import { postOrder, postGuestOrder } from "../apis/Order";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -31,11 +31,7 @@ function CartPage() {
 
   const handlePlaceOrder = async () => {
     if (!isAuthenticated) {
-      if (customerName == "") {
-        postGuestOrder(cartItems);
-      } else {
-        postCashierOrder(customerName, "", cartItems);
-      }
+      postGuestOrder(cartItems, customerName);
       setOrderComplete(true);
       clearCart();
       setCustomerName("");
@@ -63,13 +59,15 @@ function CartPage() {
         <div className="col-md-4 summary-column">
           <div className="summary-item-container p-2 py-4">
             <div className="">Review Order ({cartItems.items.length})</div>
-            <textarea
-              className="form-control cart-page-textarea mb-1 mt-1"
-              placeholder="Enter Customer Name..."
-              rows={1}
-              value={customerName}
-              onChange={handleNameChange}
-            ></textarea>
+            {!isAuthenticated && (
+              <textarea
+                className="form-control cart-page-textarea mb-1 mt-1"
+                placeholder="Enter Customer Name..."
+                rows={1}
+                value={customerName}
+                onChange={handleNameChange}
+              ></textarea>
+            )}
             <div className="review-order-header"></div>
             <div className="subtotal-information">
               <div className="col-md-6">

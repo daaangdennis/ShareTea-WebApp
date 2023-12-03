@@ -32,12 +32,20 @@ export async function postOrder(cartData: Cart, accessTokenPromise: String) {
   }
 }
 
-export async function postGuestOrder(cartData: Cart) {
+export async function postGuestOrder(cartData: Cart, customerName: string) {
+  let passedValue = "";
+  if (customerName != "") {
+    const nameParts: string[] = customerName.split(" ");
+    passedValue =
+      "?firstName=" + nameParts[0] + "&" + "lastName=" + nameParts[1];
+  }
+  console.log(cartData);
   try {
     const response = await Axios.post(
-      process.env.REACT_APP_BACKEND_URL + "/orders/add/guest",
+      process.env.REACT_APP_BACKEND_URL + "/orders/add/guest" + passedValue,
       cartData
     );
+
     console.log(response);
   } catch (error) {
     console.error("There was an error ordering: ", error);

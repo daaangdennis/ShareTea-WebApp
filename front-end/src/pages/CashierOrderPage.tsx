@@ -101,6 +101,18 @@ function CashierOrderPage() {
     handleCancelButton();
   };
 
+  const handleEditItem = (index: number) => {
+    const product = cartItems.items.at(index)?.product;
+    setDisplayIce(product?.has_ice ?? false);
+    setDisplaySugar(product?.has_sugar ?? false);
+    setDisplayTopping(product?.has_toppings ?? false);
+    console.log(displayIce);
+    console.log(displaySugar);
+    console.log(displayTopping);
+    setShowOrderDetails(true);
+    //setSelectedProduct(product);
+  };
+
   const addProductToCart = () => {
     const newlist: Cart = _.cloneDeep(cartItems);
     newlist.items.push({
@@ -292,7 +304,7 @@ function CashierOrderPage() {
                           key={i}
                           scope="col"
                           className="pendingpage-table-column px-3 py-2"
-                          style={{ width: `${100 / tableColumns.length}%` }}
+                          style={{ width: `${100 / tableColumns.length + 1}%` }}
                         >
                           {name}
                         </th>
@@ -305,25 +317,25 @@ function CashierOrderPage() {
                     <tr key={i}>
                       <td
                         className="pendingpage-table-column px-3 py-2"
-                        style={{ width: `${100 / tableColumns.length}%` }}
+                        style={{ width: `${100 / tableColumns.length + 1}%` }}
                       >
                         {item.product.name ? item.product.name : "None"}
                       </td>
                       <td
                         className="pendingpage-table-column px-3 py-2"
-                        style={{ width: `${100 / tableColumns.length}%` }}
+                        style={{ width: `${100 / tableColumns.length + 1}%` }}
                       >
                         {item.ice_level ? item.ice_level : "No Ice"}
                       </td>
                       <td
                         className="pendingpage-table-column px-3 py-2"
-                        style={{ width: `${100 / tableColumns.length}%` }}
+                        style={{ width: `${100 / tableColumns.length + 1}%` }}
                       >
                         {item.sugar_level ? item.sugar_level : "No Sugar"}
                       </td>
                       <td
                         className="pendingpage-table-column px-3 py-2"
-                        style={{ width: `${100 / tableColumns.length}%` }}
+                        style={{ width: `${100 / tableColumns.length + 1}%` }}
                       >
                         {item.toppings?.length ?? 0 > 0
                           ? item.toppings
@@ -333,13 +345,33 @@ function CashierOrderPage() {
                       </td>
                       <td
                         className="pendingpage-table-column px-3 py-2"
-                        style={{ width: `${100 / tableColumns.length}%` }}
+                        style={{ width: `${100 / tableColumns.length + 1}%` }}
                       >
                         $
                         {(
                           item.product.price +
                           (item.toppings?.length ?? 0) * 0.75
                         ).toFixed(2)}
+                      </td>
+                      <td
+                        className="pendingpage-table-column px-3 py-2"
+                        style={{ width: `${100 / tableColumns.length + 1}%` }}
+                      >
+                        <button
+                          onClick={() => handleEditItem(i)}
+                          className="btn btn-info btn-sm"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            fill="currentColor"
+                            className="bi bi-pencil-fill"
+                            viewBox="0 0 16 16"
+                          >
+                            <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z" />
+                          </svg>
+                        </button>
                       </td>
                     </tr>
                   ))}
