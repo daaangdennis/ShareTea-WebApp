@@ -182,7 +182,7 @@ public class MainController {
      */
     @PostMapping("/orders/add")
     public Orders addOrder(HttpServletRequest request, @RequestBody Map<String, Object> orderData) throws URISyntaxException, IOException, InterruptedException {
-        return service.addOrder(request, null, null, null, null, null, orderData);
+        return service.addOrder(request, null, null, null, orderData);
     }
 
     /**
@@ -196,11 +196,13 @@ public class MainController {
      * @throws InterruptedException
      */
     @PostMapping("/orders/add/guest")
-    public Orders addOrder(Map<String, Object> orderData, @RequestParam(required = false) String firstName, @RequestParam(required = false) String lastName) throws URISyntaxException, IOException, InterruptedException {
+    public Orders addOrder(@RequestBody Map<String, Object> orderData, @RequestParam(required = false) String firstName, @RequestParam(required = false) String lastName) throws URISyntaxException, IOException, InterruptedException {
         if(firstName != null){
-            return service.addOrder(null, null, null, null, firstName, lastName, orderData);
+            return service.addOrder(null, null, firstName, lastName, orderData);
         }
-        return service.addOrder(null, null, null, null, null, null, orderData);
+        else{
+            return service.addOrder(null, null, null, null, orderData);
+        }
     }
 
     /**
@@ -217,10 +219,10 @@ public class MainController {
     @PostMapping("/orders/cashieradd")
     public Orders cashierAddOrder(@RequestParam(required = false) String email, @RequestParam(required = false) String firstName, @RequestParam(required = false) String lastName, @RequestBody Map<String, Object> orderData) throws URISyntaxException, IOException, InterruptedException {
         if(firstName == null){
-            return service.addOrder(null, email, null, null, null, null, orderData);
+            return service.addOrder(null, email, null, null, orderData);
         }
         else{
-            return service.addOrder(null, null, firstName, lastName, null, null, orderData);
+            return service.addOrder(null, null, firstName, lastName, orderData);
         }
 
     }

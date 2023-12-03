@@ -436,7 +436,7 @@ public class Services {
         return ordersRepository.findAll();
     }
     
-    public Orders addOrder(HttpServletRequest request, String cashierEmail, String cashierFirstName, String cashierLastName, String customerFirstName, String customerLastName, Map<String, Object> orderData) throws URISyntaxException, IOException, InterruptedException {
+    public Orders addOrder(HttpServletRequest request, String cashierEmail, String requestFirstName, String requestLastName, Map<String, Object> orderData) throws URISyntaxException, IOException, InterruptedException {
         Orders order = new Orders();
 
         if(request != null){
@@ -457,7 +457,7 @@ public class Services {
                 return null;
             }
         }
-        else if(cashierEmail != null || cashierFirstName != null){
+        else if(cashierEmail != null || requestFirstName != null){
             if(cashierEmail != null){
                 Users user = usersRepository.findByEmail(cashierEmail);
                 if( user != null) {
@@ -469,25 +469,15 @@ public class Services {
                     newUser.setEmail(cashierEmail);
                     usersRepository.save(newUser);
                     order.setCustomer_id(newUser.getUser_id());
-                    // CustomerBody customer = new CustomerBody(null, null, cashierEmail);
-                    // Customer newCustomer = addCustomer(customer);
-                    // order.setCustomer_id(newCustomer.getUser_id());   
                 }
             }
-            else if(cashierFirstName != null && cashierLastName != null){
+            else if(requestFirstName != null && requestLastName != null){
                 Users newUser = new Users();
-                newUser.setFirst_name(cashierFirstName);
-                newUser.setLast_name(cashierLastName);
+                newUser.setFirst_name(requestFirstName);
+                newUser.setLast_name(requestLastName);
                 usersRepository.save(newUser);
                 order.setCustomer_id(newUser.getUser_id());
             }
-        }
-        else if(customerFirstName != null){
-            Users newUser = new Users();
-            newUser.setFirst_name(customerFirstName);
-            newUser.setLast_name(customerLastName);
-            usersRepository.save(newUser);
-            order.setCustomer_id(newUser.getUser_id());
         }
         else{
             order.setCustomer_id(48);
@@ -498,7 +488,9 @@ public class Services {
         Double total = 0.00;
         
         ordersRepository.save(order);
+        System.out.println("Im here");
         List<Map<String, Object>> items = (List<Map<String, Object>>) orderData.get("items");
+        System.out.println("Im here again");
 
         for (Map<String, Object> item : items) {
             Integer productID = (Integer) ((Map<String, Object>) item.get("product")).get("product_id");
