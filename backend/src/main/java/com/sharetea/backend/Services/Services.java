@@ -159,8 +159,13 @@ public class Services {
             HttpClient httpClient = HttpClient.newHttpClient();
             HttpResponse<String> IDResponse = httpClient.send(getID, HttpResponse.BodyHandlers.ofString());
 
+            if(IDResponse.body().equals("[]")){
+                return;
+            }
+
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode responseBody = objectMapper.readTree(IDResponse.body());
+            
             String userID = responseBody.get(0).get("user_id").asText();
             System.out.println(userID);
 
@@ -270,6 +275,9 @@ public class Services {
 
         HttpClient httpClient = HttpClient.newHttpClient();
         HttpResponse<String> IDResponse = httpClient.send(getID, HttpResponse.BodyHandlers.ofString());
+        if(IDResponse.body().equals("[]")){
+                return;
+        }
 
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode responseBody = objectMapper.readTree(IDResponse.body());

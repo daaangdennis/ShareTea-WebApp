@@ -21,10 +21,10 @@ public class Users {
     private Integer order_count = 1;
 
     private String position;
-    private String phone_number;
-    private String address;
-    private String ssn;
-    private String picture;
+    private String phone_number = "";
+    private String address = "";
+    private String ssn = "";
+    private String picture = "";
 
     public Integer getUser_id() {
         return user_id;
