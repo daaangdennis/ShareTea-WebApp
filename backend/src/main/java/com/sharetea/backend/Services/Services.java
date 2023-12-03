@@ -471,10 +471,10 @@ public class Services {
                     order.setCustomer_id(newUser.getUser_id());
                 }
             }
-            else if(requestFirstName != null && requestLastName != null){
+            else if(requestFirstName != null){
                 Users newUser = new Users();
                 newUser.setFirst_name(requestFirstName);
-                newUser.setLast_name(requestLastName);
+                newUser.setLast_name(requestLastName != null ? requestLastName : "");
                 usersRepository.save(newUser);
                 order.setCustomer_id(newUser.getUser_id());
             }
