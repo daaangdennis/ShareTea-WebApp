@@ -17,22 +17,27 @@ const MenuBoard = () => {
 
   return (
     <div className="menuboard-container">
-        <div className="menubard-header">
+        <div className="menubard-header my-4">
             <h1>Welcome to Sharetea!</h1>
         </div>
-        <div className="menuboard-content">
+        <div className="menuboard-content mx-5">
           {categories.map((category: string, i: number) => (
-            <div key={i}>
-              <p>{category}</p>
+            <div key={i} className="menuboard-content-section">
+              <h3 className="menuboard-content-category-text pb-2">{category}</h3>
               {products.products.filter(product => product.category === category).map((product: product) => (
-                <p>{product.name} ${(product.price).toFixed(2)}</p>
+                <div className="menuboard-content-item-container">
+                  <p>{product.name}</p>
+                  <p style={{color: "#cf152d"}}>${(product.price).toFixed(2)}</p>
+                </div>
               ))}
             </div>
           ))}
-          <p>Available Toppings (+$0.75 each)</p>
-          {products.toppings.map((topping: topping) => (
-            <p>{topping.name}</p>
-          ))}
+          <div className="menuboard-content-section">
+            <h3 className="menuboard-content-category-text pb-2">Toppings (+$0.75 each)</h3>
+            {products.toppings.map((topping: topping) => (
+              <p className="menuboard-content-item-container">{topping.name}</p>
+            ))}
+          </div>
         </div>
     </div>
   );
