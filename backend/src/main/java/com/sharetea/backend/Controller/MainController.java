@@ -26,21 +26,22 @@ public class MainController {
     @Autowired
     private Services service;
 
-    @GetMapping("/")
-    public String home() {
-        return "Hello!";
-    }
-
-    // @GetMapping("/access")
-    // public Object access() {
-    // return service.requestUsers();
-    // }
-
+    /**
+     * API Route to get all user information
+     * 
+     * @return JSON object containing ID, names, email, and permissions
+     */
     @GetMapping("/users/get")
     public List<Map<String, Object>> userGet() {
         return service.requestUsers();
     }
 
+    /**
+     * API Route to delete traces of the user from the database as well as Auth0
+     * provider
+     * 
+     * @param userId ID of user in the database
+     */
     @PostMapping("/users/delete")
     public void userDelete(@RequestParam Integer userId) {
         try {
@@ -50,130 +51,294 @@ public class MainController {
         }
     }
 
+    /**
+     * 
+     * @param request HTTP request containing the user's authorization access token
+     * @return JSON Object containing user's completed and pending orders and their
+     *         full details
+     * @throws URISyntaxException
+     * @throws IOException
+     * @throws InterruptedException
+     */
     @GetMapping("/user/orders")
     public Map<String, List<Map<String, Object>>> userOrders(HttpServletRequest request)
             throws URISyntaxException, IOException, InterruptedException {
         return service.userOrders(request, null);
     }
 
+    /**
+     * 
+     * @param request HTTP request containing the user's authorization access token
+     * @return JSON Object containing user's completed orders and their full details
+     * @throws URISyntaxException
+     * @throws IOException
+     * @throws InterruptedException
+     */
     @GetMapping("/user/completed")
     public Map<String, List<Map<String, Object>>> userCompletedOrders(HttpServletRequest request)
             throws URISyntaxException, IOException, InterruptedException {
         return service.userCompletedOrders(request);
     }
 
+    /**
+     * 
+     * @param email User's email in Auth0 and database
+     * @return JSON Object containing user's completed and pending orders and their
+     *         full details
+     * @throws URISyntaxException
+     * @throws IOException
+     * @throws InterruptedException
+     */
     @GetMapping("/user/orders/manager")
     public Map<String, List<Map<String, Object>>> userOrders(@RequestParam String email)
             throws URISyntaxException, IOException, InterruptedException {
         return service.userOrders(null, email);
     }
 
+    /**
+     * 
+     * @param request      HTTP request containing the user's authorization access
+     *                     token
+     * @param favoriteData JSON Object containing favorite product customization
+     * @return String confirming favorite addition
+     * @throws URISyntaxException
+     * @throws IOException
+     * @throws InterruptedException
+     */
     @PostMapping("/favorites/save")
     public String favorite(HttpServletRequest request, @RequestBody Map<String, Object> favoriteData)
             throws URISyntaxException, IOException, InterruptedException {
         return service.addFavorite(request, favoriteData);
     }
 
+    /**
+     * 
+     * @param request HTTP request containing the user's authorization access token
+     * @return JSON Object containing all of the user's favorite products and their
+     *         customization
+     * @throws URISyntaxException
+     * @throws IOException
+     * @throws InterruptedException
+     */
     @GetMapping("/favorites/get")
     public Map<String, Object> favorite(HttpServletRequest request)
             throws URISyntaxException, IOException, InterruptedException {
         return service.getFavorite(request);
     }
 
+    /**
+     * 
+     * @param request        HTTP request containing the user's authorization access
+     *                       token
+     * @param orderProductID order_product_id which identifies favorite product in
+     *                       the database
+     * @throws URISyntaxException
+     * @throws IOException
+     * @throws InterruptedException
+     */
     @PostMapping("/favorites/delete")
-    public List<Integer> deleteFavorite(HttpServletRequest request, @RequestParam Integer orderProductID)
+    public void deleteFavorite(HttpServletRequest request, @RequestParam Integer orderProductID)
             throws URISyntaxException, IOException, InterruptedException {
-        return service.deleteFavorite(request, orderProductID);
+        service.deleteFavorite(request, orderProductID);
     }
 
-    @GetMapping("/permissions")
-    public String getPermissions() throws URISyntaxException, IOException, InterruptedException {
-        return "You are a manager!";
+    @PostMapping("/users/add")
+    public void addUser(@RequestParam String email, @RequestParam String role,
+            @RequestParam(required = false) String firstName,
+            @RequestParam(required = false) String lastName, @RequestParam(required = false) String phone,
+            @RequestParam(required = false) String address, @RequestParam(required = false) String SSN,
+            @RequestParam(required = false) String picture)
+            throws URISyntaxException, IOException, InterruptedException {
+        service.addUser(firstName, lastName, email, role, phone, SSN, address, picture);
     }
 
+    /**
+     * 
+     * @param userId    user_id from the database that identifies specific user
+     * @param role      Optional role to be updated into the user
+     * @param firstName Optional role to be updated into the user in the database
+     * @param lastName  Optional role to be updated into the user in the database
+     * @throws URISyntaxException
+     * @throws IOException
+     * @throws InterruptedException
+     */
     @PostMapping("/users/update")
     public void changePermissions(@RequestParam Integer userId, @RequestParam(required = false) String role,
-            @RequestParam(required = false) String firstName, @RequestParam(required = false) String lastName)
+            @RequestParam(required = false) String firstName, @RequestParam(required = false) String lastName,
+            @RequestParam(required = false) String phone, @RequestParam(required = false) String address,
+            @RequestParam(required = false) String SSN, @RequestParam(required = false) String picture)
             throws URISyntaxException, IOException, InterruptedException {
-        service.changePermissions(userId, role, firstName, lastName);
+
+        service.changePermissions(userId, role, firstName, lastName, phone, address, SSN, picture);
     }
 
-    @GetMapping("/orders/get")
-    public Iterable<Orders> getOrders() {
-        return service.getAllOrders();
-    }
+    // @GetMapping("/orders/get")
+    // public Iterable<Orders> getOrders() {
+    // return service.getAllOrders();
+    // }
 
+    /**
+     * 
+     * @return Integer containing the next available order number
+     */
     @GetMapping("/orders/next")
     public Integer getNextOrder() {
         return service.maxOrder();
     }
 
+    /**
+     * 
+     * @param request   HTTP request containing the user's authorization access
+     *                  token
+     * @param orderData JSON Object containing full order data
+     * @return JSON Object with the order's body
+     * @throws URISyntaxException
+     * @throws IOException
+     * @throws InterruptedException
+     */
     @PostMapping("/orders/add")
     public Orders addOrder(HttpServletRequest request, @RequestBody Map<String, Object> orderData)
             throws URISyntaxException, IOException, InterruptedException {
-        return service.addOrder(request, null, null, null, orderData);
+        return service.addOrder(request, null, null, null, null, null, orderData);
     }
 
+    /**
+     * 
+     * @param orderData JSON Object containing full order data
+     * @param firstName Optional guest's first name
+     * @param lastName  Optional guest's last name
+     * @return JSON Object with the order's body
+     * @throws URISyntaxException
+     * @throws IOException
+     * @throws InterruptedException
+     */
     @PostMapping("/orders/add/guest")
-    public Orders addOrder(Map<String, Object> orderData) throws URISyntaxException, IOException, InterruptedException {
-        return service.addOrder(null, null, null, null, orderData);
+    public Orders addOrder(Map<String, Object> orderData, @RequestParam(required = false) String firstName,
+            @RequestParam(required = false) String lastName)
+            throws URISyntaxException, IOException, InterruptedException {
+        if (firstName != null) {
+            return service.addOrder(null, null, null, null, firstName, lastName, orderData);
+        }
+        return service.addOrder(null, null, null, null, null, null, orderData);
     }
 
+    /**
+     * API Route for cashier to add an order. Either both first name and last name
+     * are passed, or only the user's email
+     * 
+     * @param email     Optional user's email
+     * @param firstName Optional user's first name
+     * @param lastName  Optional user's last name
+     * @param orderData JSON Object containing full order data
+     * @return JSON Object with the order's body
+     * @throws URISyntaxException
+     * @throws IOException
+     * @throws InterruptedException
+     */
     @PostMapping("/orders/cashieradd")
     public Orders cashierAddOrder(@RequestParam(required = false) String email,
             @RequestParam(required = false) String firstName, @RequestParam(required = false) String lastName,
             @RequestBody Map<String, Object> orderData) throws URISyntaxException, IOException, InterruptedException {
         if (firstName == null) {
-            return service.addOrder(null, email, null, null, orderData);
+            return service.addOrder(null, email, null, null, null, null, orderData);
         } else {
-            return service.addOrder(null, null, firstName, lastName, orderData);
+            return service.addOrder(null, null, firstName, lastName, null, null, orderData);
         }
 
     }
 
+    /**
+     * Marks order as completed in the database
+     * 
+     * @param orderID order_id from the database
+     */
     @PostMapping("/orders/finish")
     public void orderFinish(@RequestParam Integer orderID) {
         service.finishOrder(orderID, false);
     }
 
+    /**
+     * Marks order as refunded / canceled in the database
+     * 
+     * @param orderID order_id from the database
+     */
     @PostMapping("/orders/refund")
     public void orderRefund(@RequestParam Integer orderID) {
         service.finishOrder(orderID, true);
     }
 
+    /**
+     * Removes order history from the database
+     * 
+     * @param orderID order_id from the database
+     */
     @PostMapping("/orders/remove")
-    public String orderRemove(@RequestParam Integer orderID) {
-        return service.removeOrder(orderID);
+    public void orderRemove(@RequestParam Integer orderID) {
+        service.removeOrder(orderID);
     }
 
+    /**
+     * 
+     * @return JSON Object containing pending orders and their full details
+     */
     @GetMapping("/orders/pending")
     public Map<String, List<Map<String, Object>>> getPendingOrders() {
         return service.pendingOrders();
     }
 
+    /**
+     * 
+     * @return JSON Object containing completed orders and their full details
+     */
     @GetMapping("/orders/completed")
     public Map<String, List<Map<String, Object>>> CompletedOrders() {
         return service.completedOrders();
     }
 
-    // PARAM: HttpServletRequest request
-    // System.out.println(findUserByAccessToken(request));
-
+    /**
+     * 
+     * @return JSON Object containing both product and toppings and their full
+     *         details
+     */
     @GetMapping("/product/get")
     public Map<String, Object> getProducts() {
         return service.getAllProducts();
     }
 
+    /**
+     * 
+     * @param temperature Temperature for user's current location
+     * @return JSON object with products and their details that match their weather
+     *         with the user's temperature
+     */
     @GetMapping("/product/get/weather")
     public Map<String, Object> getProductsWeather(@RequestParam Double temperature) {
         return service.weatherProducts(temperature);
     }
 
+    /**
+     * 
+     * @return JSON object with the three best selling products
+     */
     @GetMapping("/product/getbestselling")
     public Map<String, Object> getBestSelling() {
         return service.getBestSelling();
     }
 
+    /**
+     * Updates a current product in the database
+     * 
+     * @param productID product_id from the database
+     * @param newName   Optional new name to assign to the product in the database
+     * @param category  Optional new category to assign to the product in the
+     *                  database
+     * @param price     Optional new price to assign to the product in the database
+     * @param weather   Optional new weather match to assign to the product in the
+     *                  database
+     * @param url       Optional new image URL to assign to the product in the
+     *                  database
+     * @return JSON object containing the product's updated body
+     */
     @PostMapping("/menu/update")
     public Product updateProduct(@RequestParam Integer productID, @RequestParam(required = false) String newName,
             @RequestParam(required = false) String category, @RequestParam(required = false) Double price,
@@ -181,20 +346,29 @@ public class MainController {
         return service.updateProduct(productID, newName, category, price, weather, url);
     }
 
+    /**
+     * Adds a new product to the database
+     * 
+     * @param name     Name to assign to the new product
+     * @param category Category to assign to the new product
+     * @param price    Price to assign to the new product
+     * @param weather  Optional weather match to assign to the new product
+     * @return
+     */
     @PostMapping("/menu/add")
     public Product addProduct(@RequestParam String name, @RequestParam String category, @RequestParam Double price,
             @RequestParam(required = false) String weather) {
         return service.addProduct(name, category, price, weather);
     }
 
+    /**
+     * Deletes / deactivates a product in the database
+     * 
+     * @param productName name the product has in the database
+     */
     @PostMapping("/menu/delete")
-    public String deleteProduct(@RequestParam String productName) {
-        return service.deleteProduct(productName);
-    }
-
-    @GetMapping("/product/getmostandleast")
-    public List<List<String>> updateProduct(@RequestParam Integer customer_id) {
-        return service.getMostandLeastOrdered(customer_id);
+    public void deleteProduct(@RequestParam String productName) {
+        service.deleteProduct(productName);
     }
 
     @GetMapping("/product/sales")
@@ -222,6 +396,14 @@ public class MainController {
         return service.excessStock(LocalDate.parse(date));
     }
 
+    /**
+     * Returns amount of individual inventory used between two dates
+     * 
+     * @param startDate Start date for data
+     * @param endDate   End date for data
+     * @return JSON Object containing all inventory names and their usage between
+     *         dates
+     */
     @GetMapping("/inventory/usage")
     public List<Map<String, Object>> inventoryUsage(@RequestParam String startDate, @RequestParam String endDate) {
         return service.inventoryUsage(LocalDate.parse(startDate), LocalDate.parse(endDate));
@@ -244,16 +426,31 @@ public class MainController {
         return service.deleteInventory(inventoryId);
     }
 
+    /**
+     * 
+     * @return
+     */
     @GetMapping("/categories/get")
     public List<String> getCategories() {
         return service.getCategories();
     }
 
+    /**
+     * Adds category into database
+     * 
+     * @param categoryName Name of category to be added into database
+     */
     @PostMapping("/categories/add")
     public void addCategory(@RequestParam String categoryName) {
         service.addCategory(categoryName);
     }
 
+    /**
+     * Delete category from database and move products with that category to
+     * "Others"
+     * 
+     * @param categoryName Name of the category in the datbase
+     */
     @PostMapping("/categories/delete")
     public void deleteCategory(@RequestParam String categoryName) {
         service.deleteCategory(categoryName);
