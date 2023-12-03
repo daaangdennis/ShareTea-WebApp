@@ -3,9 +3,9 @@ import { useRecoilValue, useRecoilState } from "recoil";
 import { Cart, product } from "../types/types";
 import { cart } from "../atoms/cart";
 import CartItemsGrid from "../components/CartItemsGrid";
-
+import { postCashierOrder } from "../apis/CashierOrder";
 import "../styles/CartPage.css";
-import { postOrder } from "../apis/Order";
+import { postOrder, postGuestOrder } from "../apis/Order";
 import { useAuth0 } from "@auth0/auth0-react";
 
 function CartPage() {
@@ -13,9 +13,14 @@ function CartPage() {
   const { user, isAuthenticated, isLoading } = useAuth0();
   const { loginWithRedirect } = useAuth0();
   const [orderComplete, setOrderComplete] = useState<boolean>(false);
+  const [customerName, setCustomerName] = useState("");
 
   const { getAccessTokenSilently } = useAuth0();
   console.log("total bug", cartItems);
+
+  const handleNameChange = (event: any) => {
+    setCustomerName(event.target.value);
+  };
 
   const clearCart = () => {
     setcartItems({
@@ -26,7 +31,17 @@ function CartPage() {
 
   const handlePlaceOrder = async () => {
     if (!isAuthenticated) {
-      loginWithRedirect();
+      if (customerName == "") {
+        postGuestOrder(cartItems);
+      } else {
+        postCashierOrder(customerName, "", cartItems);
+      }
+      setOrderComplete(true);
+      clearCart();
+      setCustomerName("");
+      setTimeout(() => {
+        setOrderComplete(false);
+      }, 3000);
     } else {
       try {
         const accessToken = await getAccessTokenSilently();
@@ -47,9 +62,15 @@ function CartPage() {
       <div className="row">
         <div className="col-md-4 summary-column">
           <div className="summary-item-container p-2 py-4">
-            <div className="review-order-header">
-              Review Order ({cartItems.items.length})
-            </div>
+            <div className="">Review Order ({cartItems.items.length})</div>
+            <textarea
+              className="form-control cart-page-textarea mb-1 mt-1"
+              placeholder="Enter Customer Name..."
+              rows={1}
+              value={customerName}
+              onChange={handleNameChange}
+            ></textarea>
+            <div className="review-order-header"></div>
             <div className="subtotal-information">
               <div className="col-md-6">
                 Subtotal:
@@ -58,8 +79,7 @@ function CartPage() {
               </div>
               <div className="col-md-6">
                 ${cartItems.total.toFixed(2)}
-                <br></br>
-                ${(cartItems.total * 0.0825).toFixed(2)}
+                <br></br>${(cartItems.total * 0.0825).toFixed(2)}
               </div>
             </div>
             <div className="total-information">
@@ -73,15 +93,9 @@ function CartPage() {
               </div>
             </div>
             <div className="button-container">
-              {isAuthenticated ? (
-                <button className="order-button" onClick={handlePlaceOrder}>
-                  Place Order
-                </button>
-              ) : (
-                <button className="order-button" onClick={handlePlaceOrder}>
-                  Log In To Place Order
-                </button>
-              )}
+              <button className="order-button" onClick={handlePlaceOrder}>
+                Place Order
+              </button>
               <button className="order-button" onClick={clearCart}>
                 Cancel Order
               </button>

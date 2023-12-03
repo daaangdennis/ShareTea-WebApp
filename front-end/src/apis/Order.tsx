@@ -32,6 +32,18 @@ export async function postOrder(cartData: Cart, accessTokenPromise: String) {
   }
 }
 
+export async function postGuestOrder(cartData: Cart) {
+  try {
+    const response = await Axios.post(
+      process.env.REACT_APP_BACKEND_URL + "/orders/add/guest",
+      cartData
+    );
+    console.log(response);
+  } catch (error) {
+    console.error("There was an error ordering: ", error);
+  }
+}
+
 export function getPendingOrders(
   setPendingOrder: React.Dispatch<React.SetStateAction<PendingOrders>>
 ) {
@@ -94,7 +106,7 @@ export async function removeOrder(order_id: number) {
 }
 
 export async function getUserOrders(
-  setUserOrders: React.Dispatch<React.SetStateAction<UserOrders>>, 
+  setUserOrders: React.Dispatch<React.SetStateAction<UserOrders>>,
   accessTokenPromise: String
 ) {
   try {
@@ -103,12 +115,13 @@ export async function getUserOrders(
       Authorization: `Bearer ${accessToken}`,
     };
 
-    Axios.get(process.env.REACT_APP_BACKEND_URL + "/user/orders", { headers })
-    .then((response) => {
+    Axios.get(process.env.REACT_APP_BACKEND_URL + "/user/orders", {
+      headers,
+    }).then((response) => {
       const orders: UserOrders = response.data;
       setUserOrders(orders);
       //console.log(response);
-    })
+    });
   } catch (error) {
     console.error("There was an error fetching data: ", error);
   }
