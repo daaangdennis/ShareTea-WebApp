@@ -86,11 +86,16 @@ public class Services {
         return usersRepository.getUsers();
     }
 
-    public void addUser(String firstName, String lastName, String email, String permission, String phoneNumber, String SSN, String address){
+    public void addUser(String firstName, String lastName, String email, String permission, String phoneNumber, String SSN, String address, String picture){
+        Users checkUser = usersRepository.findByEmail(email);
+        if(checkUser != null){
+            return;
+        }
         Users user = new Users();
         if(email == null || permission == null){
             return;
         }
+        
         user.setEmail(email);
         user.setPosition(permission);
         if(firstName != null){
@@ -102,10 +107,19 @@ public class Services {
         if(address != null){
             user.setAddress(address);
         }
+        if(phoneNumber != null){
+            user.setPhone_number(phoneNumber);
+        }
+        if(SSN != null){
+            user.setSsn(SSN);
+        }
+        if(picture != null){
+            user.setPicture(picture);
+        }
         usersRepository.save(user);
     }
 
-    public void changePermissions(Integer id, String position, String firstName, String lastName, String phoneNumber) throws URISyntaxException, IOException, InterruptedException{
+    public void changePermissions(Integer id, String position, String firstName, String lastName, String phoneNumber, String address, String SSN, String picture) throws URISyntaxException, IOException, InterruptedException{
         Users thisUser = usersRepository.findById(id).get();
         if(thisUser == null){
             return;
@@ -119,10 +133,19 @@ public class Services {
         if(phoneNumber != null){
             thisUser.setPhone_number(phoneNumber);
         }
+        if(address != null){
+            thisUser.setAddress(address);
+        }
+        if(SSN != null){
+            thisUser.setSsn(SSN);
+        }
+        if(picture != null){
+            thisUser.setPicture(picture);
+        }
         usersRepository.save(thisUser);
         
         String email = thisUser.getEmail();
-        if(position != null){
+        if(position != null && !position.toLowerCase().equals(thisUser.getPosition().toLowerCase())){
             String encodedEmail = URLEncoder.encode(email, "UTF-8");
             String emailURL = "https://dev-1jps85kh7htbmqki.us.auth0.com/api/v2/users-by-email?fields=user_id&email=" + encodedEmail;
             String token = requestToken();
@@ -226,7 +249,9 @@ public class Services {
     }
 
     public void deleteUser(Integer id) throws IOException, InterruptedException, URISyntaxException{
-        String email = usersRepository.findById(id).get().getEmail();
+        Users thisUser = usersRepository.findById(id).get();
+        String email = thisUser.getEmail();
+        changePermissions(thisUser.getUser_id(), "delete", null, null, null, null, null, null);
         if(id == null || id == 27 || id == 48){ //27 is deleted user default, 48 is guest user, don't delete
             return;
         }

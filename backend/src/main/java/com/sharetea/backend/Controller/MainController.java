@@ -129,8 +129,12 @@ public class MainController {
 
 
     @PostMapping("/users/add")
-    public void addUser(@RequestParam String email, @RequestParam String role, @RequestParam(required = false) String firstName, @RequestParam(required = false) String lastName, @RequestParam(required = false) String phone, @RequestParam(required = false) String address ,@RequestParam(required = false) String SSN) throws URISyntaxException, IOException, InterruptedException {
-        service.addUser(firstName, lastName, email, role, phone, SSN, address);
+    public void addUser(@RequestParam String email, @RequestParam String role, @RequestParam(required = false) String firstName, 
+                        @RequestParam(required = false) String lastName, @RequestParam(required = false) String phone, 
+                        @RequestParam(required = false) String address , @RequestParam(required = false) String SSN, 
+                        @RequestParam(required = false) String picture) throws URISyntaxException, IOException, InterruptedException 
+    {
+        service.addUser(firstName, lastName, email, role, phone, SSN, address, picture);
     }
 
     /**
@@ -144,8 +148,13 @@ public class MainController {
      * @throws InterruptedException
      */
     @PostMapping("/users/update")
-    public void changePermissions(@RequestParam Integer userId, @RequestParam(required = false) String role, @RequestParam(required = false) String firstName, @RequestParam(required = false) String lastName, @RequestParam(required = false) String phoneNumber) throws URISyntaxException, IOException, InterruptedException {
-        service.changePermissions(userId, role, firstName, lastName, phoneNumber);
+    public void changePermissions(@RequestParam Integer userId, @RequestParam(required = false) String role, 
+                                  @RequestParam(required = false) String firstName, @RequestParam(required = false) String lastName, 
+                                  @RequestParam(required = false) String phone, @RequestParam(required = false) String address,
+                                  @RequestParam(required = false) String SSN, @RequestParam(required = false) String picture)
+                                  throws URISyntaxException, IOException, InterruptedException {
+        
+                                    service.changePermissions(userId, role, firstName, lastName, phone, address, SSN, picture);
     }
     
     // @GetMapping("/orders/get")
