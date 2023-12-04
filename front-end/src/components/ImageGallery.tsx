@@ -1,10 +1,21 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useRecoilState } from "recoil";
 import { activeImageState } from "../atoms/activeImageState";
 import { ImageGalleryProps } from "../types/types";
 import "../styles/ImageGallery.css";
 const ImageGallery: React.FC<ImageGalleryProps> = ({ images, style }) => {
   const [index, setIndex] = useRecoilState(activeImageState);
+
+  useEffect(() => {
+    // Set up an interval to switch the slide every 3 seconds
+    const intervalId = setInterval(() => {
+      // Calculate the index of the next slide
+      setIndex((prevSlide) => (prevSlide + 1) % images.length);
+    }, 3000);
+
+    // Clear the interval when the component unmounts
+    return () => clearInterval(intervalId);
+  }, [images.length]); // Include slides.length as a dependency
 
   const prevImage = () => {
     setIndex((currIndex) =>

@@ -1,4 +1,5 @@
 import "../styles/CashierOrderPage.css";
+import "../styles/PendingPage.css";
 import React, { useState, useEffect } from "react";
 import { Products } from "../atoms/product";
 import { DefaultValue, useRecoilState, useRecoilValue } from "recoil";
@@ -10,6 +11,7 @@ import {
   ToppingsGridProps,
   product,
   Cart,
+  ICartItem,
 } from "../types/types";
 import { cart } from "../atoms/cart";
 import { nextOrder, postCashierOrder } from "../apis/CashierOrder";
@@ -65,6 +67,8 @@ function CashierOrderPage() {
   const [displayIce, setDisplayIce] = useState(false);
   const [displaySugar, setDisplaySugar] = useState(false);
   const [displayTopping, setDisplayTopping] = useState(false);
+  const [currentlyEditting, setCurrentlyEditting] = useState(false);
+  const [edittingIndex, setEdittingIndex] = useState(0);
   // Add product functionality like checking to see if a product has toppings
   useGetCategories();
   const iceLevel = [
@@ -86,23 +90,95 @@ function CashierOrderPage() {
     "120% Sugar",
   ];
 
+  const defaultProduct: product = {
+    product_id: 0,
+    name: "",
+    url: "",
+    price: 0,
+    category: "",
+    has_ice: false,
+    has_sugar: false,
+    has_toppings: false,
+  };
+
+  const tableColumns = [
+    "Product Name",
+    "Ice Level",
+    "Sugar Level",
+    "Toppings",
+    "Price",
+  ];
+
+  const handleDeleteItem = (index: number) => {
+    const newlist: Cart = _.cloneDeep(cartItems);
+    setSubTotal(
+      subTotal -
+        ((newlist.items.at(index)?.product.price ?? 0) +
+          (newlist.items.at(index)?.toppings?.length ?? 0) * 0.75)
+    );
+    const difflist = newlist;
+    difflist.items = newlist.items.filter((_, i) => i !== index);
+    setcartItems(difflist);
+  };
+
   const handleProceedButton = () => {
     setCurrentOrderNumber(currentOrderNumber + 1);
     postCashierOrder(customerName, customerEmail, cartItems);
     handleCancelButton();
   };
 
+  const handleEditItem = (index: number) => {
+    const product = cartItems.items.at(index)?.product;
+    setDisplayIce(product?.has_ice ?? false);
+    setDisplaySugar(product?.has_sugar ?? false);
+    setDisplayTopping(product?.has_toppings ?? false);
+    console.log(displayIce);
+    console.log(displaySugar);
+    console.log(displayTopping);
+    setShowOrderDetails(true);
+    setSelectedProduct(product ?? defaultProduct);
+    setCurrentlyEditting(true);
+    setSelectedIceLevel(cartItems.items.at(index)?.ice_level ?? "");
+    setSelectedSugarLevel(cartItems.items.at(index)?.sugar_level ?? "");
+
+    setEdittingIndex(index);
+  };
+
   const addProductToCart = () => {
     const newlist: Cart = _.cloneDeep(cartItems);
-    newlist.items.push({
-      product: selectedProduct,
-      toppings: listToppings,
-      notes: note,
-      ice_level: selectedIceLevel,
-      sugar_level: selectedSugarLevel,
-    });
-    newlist.total =
-      newlist.total + selectedProduct.price + listToppings.length * 0.75;
+    if (currentlyEditting) {
+      newlist.total -=
+        newlist.items.at(edittingIndex)?.product.price ??
+        0 + (newlist.items.at(edittingIndex)?.toppings?.length ?? 0) * 0.75;
+      const difflist = newlist;
+      difflist.items = difflist.items.map((item, i) =>
+        i === edittingIndex
+          ? {
+              ...item,
+              product: selectedProduct,
+              toppings: listToppings,
+              notes: note,
+              ice_level: selectedIceLevel,
+              sugar_level: selectedSugarLevel,
+            }
+          : item
+      );
+
+      newlist.total =
+        (selectedProduct?.price ?? 0) + listToppings.length * 0.75;
+    } else {
+      newlist.items.push({
+        product: selectedProduct,
+        toppings: listToppings,
+        notes: note,
+        ice_level: selectedIceLevel,
+        sugar_level: selectedSugarLevel,
+      });
+      newlist.total =
+        newlist.total +
+        (selectedProduct?.price ?? 0) +
+        listToppings.length * 0.75;
+    }
 
     console.log(newlist.total);
     setcartItems(newlist);
@@ -122,6 +198,7 @@ function CashierOrderPage() {
     });
     console.log(sum);
     console.log(filteredCart);
+    setCurrentlyEditting(false);
   };
 
   const handleNoteChange = (event: any) => {
@@ -150,6 +227,7 @@ function CashierOrderPage() {
     setSelectedIceLevel("");
     setSelectedSugarLevel("");
     setNote("");
+    setCurrentlyEditting(false);
   };
 
   const handleCancelButton = () => {
@@ -218,7 +296,7 @@ function CashierOrderPage() {
   return (
     <div className="container-fluid p-0">
       <div className="row p-0">
-        <div className="col-lg-9 d-flex flex-column justify-content-start p-0">
+        <div className="col-lg-8 d-flex flex-column justify-content-start p-0">
           <div className="CategoryNavBar mb-2 p-4">
             {categoriesList.map((category) => (
               <button
@@ -246,33 +324,133 @@ function CashierOrderPage() {
           </div>
         </div>
         {!showOrderDetails ? (
-          <div className="col-lg-3 p-0">
+          <div className="col-lg-4 p-0">
             <div className="OrderDetailsContainer flex-container flex-column d-flex h-100 p-0">
-              <div className="OrderHeader">
+              <div className="mx-auto d-block">
                 <h1 className="largeText">Order#{currentOrderNumber}</h1>
-
-                <div className="order-customer-name">
-                  <textarea
-                    className="form-control cashier-page-textarea mb-1"
-                    placeholder="Enter Customer Name..."
-                    rows={1}
-                    value={customerName}
-                    onChange={handleNameChange}
-                  ></textarea>
-                  <textarea
-                    className="form-control cashier-page-textarea"
-                    placeholder="Enter Customer Email..."
-                    rows={1}
-                    value={customerEmail}
-                    onChange={handleEmailChange}
-                  ></textarea>
-                </div>
               </div>
-              <Table
+
+              <div className="col-md-9 mx-auto d-block">
+                <textarea
+                  className="form-control cashier-page-textarea mb-1"
+                  placeholder="Enter Customer Name..."
+                  rows={1}
+                  value={customerName}
+                  onChange={handleNameChange}
+                ></textarea>
+                <textarea
+                  className="form-control cashier-page-textarea mb-2"
+                  placeholder="Enter Customer Email..."
+                  rows={1}
+                  value={customerEmail}
+                  onChange={handleEmailChange}
+                ></textarea>
+              </div>
+              {/* <Table
                 className="m-4"
                 columns={["Name", "Ice", "Sugar", "Toppings", "Price"]}
                 data={filteredCart}
-              />
+              /> */}
+
+              <table className="pendingpage-table mb-5">
+                <thead className="pendingpage-table-header">
+                  <tr>
+                    {tableColumns.map((name: string, i: number) => {
+                      return (
+                        <th
+                          key={i}
+                          scope="col"
+                          className="pendingpage-table-column px-3 py-2"
+                          style={{ width: `${100 / tableColumns.length + 1}%` }}
+                        >
+                          {name}
+                        </th>
+                      );
+                    })}
+                  </tr>
+                </thead>
+                <tbody>
+                  {cartItems?.items.map((item: ICartItem, i: number) => (
+                    <tr key={i}>
+                      <td
+                        className="pendingpage-table-column px-3 py-2"
+                        style={{ width: `${100 / tableColumns.length + 1}%` }}
+                      >
+                        {item.product.name ? item.product.name : "None"}
+                      </td>
+                      <td
+                        className="pendingpage-table-column px-3 py-2"
+                        style={{ width: `${100 / tableColumns.length + 1}%` }}
+                      >
+                        {item.ice_level ? item.ice_level : "No Ice"}
+                      </td>
+                      <td
+                        className="pendingpage-table-column px-3 py-2"
+                        style={{ width: `${100 / tableColumns.length + 1}%` }}
+                      >
+                        {item.sugar_level ? item.sugar_level : "No Sugar"}
+                      </td>
+                      <td
+                        className="pendingpage-table-column px-3 py-2"
+                        style={{ width: `${100 / tableColumns.length + 1}%` }}
+                      >
+                        {item.toppings?.length ?? 0 > 0
+                          ? item.toppings
+                              ?.map((topping) => topping.name)
+                              .join(", ")
+                          : "No Toppings"}
+                      </td>
+                      <td
+                        className="pendingpage-table-column px-3 py-2"
+                        style={{ width: `${100 / tableColumns.length + 1}%` }}
+                      >
+                        $
+                        {(
+                          item.product.price +
+                          (item.toppings?.length ?? 0) * 0.75
+                        ).toFixed(2)}
+                      </td>
+                      <td
+                        className="pendingpage-table-column px-3 py-2"
+                        style={{ width: `${100 / tableColumns.length + 1}%` }}
+                      >
+                        <button
+                          onClick={() => handleEditItem(i)}
+                          className="btn btn-info btn-sm"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            fill="currentColor"
+                            className="bi bi-pencil-fill"
+                            viewBox="0 0 16 16"
+                          >
+                            <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z" />
+                          </svg>
+                        </button>
+                        <button
+                          onClick={() => handleDeleteItem(i)}
+                          className="btn btn-danger btn-sm"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            fill="currentColor"
+                            className="bi bi-trash3-fill"
+                            viewBox="0 0 16 16"
+                          >
+                            <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z" />
+                          </svg>
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+
+              {/* Testing */}
               <div className="PricingContainer">
                 <h1 className="largeText">Subtotal: ${subTotal.toFixed(2)}</h1>
                 <h1 className="largeText">
@@ -301,7 +479,7 @@ function CashierOrderPage() {
             </div>
           </div>
         ) : (
-          <div className="col-lg-3 p-0">
+          <div className="col-lg-4 p-0">
             <div className="FoodItemContainer flex-container flex-column d-flex h-100 p-0">
               <div className="cashier-page-item-text">
                 <h1>{selectedProduct.name}</h1>
@@ -309,10 +487,10 @@ function CashierOrderPage() {
               </div>
 
               {displayIce && (
-                <div className="cashier-ice-dropdown">
+                <div className="cashier-ice-dropdown mx-auto d-block">
                   {iceLevel && (
                     <div>
-                      <h2>Ice Level</h2>
+                      <h2 className="cashier-page-item-text">Ice Level</h2>
                       <select
                         value={selectedIceLevel}
                         onChange={handleIceLevelChange}
@@ -327,10 +505,10 @@ function CashierOrderPage() {
                 </div>
               )}
               {displaySugar && (
-                <div className="cashier-sugar-dropdown">
+                <div className="cashier-sugar-dropdown mx-auto d-block mb-2">
                   {sugarLevel && (
                     <div>
-                      <h2>Sugar Level</h2>
+                      <h2 className="cashier-page-item-text">Sugar Level</h2>
                       <select
                         value={selectedSugarLevel}
                         onChange={handleSugarLevelChange}
@@ -345,8 +523,8 @@ function CashierOrderPage() {
                 </div>
               )}
               {displayTopping && (
-                <div className="cashier-topping-grid">
-                  <h2 className="mt-4">Toppings</h2>
+                <div className="mx-auto d-block col-md-10">
+                  <h2 className="mt-4 cashier-page-item-text">Toppings</h2>
                   {sourceProducts.toppings && (
                     <ToppingsGrid
                       sourceToppings={sourceProducts.toppings}
@@ -358,12 +536,14 @@ function CashierOrderPage() {
               )}
               <div className="mt-2 cashier-page-item-text mb-2">
                 <h2 className="text-center">Additional Notes</h2>
-                <textarea
-                  className="form-control cashier-page-textarea"
-                  rows={3}
-                  value={note}
-                  onChange={handleNoteChange}
-                ></textarea>
+                <div className="col-md-9 mx-auto d-block">
+                  <textarea
+                    className="form-control cashier-page-textarea"
+                    rows={3}
+                    value={note}
+                    onChange={handleNoteChange}
+                  ></textarea>
+                </div>
               </div>
               <div className="flex-column flex-sm-row d-flex align-items-center justify-content-center mb-2">
                 <button
@@ -382,80 +562,6 @@ function CashierOrderPage() {
             </div>
           </div>
         )}
-
-        {/* 
-                <div className="ItemGrid">
-                  <div className="ItemCategories row">
-           
-                    <div className="col orderColumns">
-                      <p>Name</p>
-                    </div>
-
-                    <div className="col orderColumns">
-                      <p>Ice</p>
-                    </div>
-          
-                    <div className="col orderColumns">
-                      <p>Sugar</p>
-                    </div>
-              
-                    <div className="col orderColumns">
-                      <p>Toppings</p>
-                    </div>
-               
-                    <div className="col orderColumns">
-                      <p>Price</p>
-                    </div>
-                  </div>
-
-                  {rows.map((rowData, index) => (
-                    <div key={index} className="CartItems row">
-                      <div
-                        className="col orderColumns"
-                        style={{ maxWidth: "20%" }}
-                      >
-                        <p>{rowData.itemName}</p>
-                      </div>
-                      <div
-                        className="col orderColumns"
-                        style={{ maxWidth: "20%" }}
-                      >
-                        <p>{rowData.itemIce}</p>
-                      </div>
-                      <div
-                        className="col orderColumns"
-                        style={{ maxWidth: "20%" }}
-                      >
-                        <p>{rowData.itemSugar}</p>
-                      </div>
-                      <div
-                        className="col orderColumns"
-                        style={{ maxWidth: "20%" }}
-                      >
-                        <p>{rowData.itemToppings}</p>
-                      </div>
-                      <div
-                        className="col orderColumns"
-                        style={{ maxWidth: "20%" }}
-                      >
-                        <p>${rowData.itemPrice}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div> */}
-
-        {/* </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="ViewOrder cashier-page-button-container flex-column flex-sm-row">
- 
-   
-        <button className="cashier-page-button">View Order</button>
-      </div>
-    </div> */}
       </div>
     </div>
   );

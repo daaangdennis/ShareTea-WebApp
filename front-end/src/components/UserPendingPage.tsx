@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { getUserOrders, refundOrder } from "../apis/Order";
 import { OrderItem, UserOrders, Order } from "../types/types";
 import { useAuth0 } from "@auth0/auth0-react";
+import LoadingSpinner from "./LoadingSpinner";
 
 import "../styles/PendingPage.css";
 
@@ -15,6 +16,7 @@ function UserPendingPage() {
     const [selectedOrder, setSelectedOrder] = useState<Order>();
     const { getAccessTokenSilently } = useAuth0();
     const [orderTime, setOrderTime] = useState<String>("");
+    const [isLoadingOrders, setIsLoadingOrders] = useState<boolean>(true);
 
     const tableColumns = [
         "Product Name",
@@ -27,8 +29,10 @@ function UserPendingPage() {
     useEffect(() => {
         const fetchData = async () => {
             try {
+            setIsLoadingOrders(true);
             const accessToken = await getAccessTokenSilently();
-            getUserOrders(setUserOrders, accessToken);
+            await getUserOrders(setUserOrders, accessToken);
+            setIsLoadingOrders(false);
             } catch (error) {
             console.error('Error fetching data:', error);
             }
@@ -93,11 +97,22 @@ function UserPendingPage() {
                         Next
                     </button>
                 </div>
-                <PendingOrderGrid 
-                    pending={userOrders.pending ? (userOrders.pending.slice((pageNumber-1) * maxOrdersPerPage, maxOrdersPerPage + (pageNumber-1) * maxOrdersPerPage)) : ([])} 
-                    onCardClick={handleOrderSelect}
-                    selectedOrder={selectedOrder}
-                />
+                {isLoadingOrders ?
+                (
+                    <LoadingSpinner
+                        className="justify-content-center mt-5"
+                        style={{ gap: 10 }}
+                    />
+                )
+                :
+                (
+                    <PendingOrderGrid 
+                        pending={userOrders.pending ? (userOrders.pending.slice((pageNumber-1) * maxOrdersPerPage, maxOrdersPerPage + (pageNumber-1) * maxOrdersPerPage)) : ([])} 
+                        onCardClick={handleOrderSelect}
+                        selectedOrder={selectedOrder}
+                    />
+                )
+                }
             </div>   
             {selectedOrder ? 
             (
