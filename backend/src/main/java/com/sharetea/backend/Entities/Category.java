@@ -10,7 +10,7 @@ import jakarta.validation.constraints.NotEmpty;
 public class Category {
     @Id @NotEmpty
     private String name;
-
+    
     public String getName() {
         return name;
     }

@@ -1157,6 +1157,7 @@ public class Services {
             return newProduct;
         }
     }
+    
 
     /**
      * Deletes / deactivates a product in the database
@@ -1172,6 +1173,7 @@ public class Services {
         productRepository.save(product);
     }
 
+
     /**
      * Gets active inventory items
      * 
@@ -1181,6 +1183,7 @@ public class Services {
     public List<Inventory> getAllInventory() {
         return inventoryRepository.findByActive(true);
     }
+
 
     /**
      * Updates details for inventory items in the database
@@ -1236,6 +1239,11 @@ public class Services {
         }
     }
 
+    /**
+     * Deletes / deactivates inventory item in the database
+     * 
+     * @param ID Inventory ID item from database
+     */
     public String deleteInventory(Integer ID) {
         Optional<Inventory> inventory = inventoryRepository.findById(ID);
         if (!inventory.isPresent()) {
@@ -1247,10 +1255,23 @@ public class Services {
         return ("Deleted inventory#" + ID);
     }
 
+    /**
+     * Shows which inventory items are below 100 stock
+     * 
+     * @return JSON Object with inventory items and their low stock
+     */
     public List<Map<String, Object>> lowStock() {
         return inventoryRepository.findLowStock();
     }
 
+    /**
+     * Shows which inventory items have sold less than 10% of their inventory given
+     * a start date
+     * 
+     * @param date Date that denotes start of inventory usage counting
+     * @return JSON Object with inventory items that sold less than 10% of their
+     *         stock
+     */
     public List<Map<String, Object>> excessStock(LocalDate date) {
         List<Map<String, Object>> finalStock = new ArrayList<>();
         List<Map<String, Object>> allStock = inventoryProductRepository.excessStock(date);
