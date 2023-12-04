@@ -81,7 +81,7 @@ function StatsPage() {
     <div className="container-fluid p-0">
       <div className="row m-0">
         <div className="col-12 p-0">
-          <div className="container-fluid d-flex justify-content-center flex-column h-100 p-0 mt-2">
+          <div className="container-fluid d-flex justify-content-center flex-column h-100 p-0 ">
             <div className="d-flex flex-wrap w-100 StatsButtonContainer p-0 justify-content-center">
               <button
                 onClick={handleProductSalesButton}
