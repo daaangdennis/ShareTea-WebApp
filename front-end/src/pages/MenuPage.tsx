@@ -4,14 +4,15 @@ import MenuSidebar from "../components/MenuSidebar";
 import SubNav from "../components/SubNav";
 import Nav from "react-bootstrap/Nav";
 import RecommendedContent from "../components/RecommendedContent";
-import PreviousContent from "../components/PreviousContent";
 import FavoriteContent from "../components/FavoriteContent";
+import MenuBoard from "../components/MenuBoard";
 
 function MenuPage() {
   const navItems = [
     { name: "Menu" },
     { name: "Recommended" },
     { name: "Favorites" },
+    { name: "Menu Board" },
   ];
 
   const [selectedNavItem, setSelectedNavItem] = useState(navItems[0].name);
@@ -24,6 +25,8 @@ function MenuPage() {
         return <RecommendedContent />;
       case "Favorites":
         return <FavoriteContent />;
+      case "Menu Board":
+        return <MenuBoard />;
       default:
         return <MenuContent />;
     }
