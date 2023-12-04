@@ -363,9 +363,9 @@ public class MainController {
      * @return
      */
     @PostMapping("/menu/add")
-    public Product addProduct(@RequestParam String name, @RequestParam String category, @RequestParam Double price,
+    public void addProduct(@RequestParam String name, @RequestParam String category, @RequestParam Double price,
             @RequestParam(required = false) String weather) {
-        return service.addProduct(name, category, price, weather);
+        service.addProduct(name, category, price, weather);
     }
 
     /**

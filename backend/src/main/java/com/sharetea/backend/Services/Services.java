@@ -57,6 +57,11 @@ public class Services {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    /**
+     * Retrieves access token to authenticate request to management API
+     * 
+     * @return String with access token
+     */
     public String requestToken() {
         String url = "https://dev-1jps85kh7htbmqki.us.auth0.com/oauth/token";
         String payload = "{\"client_id\":\"bmpUm9FNggk0QcmUSmu4zL1tFGsKujpi\",\"client_secret\":\"st8DfPIL7XGTOI0nQ6reqP6M44yahE10jtMJtA2f_jcTkL_lPfcxLYTjc_dOG12b\",\"audience\":\"https://dev-1jps85kh7htbmqki.us.auth0.com/api/v2/\",\"grant_type\":\"client_credentials\"}";
@@ -82,10 +87,22 @@ public class Services {
         return null;
     }
 
+    /**
+     * 
+     * @return JSON Object with users and their information from database
+     */
     public List<Map<String, Object>> requestUsers() {
         return usersRepository.getUsers();
     }
 
+    /**
+     * 
+     * @param request Headers that contain access token for authentication
+     * @return Returns user's name, email, and picture from the database
+     * @throws URISyntaxException
+     * @throws IOException
+     * @throws InterruptedException
+     */
     public Map<String, Object> userInfo(HttpServletRequest request)
             throws URISyntaxException, IOException, InterruptedException {
         Map<String, String> userInfo = findUserByAccessToken(request);
@@ -97,6 +114,19 @@ public class Services {
         return usersRepository.getUserInfo(email);
     }
 
+    /**
+     * Adds a new user in database and prepares role for when that user signs in
+     * onto the website through Oauth2
+     * 
+     * @param firstName   Optional new user's first name
+     * @param lastName    Optional new user's last name
+     * @param email       New user's email
+     * @param permission  New user's role
+     * @param phoneNumber Optional new user's phone number
+     * @param SSN         Optional new user's SSN
+     * @param address     Optional new user's address
+     * @param picture     Optional new user's picture
+     */
     public void addUser(String firstName, String lastName, String email, String permission, String phoneNumber,
             String SSN, String address, String picture) {
         Users checkUser = usersRepository.findByEmail(email);
@@ -131,6 +161,21 @@ public class Services {
         usersRepository.save(user);
     }
 
+    /**
+     * Updates user details in the database
+     * 
+     * @param id          User's id from the database
+     * @param position    Optional new role
+     * @param firstName   Optional new first name
+     * @param lastName    Optional new last name
+     * @param phoneNumber Optional new phone number
+     * @param address     Optional new address
+     * @param SSN         Optional new SSN
+     * @param picture     Optional new picture
+     * @throws URISyntaxException
+     * @throws IOException
+     * @throws InterruptedException
+     */
     public void changePermissions(Integer id, String position, String firstName, String lastName, String phoneNumber,
             String address, String SSN, String picture) throws URISyntaxException, IOException, InterruptedException {
         Users thisUser = usersRepository.findById(id).get();
@@ -265,6 +310,14 @@ public class Services {
         }
     }
 
+    /**
+     * Deletes and user and their permissions from the database and Auth0
+     * 
+     * @param id User's id from the database
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws URISyntaxException
+     */
     public void deleteUser(Integer id) throws IOException, InterruptedException, URISyntaxException {
         Users thisUser = usersRepository.findById(id).get();
         String email = thisUser.getEmail();
@@ -314,6 +367,15 @@ public class Services {
         }
     }
 
+    /**
+     * Retrieves single saved user's information through Auth0's API
+     * 
+     * @param request Headers that contain access token for authentication
+     * @return Map containing user info if access token is valid
+     * @throws URISyntaxException
+     * @throws IOException
+     * @throws InterruptedException
+     */
     public Map<String, String> findUserByAccessToken(HttpServletRequest request)
             throws URISyntaxException, IOException, InterruptedException {
         String auth = request.getHeader("Authorization");
@@ -347,6 +409,16 @@ public class Services {
         return answerMap;
     }
 
+    /**
+     * Adds a favorite customized product to the user in the database
+     * 
+     * @param request      Headers that contain access token for authentication
+     * @param favoriteData JSON object order customization data
+     * @return String for add success
+     * @throws URISyntaxException
+     * @throws IOException
+     * @throws InterruptedException
+     */
     public String addFavorite(HttpServletRequest request, Map<String, Object> favoriteData)
             throws URISyntaxException, IOException, InterruptedException {
         Map<String, String> userInfo = findUserByAccessToken(request);
@@ -381,6 +453,15 @@ public class Services {
         return "Added favorite.";
     }
 
+    /**
+     * Gets favorite products for user
+     * 
+     * @param request Headers that contain access token for authentication
+     * @return JSON Object containing the user's favorite products
+     * @throws URISyntaxException
+     * @throws IOException
+     * @throws InterruptedException
+     */
     public Map<String, Object> getFavorite(HttpServletRequest request)
             throws URISyntaxException, IOException, InterruptedException {
         Map<String, String> userInfo = findUserByAccessToken(request);
@@ -412,7 +493,16 @@ public class Services {
         return finalList;
     }
 
-    // TODO
+    /**
+     * Deletes single favorite product for a user
+     * 
+     * @param request Headers that contain access token for authentication
+     * @param opID    order_product_id from database that identifies a favorite
+     *                product
+     * @throws URISyntaxException
+     * @throws IOException
+     * @throws InterruptedException
+     */
     public void deleteFavorite(HttpServletRequest request, Integer opID)
             throws URISyntaxException, IOException, InterruptedException {
         Map<String, String> userInfo = findUserByAccessToken(request);
@@ -425,6 +515,12 @@ public class Services {
         orderProductRepository.deleteById(opID);
     }
 
+    /**
+     * Gets certain products given temperature
+     * 
+     * @param temperature Temperature parameter
+     * @return JSON Object with products in their suitable weather
+     */
     public Map<String, Object> weatherProducts(Double temperature) {
         List<Product> products = null;
         if (temperature <= 17) {
@@ -444,10 +540,27 @@ public class Services {
         return weatherMap;
     }
 
+    /**
+     * 
+     * @return List of order objects
+     */
     public List<Orders> getAllOrders() {
         return ordersRepository.findAll();
     }
 
+    /**
+     * Adds an order to the database
+     * 
+     * @param request          Headers that contain access token for authentication
+     * @param cashierEmail     Optional cashier entered customer email
+     * @param requestFirstName Optional customer first name
+     * @param requestLastName  Optional customer last name
+     * @param orderData        JSON Object containing order data
+     * @return JSON Object showing database order body
+     * @throws URISyntaxException
+     * @throws IOException
+     * @throws InterruptedException
+     */
     public Orders addOrder(HttpServletRequest request, String cashierEmail, String requestFirstName,
             String requestLastName, Map<String, Object> orderData)
             throws URISyntaxException, IOException, InterruptedException {
@@ -551,6 +664,11 @@ public class Services {
         return order;
     }
 
+    /**
+     * Deletes single order history from the database
+     * 
+     * @param orderID order_id from the database to identify order
+     */
     public void removeOrder(Integer orderID) {
         Optional<Orders> order = ordersRepository.findById(orderID);
         if (!order.isPresent()) {
@@ -567,6 +685,16 @@ public class Services {
         ordersRepository.deleteById(orderID);
     }
 
+    /**
+     * Gets pending and completed orders for a user
+     * 
+     * @param request    Headers that contain access token for authentication
+     * @param paramEmail Optional cashier entered user email
+     * @return JSON Object with user's pending and completed order history
+     * @throws URISyntaxException
+     * @throws IOException
+     * @throws InterruptedException
+     */
     public Map<String, List<Map<String, Object>>> userOrders(HttpServletRequest request, String paramEmail)
             throws URISyntaxException, IOException, InterruptedException {
         String email = "";
@@ -634,7 +762,7 @@ public class Services {
                     itemMap.put("toppings", toppings);
 
                     itemList.add(itemMap);
-                }   
+                }
                 orderMap.put("status", (Boolean) orderMap.get("is_refunded") == true ? "Refunded" : "Completed");
                 orderMap.put("items", itemList);
                 completedList.add(orderMap);
@@ -646,6 +774,15 @@ public class Services {
         return finalList;
     }
 
+    /**
+     * Gets user completed orders
+     * 
+     * @param request Headers that contain access token for authentication
+     * @return JSON Object with user's completed order history
+     * @throws URISyntaxException
+     * @throws IOException
+     * @throws InterruptedException
+     */
     public Map<String, List<Map<String, Object>>> userCompletedOrders(HttpServletRequest request)
             throws URISyntaxException, IOException, InterruptedException {
         Map<String, String> userInfo = findUserByAccessToken(request);
@@ -694,11 +831,14 @@ public class Services {
         return finalList;
     }
 
+    /**
+     * Gets pending orders from database
+     * 
+     * @return JSON object containing all database pending orders
+     */
     public Map<String, List<Map<String, Object>>> pendingOrders() {
         List<Map<String, Object>> pendingOrders = ordersRepository.pendingOrders();
-
         List<Map<String, Object>> finalPendingList = new ArrayList<>();
-
         for (Map<String, Object> order : pendingOrders) {
             Map<String, Object> orderMap = new HashMap<>(order);
             Integer orderID = (Integer) order.get("order_id");
@@ -730,6 +870,11 @@ public class Services {
         return result;
     }
 
+    /**
+     * Gets completed orders from database
+     * 
+     * @return JSON Object containing completed order data from database
+     */
     public Map<String, List<Map<String, Object>>> completedOrders() {
         List<Map<String, Object>> completedOrders = ordersRepository.completedOrders();
 
@@ -765,10 +910,21 @@ public class Services {
         return result;
     }
 
+    /**
+     * Gets next available order ID
+     * 
+     * @return Integer with next available order_id from database
+     */
     public Integer maxOrder() {
         return ordersRepository.maxOrder();
     }
 
+    /**
+     * Marks order as completed
+     * 
+     * @param orderID order_id to identify order in database
+     * @param refund  Optional boolean check to define order as refunded / canceled
+     */
     public void finishOrder(Integer orderID, Boolean refund) {
         Orders order = ordersRepository.findById(orderID).get();
         order.setIs_pending(false);
@@ -778,6 +934,11 @@ public class Services {
         ordersRepository.save(order);
     }
 
+    /**
+     * Gets products and toppings from database
+     * 
+     * @return JSON Object containing product and toppings from database
+     */
     public Map<String, Object> getAllProducts() {
         List<Product> products = productRepository.findByActive(true);
         List<Inventory> toppings = inventoryRepository.findToppings();
@@ -790,6 +951,11 @@ public class Services {
         return productMap;
     }
 
+    /**
+     * Gets best selling products
+     * 
+     * @return JSON Object with product data for the best selling products
+     */
     public Map<String, Object> getBestSelling() {
         List<Integer> bestSellingID = orderProductRepository.findBestSelling();
         List<Optional<Product>> bestSelling = new ArrayList<>();
@@ -805,10 +971,20 @@ public class Services {
         return bestSellingMap;
     }
 
+    /**
+     * Gets category names from database
+     * 
+     * @return List of strings with category names
+     */
     public List<String> getCategories() {
         return categoryRepository.getCategoryNames();
     }
 
+    /**
+     * Adds a new category name to the database
+     * 
+     * @param categoryName String for new category name
+     */
     public void addCategory(String categoryName) {
         if (categoryRepository.findByName(categoryName) != null) {
             return;
@@ -818,6 +994,12 @@ public class Services {
         categoryRepository.save(newCategory);
     }
 
+    /**
+     * Deletes a category name and assigns products under that category to "Others"
+     * 
+     * @param categoryName Name of category to delete
+     * @return
+     */
     public String deleteCategory(String categoryName) {
         Category del = categoryRepository.findById(categoryName).get();
         if (del == null) {
@@ -837,18 +1019,54 @@ public class Services {
         return "Deleted " + categoryName;
     }
 
+    /**
+     * Shows menu products and their sales between two dates
+     * 
+     * @param start Start date for data
+     * @param end   End date for data
+     * @return JSON Object containing products and their sales
+     */
     public List<Map<String, Object>> productSales(LocalDate start, LocalDate end) {
         return productRepository.productSales(start, end);
     }
 
+    /**
+     * Shows most popular pairings for two products between two dates
+     * 
+     * @param start Start date for data
+     * @param end   End date for data
+     * @return JSON Object showing quantity of pairings between two items
+     */
     public List<Map<String, Object>> commonPairs(LocalDate start, LocalDate end) {
         return productRepository.commonPairings(start, end);
     }
 
+    /**
+     * Returns amount of individual inventory used between two dates
+     * 
+     * @param start Start date for data
+     * @param end   End date for data
+     * @return JSON Object containing all inventory names and their usage between
+     *         dates
+     */
     public List<Map<String, Object>> inventoryUsage(LocalDate start, LocalDate end) {
         return inventoryProductRepository.inventoryUsage(start, end);
     }
 
+    /**
+     * Updates a current product in the database
+     * 
+     * @param productID product_id from the database
+     * @param name      Optional new name to assign to the product in the database
+     * @param category  Optional new category to assign to the product in the
+     *                  database
+     * @param price     Optional new price to assign to the product in the database
+     * @param weather   Optional new weather match to assign to the product in the
+     *                  database
+     * @param url       Optional new image URL to assign to the product in the
+     *                  database
+     * @return JSON object containing the product's updated body
+     */
     public Product updateProduct(Integer productID, String name, String category, Double price, String weather,
             String url) {
         Product product = productRepository.findById(productID).get();
@@ -895,6 +1113,15 @@ public class Services {
         }
     }
 
+    /**
+     * Adds a new product to the database
+     * 
+     * @param name     Name to assign to the new product
+     * @param category Category to assign to the new product
+     * @param price    Price to assign to the new product
+     * @param weather  Optional weather match to assign to the new product
+     * @return JSON Object with new / reactivated product body
+     */
     public Product addProduct(String name, String category, Double price, String weather) {
         Product product = productRepository.findByName(name);
         if (product != null) {
@@ -926,6 +1153,11 @@ public class Services {
         }
     }
 
+    /**
+     * Deletes / deactivates a product in the database
+     * 
+     * @param productName name the product has in the database
+     */
     public void deleteProduct(String productName) {
         Product product = productRepository.findByName(productName);
         if (product == null) {
@@ -935,10 +1167,24 @@ public class Services {
         productRepository.save(product);
     }
 
+    /**
+     * Gets active inventory items
+     * 
+     * @return JSON Object with inventory items and their details if they are active
+     *         in the database
+     */
     public List<Inventory> getAllInventory() {
         return inventoryRepository.findByActive(true);
     }
 
+    /**
+     * Updates details for inventory items in the database
+     * 
+     * @param inventoryId Inventory ID for item in the database
+     * @param newName     Name to assign to inventory item
+     * @param quantity    Stock quantity for item
+     * @param isTopping   Check to see if inventory item is a topping
+     */
     public Inventory updateInventory(Integer inventoryId, String newName, Integer quantity, Boolean isTopping) {
         Inventory inventory = inventoryRepository.findById(inventoryId).get();
         if (inventory == null) {
@@ -958,6 +1204,12 @@ public class Services {
         }
     }
 
+    /**
+     * Creates or re-activates inventory item in the database
+     * 
+     * @param inventoryName Name for new inventory item
+     * @param quantity      Quantity to assign to new inventory item
+     */
     public Inventory addInventory(String newName, Integer quantity) {
         Inventory inventory = inventoryRepository.findByName(newName);
         if (inventory != null) {
