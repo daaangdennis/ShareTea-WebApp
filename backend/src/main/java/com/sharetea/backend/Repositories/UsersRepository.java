@@ -19,10 +19,10 @@ public interface UsersRepository extends JpaRepository<Users, Integer> {
     @Transactional @Modifying @Query(value = "update users set order_count = order_count + 1 where user_id = ?1 ", nativeQuery = true)
     public void addOrderCount(Integer userID);
 
-    @Query(value = "select user_id, first_name, last_name, email, phone_number as phone, ssn as \"SSN\", position as role, phone_number as phone, address from users where email != '' and user_id != 27 and email != '' order by user_id", nativeQuery = true)
+    @Query(value = "select user_id, first_name, last_name, email, phone_number as phone, ssn as \"SSN\", position as role, phone_number as phone, address, picture from users where email != '' and user_id != 27 and email != '' order by user_id", nativeQuery = true)
     public List<Map<String, Object>> getUsers();
 
-    @Query(value = "select first_name || last_name AS name, email, picture from users where email = ?1", nativeQuery = true)
+    @Query(value = "select first_name || ' ' || last_name AS name, email, picture from users where email = ?1", nativeQuery = true)
     public Map<String, Object> getUserInfo(String email);
 
     @Transactional @Modifying @Query(value = "update orders set customer_id = 27 where customer_id = ?1", nativeQuery = true)

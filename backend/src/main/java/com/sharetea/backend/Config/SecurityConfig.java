@@ -26,14 +26,14 @@ public class SecurityConfig {
 
                     .requestMatchers(new AntPathRequestMatcher("/menu/*")).hasAnyAuthority("admin", "manager")
 
-                    .requestMatchers(new AntPathRequestMatcher("/product/get**")).permitAll()
-                    .requestMatchers(new AntPathRequestMatcher("/product/*")).hasAnyAuthority("manager", "admin")
+                    .requestMatchers(new AntPathRequestMatcher("/**")).permitAll() //CHANGE
+                    //.requestMatchers(new AntPathRequestMatcher("/product**")).permitAll() // CHANGE
+                    //.requestMatchers(new AntPathRequestMatcher("/product/*")).hasAnyAuthority("manager", "admin") //CHANGE
 
                     .requestMatchers(new AntPathRequestMatcher("/orders/add**")).permitAll()
                     .requestMatchers(new AntPathRequestMatcher("/orders/next")).permitAll()
                     .requestMatchers(new AntPathRequestMatcher("/orders**")).hasAnyAuthority("cashier","manager", "admin")
 
-                    .requestMatchers(new AntPathRequestMatcher("/**")).permitAll()
                     .anyRequest().authenticated()
                     //.requestMatchers("/api/private-scoped").hasAuthority("SCOPE_read:messages")
                 )

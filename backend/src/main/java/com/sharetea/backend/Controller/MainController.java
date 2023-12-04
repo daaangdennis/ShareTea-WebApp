@@ -327,11 +327,11 @@ public class MainController {
      * @param category Category to assign to the new product
      * @param price Price to assign to the new product
      * @param weather Optional weather match to assign to the new product
-     * @return
+     * @return 
      */
     @PostMapping("/menu/add")
-    public Product addProduct(@RequestParam String name, @RequestParam String category, @RequestParam Double price, @RequestParam(required = false) String weather){
-        return service.addProduct(name, category, price, weather);
+    public void addProduct(@RequestParam String name, @RequestParam String category, @RequestParam Double price, @RequestParam(required = false) String weather){
+        service.addProduct(name, category, price, weather);
     }
 
     /**
