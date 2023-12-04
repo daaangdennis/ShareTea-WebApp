@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { getUserOrders } from "../apis/Order";
 import { OrderItem, UserOrders, Order } from "../types/types";
 import { useAuth0 } from "@auth0/auth0-react";
+import LoadingSpinner from "./LoadingSpinner";
 
 import "../styles/PendingPage.css";
 
@@ -15,6 +16,8 @@ function UserOrderHistory() {
     const [selectedOrder, setSelectedOrder] = useState<Order>();
     const { getAccessTokenSilently } = useAuth0();
     const [orderTime, setOrderTime] = useState<String>("");
+    const [isLoadingOrders, setIsLoadingOrders] = useState<boolean>(true);
+
     const tableColumns = [
         "Product Name",
         "Ice Level",
@@ -26,8 +29,10 @@ function UserOrderHistory() {
     useEffect(() => {
         const fetchData = async () => {
             try {
+            setIsLoadingOrders(true);
             const accessToken = await getAccessTokenSilently();
-            getUserOrders(setUserOrders, accessToken);
+            await getUserOrders(setUserOrders, accessToken);
+            setIsLoadingOrders(false);
             } catch (error) {
             console.error('Error fetching data:', error);
             }
@@ -84,11 +89,22 @@ function UserOrderHistory() {
                         Next
                     </button>
                 </div>
-                <PendingOrderGrid 
-                    pending={userOrders.completed ? (userOrders.completed.slice((pageNumber-1) * maxOrdersPerPage, maxOrdersPerPage + (pageNumber-1) * maxOrdersPerPage)) : ([])} 
-                    onCardClick={handleOrderSelect}
-                    selectedOrder={selectedOrder}
-                />
+                {isLoadingOrders ?
+                (
+                    <LoadingSpinner
+                        className="justify-content-center mt-5"
+                        style={{ gap: 10 }}
+                    />
+                )
+                :
+                (
+                    <PendingOrderGrid 
+                        pending={userOrders.completed ? (userOrders.completed.slice((pageNumber-1) * maxOrdersPerPage, maxOrdersPerPage + (pageNumber-1) * maxOrdersPerPage)) : ([])} 
+                        onCardClick={handleOrderSelect}
+                        selectedOrder={selectedOrder}
+                    />
+                )
+                }
             </div>   
             {selectedOrder ? 
             (
@@ -98,6 +114,8 @@ function UserOrderHistory() {
                             Order #{selectedOrder.order_id}
                             <br></br>
                             Customer Name: {selectedOrder.first_name} {selectedOrder.last_name}
+                            <br></br>
+                            Status: {selectedOrder.status}
                             <br></br>
                             ({orderTime})
                         </h3>

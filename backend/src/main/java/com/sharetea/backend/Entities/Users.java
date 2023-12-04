@@ -21,6 +21,10 @@ public class Users {
     private Integer order_count = 1;
 
     private String position;
+    private String phone_number = "";
+    private String address = "";
+    private String ssn = "";
+    private String picture = "";
 
     public Integer getUser_id() {
         return user_id;
@@ -69,6 +73,40 @@ public class Users {
     public void setPosition(String position) {
         this.position = position;
     }
+
+    public String getPhone_number() {
+        return phone_number;
+    }
+
+    public void setPhone_number(String phone_number) {
+        this.phone_number = phone_number;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getSsn() {
+        return ssn;
+    }
+
+    public void setSsn(String ssn) {
+        this.ssn = ssn;
+    }
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
+
+    
 
     
 

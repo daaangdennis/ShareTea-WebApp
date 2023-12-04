@@ -27,12 +27,7 @@ function App() {
       roles: ["customer", "manager", "cashier", "admin"],
     },
     { name: "Cart", path: "/Cart", element: <CartPage /> },
-    {
-      name: "Checkout",
-      path: "/CashierOrder",
-      element: <CashierOrderPage />,
-      roles: ["cashier", "manager", "admin"],
-    },
+
     {
       name: "Dashboard",
       path: "/Dashboard",
@@ -58,7 +53,9 @@ function App() {
           <Route path="/custom" element={<CustomPage />} />
           <Route
             element={
-              <ProtectedRoute roles={["customer", "admin", "manager"]} />
+              <ProtectedRoute
+                roles={["customer", "admin", "manager", "cashier"]}
+              />
             }
           >
             {/* Add routes accessible by customer only here */}
@@ -69,7 +66,7 @@ function App() {
           >
             {/* Add routes accessible by cashier and manager here */}
             <Route path="/UserOrders" element={<UserOrdersPage />} />
-            <Route path="/CashierOrder" element={<CashierOrderPage />} />
+
             <Route path="/Orders" element={<OrdersPage />} />
           </Route>
           <Route element={<ProtectedRoute roles={["manager", "admin"]} />}>
