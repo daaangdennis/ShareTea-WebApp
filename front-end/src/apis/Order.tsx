@@ -55,16 +55,19 @@ export async function postGuestOrder(cartData: Cart, customerName: string) {
 export async function getPendingOrders(
   setPendingOrder: React.Dispatch<React.SetStateAction<PendingOrders>>
 ) {
-  try {
-    const response = await Axios.get(
-      process.env.REACT_APP_BACKEND_URL + "/orders/pending"
-    );
-    const pending: PendingOrders = response.data;
-    setPendingOrder(pending);
-  } catch (error) {
-    console.error("There was an error fetching data:", error);
-    throw error;
-  }
+  return new Promise(async (resolve, reject) => {
+    try {
+      const response = await Axios.get(
+        process.env.REACT_APP_BACKEND_URL + "/orders/pending"
+      );
+      const pending: PendingOrders = response.data;
+      setPendingOrder(pending);
+      resolve(true);
+    } catch (error) {
+      console.error("There was an error fetching data:", error);
+      reject(error);
+    }
+  });
 }
 
 export async function getOrderHistory(

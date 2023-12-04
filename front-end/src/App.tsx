@@ -53,7 +53,9 @@ function App() {
           <Route path="/custom" element={<CustomPage />} />
           <Route
             element={
-              <ProtectedRoute roles={["customer", "admin", "manager"]} />
+              <ProtectedRoute
+                roles={["customer", "admin", "manager", "cashier"]}
+              />
             }
           >
             {/* Add routes accessible by customer only here */}
