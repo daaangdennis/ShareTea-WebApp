@@ -17,6 +17,9 @@ public interface UserFavoriteRepository extends JpaRepository<UserFavorite, Inte
     @Query(value = "select * from user_favorite where user_id = ?1 and product_id = ?2", nativeQuery = true)
     public UserFavorite checkFavorite(Integer userID, Integer productID);
 
+    @Transactional @Query(value = "select order_product_id from user_favorite where user_id = ?1", nativeQuery = true)
+    public List<Integer> getFavoriteIDs(Integer userID);
+
     @Query(value = "select order_product_id, product_id, note, sugar_level, ice_level from order_product where order_product_id in (select order_product_id from user_favorite where user_id = ?1)", nativeQuery = true)
     public List<Map<String, Object>> getUserFavorite(Integer customerID);
 
