@@ -22,7 +22,7 @@ export interface product {
   has_ice: boolean;
   has_toppings: boolean;
   has_sugar: boolean;
-  weather?:string
+  weather?: string;
 }
 
 export interface topping {
@@ -115,17 +115,27 @@ export interface PendingOrders {
   pending: Order[];
 }
 
+export interface CompletedOrders {
+  completed: Order[];
+}
+
+export interface UserOrders {
+  pending: Order[];
+  completed: Order[];
+}
+
 export interface PendingOrderGridProp {
   pending: Order[];
   onCardClick: (order: Order) => void;
+  selectedOrder?: Order;
 }
 
 export interface PendingOrderCardProp {
   order: Order;
   onCardClick: (order: Order) => void;
+  selectedOrder?: Order;
 }
 export interface customItem {
-
   isAdd: boolean;
   isEdit: boolean;
   item: ICartItem;
@@ -157,6 +167,11 @@ export interface productSales {
   count: number;
 }
 
+export interface restockItems {
+  name: string;
+  quantity: number;
+}
+
 export interface excessProducts {
   used: number;
   quantity: number;
@@ -164,3 +179,19 @@ export interface excessProducts {
   inventory_id: number;
 }
 
+export interface popularPairsItems {
+  combination_count: number;
+  product1: string;
+  product2: string;
+}
+
+export interface dateProps {
+  startDate: Date;
+  endDate: Date;
+}
+
+export interface inventoryUsageProps {
+  inventory_name: string;
+  inventory_id: number;
+  quantity_used: number;
+}

@@ -9,23 +9,25 @@ import LoginPage from "./pages/LoginPage";
 import CartPage from "./pages/CartPage";
 import MenuPage from "./pages/MenuPage";
 import CustomPage from "./pages/CustomPage";
-import PendingPage from "./pages/PendingPage";
+import OrdersPage from "./pages/OrdersPage";
 import CashierOrderPage from "./pages/CashierOrderPage";
 import StatsPage from "./pages/StatsPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import DashboardPage from "./pages/DashboardPage";
+import UserOrdersPage from "./pages/UserOrdersPage";
 
 function App() {
   const routes: route[] = [
     { name: "Home", path: "/", element: <LandingPage /> },
     { name: "Menu", path: "/Menu", element: <MenuPage /> },
-    { name: "Cart", path: "/Cart", element: <CartPage /> },
     {
-      name: "CashierOrder",
-      path: "/CashierOrder",
-      element: <CashierOrderPage />,
-      roles: ["cashier", "manager", "admin"],
+      name: "Your Orders",
+      path: "/UserOrders",
+      element: <UserOrdersPage />,
+      roles: ["customer", "manager", "cashier", "admin"],
     },
+    { name: "Cart", path: "/Cart", element: <CartPage /> },
+
     {
       name: "Dashboard",
       path: "/Dashboard",
@@ -33,9 +35,9 @@ function App() {
       roles: ["manager", "admin"],
     },
     {
-      name: "Pending Orders",
-      path: "/Pending",
-      element: <PendingPage />,
+      name: "Orders",
+      path: "/Orders",
+      element: <OrdersPage />,
       roles: ["manager", "cashier", "admin"],
     },
   ];
@@ -49,16 +51,27 @@ function App() {
           <Route path="/Menu" element={<MenuPage />} />
           <Route path="/Cart" element={<CartPage />} />
           <Route path="/custom" element={<CustomPage />} />
-
+          <Route
+            element={
+              <ProtectedRoute
+                roles={["customer", "admin", "manager", "cashier"]}
+              />
+            }
+          >
+            {/* Add routes accessible by customer only here */}
+            <Route path="/UserOrders" element={<UserOrdersPage />} />
+          </Route>
           <Route
             element={<ProtectedRoute roles={["cashier", "manager", "admin"]} />}
           >
             {/* Add routes accessible by cashier and manager here */}
-            <Route path="/CashierOrder" element={<CashierOrderPage />} />
-            <Route path="/Pending" element={<PendingPage />} />
+            <Route path="/UserOrders" element={<UserOrdersPage />} />
+
+            <Route path="/Orders" element={<OrdersPage />} />
           </Route>
           <Route element={<ProtectedRoute roles={["manager", "admin"]} />}>
             {/* Add routes accessible by manager only here */}
+            <Route path="/UserOrders" element={<UserOrdersPage />} />
             <Route path="/Dashboard" element={<DashboardPage />} />
           </Route>
         </Routes>

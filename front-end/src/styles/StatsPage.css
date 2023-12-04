@@ -1,11 +1,9 @@
 .GraphContainer {
-  height: 700px;
-  width: 1000px;
   background-color: white;
   border: 1px solid red;
-  left: 240px;
-  top: 250px;
-  position: absolute;
+  position: relative;
+  width: 750px;
+  height: 500px;
 }
 
 .StatsContainer {
@@ -15,19 +13,29 @@
 }
 
 .StatsButtonContainer {
-  position: absolute;
-  height: 300px;
-  top: 100px;
-  left: 400px;
-  width: 800px;
+  position: relative;
+  max-width: 100%;
+  background-color: #cf152d;
 }
 
 .StatsButton {
   font-weight: 700;
+  color: #cf152d;
+  padding: 9px 25px;
+  background-color: white;
+  border: solid white;
+  border-radius: 10px;
+  transition: all 0.3s ease 0s;
+  text-align: center;
+  text-decoration: none;
+}
+
+.StatsButtonOn {
+  font-weight: 700;
   color: white;
   padding: 9px 25px;
   background-color: #cf152d;
-  border: solid #cf152d;
+  border: solid white;
   border-radius: 10px;
   transition: all 0.3s ease 0s;
   text-align: center;
@@ -35,9 +43,54 @@
 }
 
 .GenerateButton {
-  position: absolute;
-  left: 670px;
-  top: 180px;
-  width: 200px;
-  height: 100px;
+  position: relative;
+}
+
+.TableContainer {
+  background-color: white;
+  border: 1px solid red;
+  position: relative;
+  width: 750px;
+  height: 500px;
+}
+
+.startDate {
+  position: relative;
+}
+
+.endDate {
+  position: relative;
+}
+
+.dateContainer {
+  background-color: #cf152d;
+}
+
+.StatsButtonOn:hover {
+  font-weight: 700;
+  color: #cf152d;
+  padding: 9px 25px;
+  background-color: white;
+  border: solid white;
+  border-radius: 10px;
+  transition: all 0.3s ease 0s;
+  text-align: center;
+  text-decoration: none;
+}
+
+.StatsButton:hover {
+  font-weight: 700;
+  color: white;
+  padding: 9px 25px;
+  background-color: #cf152d;
+  border: solid white;
+  border-radius: 10px;
+  transition: all 0.3s ease 0s;
+  text-align: center;
+  text-decoration: none;
+}
+
+.dateLabel {
+  color: white;
+  font-weight: 700;
 }

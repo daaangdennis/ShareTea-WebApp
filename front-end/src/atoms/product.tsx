@@ -10,3 +10,8 @@ export const filteredProducts = atom({
   key: "filteredProducts",
   default: {} as listProductToppings,
 });
+
+export const Categories = atom({
+  key: "Categories",
+  default: [] as string[],
+});

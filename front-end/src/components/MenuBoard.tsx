@@ -1,77 +1,44 @@
-import React, { useEffect } from "react";
-import "../styles/menuBoard.css";
-import ReactDOM from "react-dom";
+import React, { useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
+import { Products } from "../atoms/product";
+import { listProductToppings, product, topping} from "../types/types";
+
+import "../styles/MenuBoard.css";
+import { getCategories } from "../apis/Dashboard";
+
 
 const MenuBoard = () => {
+  const [categories, setCategories] = useState<string[]>([]);
+  const [products, setProducts] = useRecoilState<listProductToppings>(Products);
   useEffect(() => {
-    const words = document.querySelectorAll(".item, .price");
-
-    words.forEach((word) => {
-      const letters = Array.from((word.textContent || "").trim());
-      const letterElements = letters.map((letter) =>
-        letter !== " " ? (
-          <span className="itembox">{letter}</span>
-        ) : (
-          <span className="itembox space"></span>
-        )
-      );
-      ReactDOM.render(<>{letterElements}</>, word);
-    });
+    getCategories(setCategories);
   }, []);
+  console.log(products);
 
   return (
-    <div className="container board">
-      <div className="row col-12 shelf"></div>
-      <div className="col-md-6 col-sm-12 menu-item">
-        <div className="item">White</div>
-        <div className="price">4.5</div>
-      </div>
-      <div className="col-md-6 col-sm-12 menu-item">
-        <div className="item">Granola</div>
-        <div className="price">12.0</div>
-      </div>
-      <div className="row col-12 shelf"></div>
-      <div className="col-md-6 col-sm-12 menu-item">
-        <div className="item">Black / Filter / Tea</div>
-        <div className="price">4.0</div>
-      </div>
-      <div className="col-md-6 col-sm-12 menu-item">
-        <div className="item">Egg in a scone</div>
-        <div className="price">10.0</div>
-      </div>
-      <div className="row col-12 shelf"></div>
-      <div className="col-md-6 col-sm-12 menu-item">
-        <div className="item">Large</div>
-        <div className="price">1.0</div>
-      </div>
-      <div className="row col-12 shelf"></div>
-      <div className="col-md-6 col-sm-12 menu-item">
-        <div className="item">Soy / almond / X shot</div>
-        <div className="price">0.5</div>
-      </div>
-      <div className="col-md-6 col-sm-12 menu-item">
-        <div className="item">Toasted:</div>
-      </div>
-      <div className="row col-12 shelf"></div>
-      <div className="col-md-6 col-sm-12 menu-item">
-        <div className="item">Ice</div>
-        <div className="price">1.0</div>
-      </div>
-      <div className="col-md-6 col-sm-12 menu-item">
-        <div className="item">Kimchi cheese</div>
-        <div className="price">14.0</div>
-      </div>
-      <div className="row col-12 shelf"></div>
-      <div className="col-md-6 col-sm-12 menu-item">
-        <div className="item">Cold drinks</div>
-        <div className="price">5.0</div>
-      </div>
-      <div className="col-md-6 col-sm-12 menu-item">
-        <div className="item">Reuben</div>
-        <div className="price">14.0</div>
-      </div>
-
-      <div className="row col-12 shelf"></div>
+    <div className="menuboard-container">
+        <div className="menubard-header my-4">
+            <h1>Welcome to Sharetea!</h1>
+        </div>
+        <div className="menuboard-content mx-5">
+          {categories.map((category: string, i: number) => (
+            <div key={i} className="menuboard-content-section">
+              <h3 className="menuboard-content-category-text pb-2">{category}</h3>
+              {products.products.filter(product => product.category === category).map((product: product) => (
+                <div className="menuboard-content-item-container">
+                  <p>{product.name}</p>
+                  <p style={{color: "#cf152d"}}>${(product.price).toFixed(2)}</p>
+                </div>
+              ))}
+            </div>
+          ))}
+          <div className="menuboard-content-section">
+            <h3 className="menuboard-content-category-text pb-2">Toppings (+$0.75 each)</h3>
+            {products.toppings.map((topping: topping) => (
+              <p className="menuboard-content-item-container">{topping.name}</p>
+            ))}
+          </div>
+        </div>
     </div>
   );
 };

@@ -9,13 +9,12 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { restockInventory } from "../atoms/statsItems";
+import { excessInventory, restockInventory } from "../atoms/statsItems";
 import { useRecoilValue } from "recoil";
 import { useGetRestockReport } from "../apis/RestockReport";
 
-function RestockInventory() {
-  const data = useRecoilValue(restockInventory);
-  useGetRestockReport();
+function ExcessItemsGraph() {
+  const data = useRecoilValue(excessInventory);
   return (
     <ResponsiveContainer width="100%" height="100%">
       <BarChart
@@ -43,4 +42,4 @@ function RestockInventory() {
     </ResponsiveContainer>
   );
 }
-export default RestockInventory;
+export default ExcessItemsGraph;

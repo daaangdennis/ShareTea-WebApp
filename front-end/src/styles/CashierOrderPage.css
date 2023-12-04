@@ -1,29 +1,12 @@
-.OrderContainer {
-  position: relative;
-  padding-bottom: 300px; /* Adjust as needed */
-  display: flex;
-  flex-wrap: wrap;
-  align-content: flex-start;
-}
-
 .FoodItemContainer {
   background-color: white;
-  border: 2px solid red;
-  height: 100vh;
-  width: 400px;
+  border: 2px solid #cf152d;
   position: relative;
-  right: 0px;
-  top: 0px;
 }
 
 .CategoryNavBar {
-  background-color: red;
-  border: 100px, solid, red;
-  height: 200px;
-  width: 1090px;
-  position: absolute;
-  left: 0;
-  top: 0;
+  background-color: #cf152d;
+  overflow-x: auto;
 }
 
 .cashier-page-item-text {
@@ -72,12 +55,26 @@
   font-size: 1.2rem;
 }
 
-.cashier-page-button {
+.cashier-page-button.btn {
   font-weight: 700;
   color: white;
   padding: 9px 25px;
   background-color: #cf152d;
   border: solid #cf152d;
+  border-radius: 10px;
+  transition: all 0.3s ease 0s;
+  text-align: center;
+  text-decoration: none;
+  width: 150px;
+  height: 150px;
+}
+
+.cashier-category-button.btn {
+  font-weight: 700;
+  color: white;
+  padding: 9px 25px;
+  background-color: #cf152d;
+  border: solid white;
   border-radius: 10px;
   transition: all 0.3s ease 0s;
   text-align: center;
@@ -107,13 +104,12 @@
 }
 
 .OrderDetailsContainer {
-  background-color: red;
-  border: 1px solid white;
-  height: 100vh;
-  width: 480px;
+  background-color: #cf152d;
+  /* border: 1px solid white; */
   position: relative;
-  right: 0px;
-  top: 0;
+  background-color: #cf152d;
+  font-family: "Poppins", "sans-serif";
+  color: white;
 }
 
 .OrderHeader {
@@ -139,9 +135,6 @@
 
 .FoodItemButtonsContainer {
   position: relative;
-  top: 200px;
-  left: 20px;
-  width: 1000px;
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
@@ -149,4 +142,25 @@
 
 .cashierItemButton {
   margin-bottom: 10px;
+}
+
+.ItemGrid {
+  position: relative;
+}
+
+.largeText {
+  color: white;
+  font-weight: 700;
+}
+
+.cashier-done-button.btn {
+  font-weight: 700;
+  color: white;
+  padding: 9px 25px;
+  background-color: #cf152d;
+  border: solid #cf152d;
+  border-radius: 10px;
+  transition: all 0.3s ease 0s;
+  text-align: center;
+  text-decoration: none;
 }

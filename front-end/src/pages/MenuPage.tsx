@@ -4,15 +4,15 @@ import MenuSidebar from "../components/MenuSidebar";
 import SubNav from "../components/SubNav";
 import Nav from "react-bootstrap/Nav";
 import RecommendedContent from "../components/RecommendedContent";
-import PreviousContent from "../components/PreviousContent";
 import FavoriteContent from "../components/FavoriteContent";
+import MenuBoard from "../components/MenuBoard";
 
 function MenuPage() {
   const navItems = [
     { name: "Menu" },
     { name: "Recommended" },
-    { name: "Previous Orders" },
     { name: "Favorites" },
+    { name: "Menu Board" },
   ];
 
   const [selectedNavItem, setSelectedNavItem] = useState(navItems[0].name);
@@ -23,10 +23,10 @@ function MenuPage() {
         return <MenuContent />;
       case "Recommended":
         return <RecommendedContent />;
-      case "Previous Orders":
-        return <PreviousContent />;
       case "Favorites":
         return <FavoriteContent />;
+      case "Menu Board":
+        return <MenuBoard />;
       default:
         return <MenuContent />;
     }
@@ -41,24 +41,26 @@ function MenuPage() {
           activeKey={selectedNavItem}
           onSelect={(key) => setSelectedNavItem(key || "")}
         >
-          {navItems.map((item, i) => (
-            <div key={i}>
-              <Nav.Link
-                eventKey={item.name}
-                style={
-                  selectedNavItem === item.name
-                    ? {
-                        textDecoration: "none",
-                        color: "white",
-                        fontWeight: "700",
-                      }
-                    : { textDecoration: "none", color: "white" }
-                }
-              >
-                {item.name}
-              </Nav.Link>
-            </div>
-          ))}
+          <div className="menupage-navbar-link-container p-0">
+            {navItems.map((item, i) => (
+              <div key={i}>
+                <Nav.Link
+                  eventKey={item.name}
+                  style={
+                    selectedNavItem === item.name
+                      ? {
+                          textDecoration: "none",
+                          color: "white",
+                          fontWeight: "700",
+                        }
+                      : { textDecoration: "none", color: "white" }
+                  }
+                >
+                  {item.name}
+                </Nav.Link>
+              </div>
+            ))}
+          </div>
         </Nav>
       </SubNav>
       <div className="row">

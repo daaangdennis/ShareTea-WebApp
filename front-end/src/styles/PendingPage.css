@@ -21,8 +21,30 @@
     background-color: #cf152d;
     border-radius: 15px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.7);
+    border: solid 2px #cf152d;
     display: flex;
     justify-content: space-between;
+    cursor: pointer;
+    transition: all 0.2s ease 0s; 
+}
+
+.pendingpage-product-card-selected {
+    padding: 10px;
+    font-family: 'Poppins', 'sans-serif';
+    margin: 20px;
+    color: #cf152d;
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.7);
+    border: solid 2px #cf152d;
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
+}
+
+.pendingpage-product-card:hover{
+    color: #cf152d;
+    background-color: white;
 }
 
 .pendingpage-product-card-left {
@@ -31,10 +53,136 @@
 
 .pendingpage-product-card-right {
     display: inline-block;
+    font-weight: 700;
+}
+
+.pendingpage-orders-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Poppins', 'sans-serif';
+    margin-bottom: 20px;
+}
+.pendingpage-orders-header h2{
+    font-weight: 700;
+    margin: 0;
+    color: #cf152d;
+}
+
+.pendingpage-orders-grid-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.pendingpage-controls-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    font-family: 'Poppins', 'sans-serif';
+    color: #cf152d;
+}
+
+.pendingpage-controls-container h5{
+    margin: 0;
+    font-weight: 600;
+}
+
+.pendingpage-control-button-disabled{
+    font-weight: 600;
+    color: #cf152d;
+    padding: 9px 25px;
+    background-color: white;
+    border: solid #cf152d;
+    border-radius: 15px;
+    text-align: center;
+}
+
+.pendingpage-control-button {
+    color: white;
+    background-color: #cf152d;
+    font-weight: 600;
+    padding: 9px 25px;
+    border: solid #cf152d;
+    border-radius: 15px;
+    text-align: center;
 }
 
 .pendingpage-orders-information-header {
     display: flex;
     align-items: left;
+}
+
+.pendingpage-orders-information-header h3{
+    font-weight: 600;
+}
+
+.pendingpage-subtotal-information-container{
+   border-bottom: solid 2px white;
+   border-bottom-style: dashed;
+   display: flex;
+   flex-direction: row;
+   font-weight: 600;
+}
+
+.pendingpage-subtotal-information-container h5{
+    margin-top: 2px;
+    font-weight: 600;
+ }
+
+.pendingpage-subtotal-information-container .col-md-6 {
+    flex: 1;
+}
+
+.pendingpage-subtotal-information-container .col-md-6:last-child {
+    text-align: right;
+}
+
+.pendingpage-total-information-container{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    font-weight: 600;
+ }
+ 
+.pendingpage-total-information-container h5{
+    margin-top: 2px;
+    font-weight: 600;
+}
+
+.pendingpage-total-information-container .col-md-6 {
+    flex: 1;
+}
+
+.pendingpage-total-information-container .col-md-6:last-child {
+    text-align: right;
+}
+
+.pendingpage-complete-button {
     font-weight: 700;
+    color: white;
+    padding: 9px 25px;
+    background-color: #cf152d;
+    border: solid white;
+    border-radius: 15px;
+    transition: all 0.3s ease 0s;
+    text-align: center;
+    width: 100%;
+}
+
+.pendingpage-complete-button:hover {
+    color: #cf152d;
+    background-color: white;
+}
+
+
+.pendingpage-table-header {
+    border-top: 2px solid white;
+    border-bottom: 2px solid white;
+}
+
+.pendingpage-table-column {
+    text-align: left;
+    vertical-align: top;
+    max-lines: 1;
 }

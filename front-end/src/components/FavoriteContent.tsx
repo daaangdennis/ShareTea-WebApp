@@ -26,7 +26,7 @@ const FavoriteContent = () => {
       </div>
     </div>
   ) : (
-    <>Not Authenticated</>
+    <h1 className="text-center my-4">Log in to view and save your favorite drink customizations!</h1>
   );
 };
 

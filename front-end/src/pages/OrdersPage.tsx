@@ -1,46 +1,37 @@
+import PendingOrderGrid from "../components/PendingOrderGrid";
+import PendingPage from "../components/PendingPage";
+import OrderHistory from "../components/OrderHistory";
+import { useEffect, useState } from "react";
+
+import "../styles/PendingPage.css";
 import SubNav from "../components/SubNav";
-import { useState } from "react";
-import "../styles/table.css";
-import InventoryManagement from "../components/InventoryManagement";
-import MenuManagement from "../components/MenuManagement";
-import { Nav } from "react-bootstrap";
-import StatsPage from "./StatsPage";
-import UserManagement from "../components/UserManagement";
-import useUserRole from "../hooks/useUserRole";
+import Nav from "react-bootstrap/Nav";
+import CashierOrderPage from "./CashierOrderPage";
 
-function DashboardPage() {
-  const { userRole, isLoading } = useUserRole();
-
+function OrdersPage() {
   const navItems = [
-    { name: "Inventory" },
-    { name: "Menu" },
-    { name: "Statistics" },
+    { name: "Checkout" },
+    { name: "Pending Orders" },
+    { name: "Order History" },
   ];
 
-  if (userRole === "admin") {
-    navItems.push({ name: "Users" });
-  }
   const [selectedNavItem, setSelectedNavItem] = useState(navItems[0].name);
-
   const renderContent = () => {
     switch (selectedNavItem) {
-      case "Inventory":
-        return <InventoryManagement />;
-      case "Menu":
-        return <MenuManagement />;
-      case "Users":
-        return <UserManagement />;
-      case "Statistics":
-        return <StatsPage />;
+      case "Checkout":
+        return <CashierOrderPage />;
+      case "Pending Orders":
+        return <PendingPage />;
+      case "Order History":
+        return <OrderHistory />;
       default:
-        return <InventoryManagement />;
+        return <CashierOrderPage />;
     }
   };
-
   const shouldRenderSidebar = selectedNavItem === "Menu";
 
   return (
-    <>
+    <div className="col">
       <SubNav>
         <Nav
           activeKey={selectedNavItem}
@@ -68,9 +59,13 @@ function DashboardPage() {
           </div>
         </Nav>
       </SubNav>
-      <div className="-lg-12">{renderContent()}</div>
-    </>
+      <div className="row">
+        <div className={`col${shouldRenderSidebar ? "" : "-lg-12"}`}>
+          {renderContent()}
+        </div>
+      </div>
+    </div>
   );
 }
 
-export default DashboardPage;
+export default OrdersPage;
