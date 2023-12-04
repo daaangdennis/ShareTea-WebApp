@@ -86,6 +86,16 @@ public class Services {
         return usersRepository.getUsers();
     }
 
+    public Map<String, Object> userInfo(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException{
+        Map<String, String> userInfo = findUserByAccessToken(request);
+        if(userInfo == null){
+            return null;
+        }
+        String email = userInfo.get("email");
+
+        return usersRepository.getUserInfo(email);
+    }
+
     public void addUser(String firstName, String lastName, String email, String permission, String phoneNumber, String SSN, String address, String picture){
         Users checkUser = usersRepository.findByEmail(email);
         if(checkUser != null){

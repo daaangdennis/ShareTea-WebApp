@@ -22,6 +22,9 @@ public interface UsersRepository extends JpaRepository<Users, Integer> {
     @Query(value = "select user_id, first_name, last_name, email, phone_number as phone, ssn as \"SSN\", position as role, phone_number as phone, address from users where email != '' and user_id != 27 and email != '' order by user_id", nativeQuery = true)
     public List<Map<String, Object>> getUsers();
 
+    @Query(value = "select first_name || last_name AS name, email, picture from users where email = ?1", nativeQuery = true)
+    public Map<String, Object> getUserInfo(String email);
+
     @Transactional @Modifying @Query(value = "update orders set customer_id = 27 where customer_id = ?1", nativeQuery = true)
     public void deleteUserOrder(Integer customerID);
 

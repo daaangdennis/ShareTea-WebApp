@@ -27,6 +27,12 @@ public class MainController {
     @Autowired
     private Services service;
 
+
+    @GetMapping("/user/get")
+    public Map<String, Object> userInfo(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException {
+        return service.userInfo(request);
+    }
+
     /**
      * API Route to get all user information
      * @return JSON object containing ID, names, email, and permissions
