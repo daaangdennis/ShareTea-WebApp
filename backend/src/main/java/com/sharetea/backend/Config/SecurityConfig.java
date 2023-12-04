@@ -23,6 +23,7 @@ public class SecurityConfig {
                 .cors(withDefaults())
                 .authorizeHttpRequests((authorize) -> authorize
                     .requestMatchers(new AntPathRequestMatcher("/users/*")).hasAnyAuthority("admin")
+                    .requestMatchers(new AntPathRequestMatcher("/menu/*")).hasAnyAuthority("admin", "manager")
                     .requestMatchers(new AntPathRequestMatcher("/**")).permitAll()
                     // .requestMatchers(new AntPathRequestMatcher("/product/**")).permitAll()
                     // .requestMatchers(new AntPathRequestMatcher("/orders/pending")).permitAll()

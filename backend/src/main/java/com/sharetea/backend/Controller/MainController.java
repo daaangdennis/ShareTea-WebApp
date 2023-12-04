@@ -337,26 +337,51 @@ public class MainController {
         service.deleteProduct(productName);
     }
 
+    /**
+     * Shows menu products and their sales between two dates
+     * @param startDate Start date for data
+     * @param endDate End date for data
+     * @return JSON Object containing products and their sales
+     */
     @GetMapping("/product/sales")
     public List<Map<String, Object>> productSales(@RequestParam String startDate, @RequestParam String endDate) {
         return service.productSales(LocalDate.parse(startDate), LocalDate.parse(endDate));
     }
-
+    
+    /**
+     * Shows most popular pairings for two products between two dates
+     * @param startDate Start date for data
+     * @param endDate End date for data
+     * @return JSON Object showing quantity of pairings between two items 
+     */
     @GetMapping("/product/commonpairings")
     public List<Map<String, Object>> commonPairs(@RequestParam String startDate, @RequestParam String endDate) {
         return service.commonPairs(LocalDate.parse(startDate), LocalDate.parse(endDate));
     }
 
+    /**
+     * 
+     * @return JSON Object with inventory items and their details 
+     */
     @GetMapping("/inventory/get")
     public Iterable<Inventory> getInventory() {
         return service.getAllInventory();
     }
 
+    /**
+     * Shows which inventory items are below 100 stock
+     * @return JSON Object with inventory items and their low stock 
+     */
     @GetMapping("/inventory/low")
     public List<Map<String, Object>> getLowStock() {
         return service.lowStock();
     }
 
+    /**
+     * Shows which inventory items have sold less than 10% of their inventory given a start date
+     * @param date Date that denotes start of inventory usage counting
+     * @return JSON Object with inventory items that sold less than 10% of their stock
+     */
     @GetMapping("/inventory/excess")
     public List<Map<String, Object>> getLowStock(@RequestParam String date) {
         return service.excessStock(LocalDate.parse(date));
@@ -373,24 +398,40 @@ public class MainController {
         return service.inventoryUsage(LocalDate.parse(startDate), LocalDate.parse(endDate));
     }
     
+    /**
+     * Updates details for inventory items in the database
+     * @param inventoryId Inventory ID for item in the database
+     * @param newName Name to assign to inventory item
+     * @param quantity Stock quantity for item
+     * @param isTopping Check to see if inventory item is a topping
+     */
     @PostMapping("/inventory/update")
-    public Inventory updateInventory(@RequestParam Integer inventoryId, @RequestParam(required = false) String newName, @RequestParam(required = false) Integer quantity, @RequestParam(required = false) Boolean isTopping) {
-        return service.updateInventory(inventoryId, newName, quantity, isTopping);
-    }
-
-    @PostMapping("/inventory/add")
-    public Inventory addInventory(@RequestParam String inventoryName, @RequestParam(required = false) Integer quantity){
-        return service.addInventory(inventoryName, quantity);
-    }
-
-    @PostMapping("/inventory/delete")
-    public String inventoryDelete(@RequestParam Integer inventoryId) {
-        return service.deleteInventory(inventoryId);
+    public void updateInventory(@RequestParam Integer inventoryId, @RequestParam(required = false) String newName, @RequestParam(required = false) Integer quantity, @RequestParam(required = false) Boolean isTopping) {
+        service.updateInventory(inventoryId, newName, quantity, isTopping);
     }
 
     /**
-     * 
-     * @return 
+     * Creates or re-activates inventory item in the database
+     * @param inventoryName Name for new inventory item
+     * @param quantity Quantity to assign to new inventory item
+     */
+    @PostMapping("/inventory/add")
+    public void addInventory(@RequestParam String inventoryName, @RequestParam(required = false) Integer quantity){
+        service.addInventory(inventoryName, quantity);
+    }
+
+    /**
+     * Deletes / deactivates inventory item in the database
+     * @param inventoryId Inventory ID item from database
+     */
+    @PostMapping("/inventory/delete")
+    public void inventoryDelete(@RequestParam Integer inventoryId) {
+        service.deleteInventory(inventoryId);
+    }
+
+    /**
+     * Gets category names from database
+     * @return List of strings with category names
      */
     @GetMapping("/categories/get")
     public List<String> getCategories() {
