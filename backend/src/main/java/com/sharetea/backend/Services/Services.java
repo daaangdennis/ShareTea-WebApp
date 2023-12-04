@@ -86,6 +86,17 @@ public class Services {
         return usersRepository.getUsers();
     }
 
+    public Map<String, Object> userInfo(HttpServletRequest request)
+            throws URISyntaxException, IOException, InterruptedException {
+        Map<String, String> userInfo = findUserByAccessToken(request);
+        if (userInfo == null) {
+            return null;
+        }
+        String email = userInfo.get("email");
+
+        return usersRepository.getUserInfo(email);
+    }
+
     public void addUser(String firstName, String lastName, String email, String permission, String phoneNumber,
             String SSN, String address, String picture) {
         Users checkUser = usersRepository.findByEmail(email);
@@ -470,10 +481,10 @@ public class Services {
                     usersRepository.save(newUser);
                     order.setCustomer_id(newUser.getUser_id());
                 }
-            } else if (requestFirstName != null && requestLastName != null) {
+            } else if (requestFirstName != null) {
                 Users newUser = new Users();
                 newUser.setFirst_name(requestFirstName);
-                newUser.setLast_name(requestLastName);
+                newUser.setLast_name(requestLastName != null ? requestLastName : "");
                 usersRepository.save(newUser);
                 order.setCustomer_id(newUser.getUser_id());
             }
