@@ -18,7 +18,7 @@ export async function postOrder(cartData: Cart, accessTokenPromise: String) {
     const headers = {
       Authorization: `Bearer ${accessToken}`,
     };
-
+    console.log(cartData)
     const response = await Axios.post(
       process.env.REACT_APP_BACKEND_URL + "/orders/add",
       cartData,

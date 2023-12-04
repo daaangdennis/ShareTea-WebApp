@@ -605,9 +605,7 @@ public class Services {
         Double total = 0.00;
         
         ordersRepository.save(order);
-        System.out.println("Im here");
         List<Map<String, Object>> items = (List<Map<String, Object>>) orderData.get("items");
-        System.out.println("Im here again");
 
         for (Map<String, Object> item : items) {
             Integer productID = (Integer) ((Map<String, Object>) item.get("product")).get("product_id");

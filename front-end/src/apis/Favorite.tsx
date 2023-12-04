@@ -8,6 +8,7 @@ export async function getFavorites(
 ) {
     try {
         const accessToken = accessTokenPromise;
+        console.log(accessToken)
         const headers = {
           Authorization: `Bearer ${accessToken}`,
         };
