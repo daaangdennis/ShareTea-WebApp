@@ -203,6 +203,9 @@ public class Services {
         usersRepository.save(thisUser);
 
         String email = thisUser.getEmail();
+        if (thisUser.getPosition() == null) {
+            return;
+        }
         if (position != null && !position.toLowerCase().equals(thisUser.getPosition().toLowerCase())) {
             String encodedEmail = URLEncoder.encode(email, "UTF-8");
             String emailURL = "https://dev-1jps85kh7htbmqki.us.auth0.com/api/v2/users-by-email?fields=user_id&email="
@@ -326,6 +329,10 @@ public class Services {
             return;
         }
         usersRepository.deleteUserOrder(id);
+        List<Integer> favOPIds = userFavoriteRepository.getFavoriteIDs(id);
+        for (Integer favID : favOPIds) {
+            deleteFavorite(null, favID);
+        }
         usersRepository.deleteById(id);
 
         String encodedEmail = URLEncoder.encode(email, "UTF-8");
@@ -505,9 +512,9 @@ public class Services {
      */
     public void deleteFavorite(HttpServletRequest request, Integer opID)
             throws URISyntaxException, IOException, InterruptedException {
-        Map<String, String> userInfo = findUserByAccessToken(request);
-        String email = userInfo.get("email");
-        Integer user_id = usersRepository.findByEmail(email).getUser_id();
+        // Map<String, String> userInfo = findUserByAccessToken(request);
+        // String email = userInfo.get("email");
+        // Integer user_id = usersRepository.findByEmail(email).getUser_id();
 
         List<Integer> deleteToppings = inventoryRepository.getFavoriteItemToppings(opID);
         itemToppingsRepository.deleteAllById(deleteToppings);
