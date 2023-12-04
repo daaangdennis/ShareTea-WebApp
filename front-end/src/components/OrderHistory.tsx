@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { getOrderHistory, removeOrder } from "../apis/Order";
 import { OrderItem, CompletedOrders, Order } from "../types/types";
 import useUserRole from "../hooks/useUserRole";
-
+import LoadingSpinner from "./LoadingSpinner";
 
 import "../styles/PendingPage.css";
 
@@ -16,6 +16,7 @@ function OrderHistory() {
     const [selectedOrder, setSelectedOrder] = useState<Order>();
     const [orderTime, setOrderTime] = useState<String>("");
     const { userRole, isLoading } = useUserRole();
+    const [isLoadingOrders, setIsLoadingOrders] = useState<boolean>(true);
 
     const tableColumns = [
         "Product Name",
@@ -24,14 +25,13 @@ function OrderHistory() {
         "Toppings",
         "Price"
     ];
-
+    
     useEffect(() => {
-        getOrderHistory(setCompletedOrders); 
+        setIsLoadingOrders(true)
+        getOrderHistory(setCompletedOrders).finally(() => {
+            setIsLoadingOrders(false);
+        });
     }, []);
-
-    //console.log(pendingOrder);
-    //console.log(selectedItems.length > 0);
-    //console.log(selectedOrder);
 
     const handlePrevButton = () => {
         if (completedOrders.completed && pageNumber > 1) {
@@ -90,11 +90,22 @@ function OrderHistory() {
                         Next
                     </button>
                 </div>
-                <PendingOrderGrid 
-                    pending={completedOrders.completed ? (completedOrders.completed.slice((pageNumber-1) * maxOrdersPerPage, maxOrdersPerPage + (pageNumber-1) * maxOrdersPerPage)) : ([])} 
-                    onCardClick={handleOrderSelect}
-                    selectedOrder={selectedOrder}
-                />
+                {isLoadingOrders ?
+                (
+                    <LoadingSpinner
+                        className="justify-content-center mt-5"
+                        style={{ gap: 10 }}
+                    />
+                )
+                :
+                (
+                    <PendingOrderGrid 
+                        pending={completedOrders.completed ? (completedOrders.completed.slice((pageNumber-1) * maxOrdersPerPage, maxOrdersPerPage + (pageNumber-1) * maxOrdersPerPage)) : ([])} 
+                        onCardClick={handleOrderSelect}
+                        selectedOrder={selectedOrder}
+                    />
+                )
+                }
             </div>   
             {selectedOrder ? 
             (
