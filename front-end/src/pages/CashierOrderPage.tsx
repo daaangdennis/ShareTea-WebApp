@@ -452,26 +452,26 @@ function CashierOrderPage() {
 
               {/* Testing */}
               <div className="PricingContainer">
-                <h1 className="largeText">Subtotal: ${subTotal.toFixed(2)}</h1>
-                <h1 className="largeText">
+                <h5 className="largeText px-3">Subtotal: ${subTotal.toFixed(2)}</h5>
+                <h5 className="largeText px-3 pb-2">
                   Tax: ${(subTotal * 0.0825).toFixed(2)}
-                </h1>
+                </h5>
                 <div className="dashed-line"></div>
-                <h1 className="largeText">
+                <h5 className="largeText px-3  py-2">
                   Total: ${(subTotal * 1.0825).toFixed(2)}
-                </h1>
+                </h5>
               </div>
               <div className="OrderDetailsButtonContainer d-flex justify-content-center align-items-center">
                 <button
                   onClick={handleProceedButton}
-                  className="cashier-category-button btn mx-2 mb-4"
+                  className="cashier-checkout-button btn mx-2 mb-4"
                 >
                   Proceed
                 </button>
 
                 <button
                   onClick={handleCancelButton}
-                  className="cashier-category-button btn mx-2 mb-4"
+                  className="cashier-checkout-button btn mx-2 mb-4"
                 >
                   Cancel
                 </button>

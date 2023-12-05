@@ -19,7 +19,7 @@ const Profile = () => {
     <div className="navbar-user-container">
       <img className="navbar-user-img" src={user.picture} alt={user.name} />
       <p className="m-0">
-        {user.name} ({user.email})
+        {user.name}
       </p>
     </div>
   );
