@@ -42,7 +42,7 @@ const RecommendedContent = () => {
               style={{ gap: 10 }}
             />
           ) : (
-            <div className="d-flex flex-column">
+            <div className="d-flex flex-column text-center">
               <h2
                 className="mt-5 ms-5"
                 style={{
