@@ -54,7 +54,7 @@ const Navbar: React.FC<navbarProps> = ({ routes }) => {
   return (
     <header className="p-3 text-bg">
       <div className="container-fluid">
-        <div className="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+        <div className="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start" style={{overflow: "auto"}}>
           <Link
             to={"/"}
             className="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none"

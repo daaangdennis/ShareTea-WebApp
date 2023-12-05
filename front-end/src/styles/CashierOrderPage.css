@@ -5,8 +5,9 @@
 }
 
 .CategoryNavBar {
-  background-color: #cf152d;
+  background-color: white;
   overflow-x: auto;
+  border-bottom: solid 4px #cf152d;
 }
 
 .cashier-page-item-text {
@@ -57,10 +58,10 @@
 
 .cashier-page-button.btn {
   font-weight: 700;
-  color: white;
+  color: #cf152d;
   padding: 9px 25px;
-  background-color: #cf152d;
-  border: solid #cf152d;
+  background-color: white;
+  border: solid 2px #cf152d;
   border-radius: 10px;
   transition: all 0.3s ease 0s;
   text-align: center;
@@ -74,17 +75,23 @@
   color: white;
   padding: 9px 25px;
   background-color: #cf152d;
-  border: solid white;
+  border: solid 2px #cf152d;
   border-radius: 10px;
-  transition: all 0.3s ease 0s;
+  transition: all 0.1s ease 0s;
   text-align: center;
   text-decoration: none;
 }
 
-.cashier-page-button:hover {
-  color: #cf152d;
-  background-color: white;
-  border: solid #cf152d;
+.cashier-category-button.btn:hover {
+  background-color: #cf152d;
+  border: solid 2px #cf152d;
+  color: white;
+  box-shadow: 0 0px 10px rgba(0, 0, 0, 0.8);
+}
+
+.cashier-page-button.btn:hover {
+  color: white;
+  background-color: #cf152d;
 }
 
 .cashier-topping-grid {
@@ -150,7 +157,7 @@
 
 .largeText {
   color: white;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .cashier-done-button.btn {
@@ -163,4 +170,27 @@
   transition: all 0.3s ease 0s;
   text-align: center;
   text-decoration: none;
+}
+
+.cashier-done-button.btn:hover {
+  color: #cf152d;
+  background-color: white;
+  border: solid #cf152d;
+}
+
+.cashier-checkout-button.btn {
+  font-weight: 700;
+  color: white;
+  padding: 9px 25px;
+  background-color: #cf152d;
+  border: solid white;
+  border-radius: 10px;
+  transition: all 0.3s ease 0s;
+  text-align: center;
+  text-decoration: none;
+}
+
+.cashier-checkout-button.btn:hover {
+  color: #cf152d;
+  background-color: white;
 }

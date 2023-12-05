@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import "../styles/Navbar.css";
 
 // Declare the google variable to let TypeScript know about it
 declare global {

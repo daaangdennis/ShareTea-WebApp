@@ -17,6 +17,7 @@ import { LoginButton, LogoutButton } from "../components/Login";
 import Profile from "../components/UserInfo";
 import { useAuth0 } from "@auth0/auth0-react";
 import { cart } from "../atoms/cart";
+import MenuBoard from "../components/MenuBoard";
 
 function LandingPage() {
   // const products: product[] = [
@@ -85,10 +86,10 @@ function LandingPage() {
           Order Now
         </a> */}
       </div>
-
+    <div className="container">
       <h1 className="landingpage-text my-md-4 my-5">Trending Products</h1>
       <ProductGrid products={bestSelling.products} />
-
+      
       <InfoBar
         header="Sharetea x Cookie Run Collaboration is Here!"
         information="Limited time only launching on 11/3/23, the collaboration will feature many sugary surprises for all the bubble tea lovers in 87 USA Sharetea locations as below.
@@ -103,6 +104,7 @@ function LandingPage() {
         during the colder seasons. To fully comprehend why we, and others like you, love it so much, you simply need to try it."
         imageUrl="https://images.squarespace-cdn.com/content/v1/61e8bb2a2cf8670534839093/14140f00-6e01-47c8-b2c2-b05028b05fbe/image4.png?format=2500w"
       />
+      </div>
 
       {/* <div>
       <ImageGallery images={landingPageImages.images}/> 
