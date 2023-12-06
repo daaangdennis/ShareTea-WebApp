@@ -14,8 +14,8 @@ public class Users {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer user_id;
 
-    private String first_name;
-    private String last_name;
+    private String first_name = "";
+    private String last_name = "";
     private String email;
 
     private Integer order_count = 1;
