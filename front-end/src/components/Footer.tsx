@@ -25,7 +25,7 @@ function Footer() {
           </li>
         </ul>
         <p className="text-center text-body-secondary">
-          Sharetea© 2023 Company, Inc
+          We are NOT affiliated with ShareTea. This is a project for TAMU-CSCE-315-904-3-2023 only for educational purposes.
         </p>
       </footer>
     </div>
