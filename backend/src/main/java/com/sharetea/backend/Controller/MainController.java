@@ -26,6 +26,11 @@ public class MainController {
     @Autowired
     private Services service;
 
+    @GetMapping("/active")
+    public String keepServerActive() {
+        return "Server is active!";
+    }
+
     @GetMapping("/user/get")
     public Map<String, Object> userInfo(HttpServletRequest request)
             throws URISyntaxException, IOException, InterruptedException {
