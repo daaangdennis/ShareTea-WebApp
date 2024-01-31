@@ -4,6 +4,8 @@
 
 The Sharetea Web Application is the new digital face of Sharetea, offering a seamless Point of Sale (POS) experience through the web. This platform serves managers, cashiers, and customers, offering a range of functionalities tailored to each user type, from order management to analytics and customer engagement.
 
+[Project Overview Presentation](https://docs.google.com/presentation/d/1UZ6t2sHUdGH1u1P6AYiLfti5E7s8vRIzK2EVVZu6x6U/edit#slide=id.g2b373c9cb6b_0_0)
+
 ## Accessing the Web Application
 
 The Sharetea Web Application is deployed and accessible via the following URL:
